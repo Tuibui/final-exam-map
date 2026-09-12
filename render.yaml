@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: final-exam-map
+    runtime: static
+    buildCommand: echo "static site, no build"
+    staticPublishPath: .

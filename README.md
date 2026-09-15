@@ -9,7 +9,7 @@
 | แนวสอบ Final Mechanical Materials | `index.html` | `/` |
 | สรุปสอบ Final TC4 (Thai Culture/Social Studies 4) | `tc4/index.html` + `tc4/img/` | `/tc4/` |
 
-หน้า TC4 อ่านแบบเลื่อนยาวหรือกด **โหมดสไลด์** (← → / ปัดจอ) ได้
+หน้า TC4 เป็นสไลด์ เลื่อนด้วย ← → / ปัดจอ / เมนูเลือกหัวข้อ และลิงก์ตรงไปสไลด์ได้ด้วย `#id` เช่น `/tc4/#lagrange-a`
 
 ## ดูในเครื่อง
 

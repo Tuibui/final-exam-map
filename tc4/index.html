@@ -89,13 +89,26 @@ ol.steps li::marker { color: var(--accent); font-weight: 600; }
 .hl { color: var(--accent); font-weight: 600; }
 .hot { color: var(--hot); font-weight: 600; }
 
-.eq { background: var(--panel); border-radius: 10px; padding: 6px 18px; overflow-x: auto; overflow-y: hidden; }
+/* equation card: formula on top, variable legend underneath */
+.eq { background: var(--panel); border-radius: 10px; padding: 6px 18px 0; overflow-x: auto; overflow-y: hidden; }
+.eq:not(:has(.vars)) { padding-bottom: 6px; }
 .eq .katex-display { margin: 10px 0; }
 .katex { font-size: 1.08em; }
+.vars {
+  list-style: none; margin: 0; padding: 10px 0 12px; display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 5px 24px;
+  font-size: 16.5px; line-height: 1.5; border-top: 1px solid var(--rule);
+}
+.vars li { display: flex; gap: 10px; align-items: baseline; }
+.vars li > b { flex: none; min-width: 3.4em; color: var(--accent); font-weight: 600; white-space: nowrap; }
+.vars .katex { font-size: 1em; }
+.vars.wide { grid-template-columns: minmax(0, 1fr); }
+.vars.solo { background: var(--panel); border-top: 0; border-radius: 10px; padding: 12px 18px; }
+.vname { font-size: 15px; color: var(--muted); font-weight: 400; }
 
 .ex { border: 1.5px solid var(--rule); border-radius: 10px; padding: 14px 18px; display: grid; gap: 6px; }
 .ex .q { font-weight: 600; }
-.ex .q::before { content: "โจทย์  "; font: 600 13px/1 var(--head); color: var(--paper); background: var(--muted); border-radius: 4px; padding: 3px 7px; margin-right: 8px; vertical-align: 2px; }
+.ex .q::before { content: "โจทย์"; font: 600 13px/1 var(--head); color: var(--paper); background: var(--muted); border-radius: 4px; padding: 3px 7px; margin-right: 10px; vertical-align: 2px; }
 .ex .a { color: var(--accent); font-weight: 600; }
 .ex .a::before { content: "→ "; }
 
@@ -110,6 +123,8 @@ th { font-family: var(--head); font-weight: 600; font-size: 15px; color: var(--m
 td.n, th.n { text-align: right; }
 tr.on td { background: var(--accent-soft); }
 td b { font-weight: 600; }
+td .vs { display: block; font-size: 15px; color: var(--muted); line-height: 1.5; margin-top: 4px; }
+td .vs .katex { font-size: 1em; }
 
 .fig { margin: 0; background: #fff; border: 1px solid var(--rule); border-radius: 10px; padding: 10px; display: grid; justify-items: center; }
 .fig img { display: block; width: auto; height: auto; max-height: min(44vh, 400px); }
@@ -180,6 +195,8 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
   th, td { padding: 8px 8px; }
   .exam td { font-size: 17px; padding: 10px 6px; }
   .exam .pt { width: 30%; }
+  .eq { padding-left: 14px; padding-right: 14px; }
+  .vars { font-size: 16px; grid-template-columns: minmax(0, 1fr); }
   .nav { gap: 8px; }
   .nav button { width: 46px; }
   .nav .cnt { display: none; }
@@ -220,7 +237,7 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
     <span>✅ มีใบรวมสูตรแจก</span>
     <span>❌ ห้ามนำโน้ตทุกชนิดเข้าห้อง</span>
   </div>
-  <p class="box" style="margin-top:14px">มีใบสูตรให้ จึง<b>ไม่ต้องท่องสูตร</b> สิ่งที่ต้องฝึกคือ<b>เลือกสูตรให้ตรงกับโจทย์</b> ตั้งสมการ Lagrange ให้ถูก และ<b>ตีความคำตอบ</b></p>
+  <p class="box" style="margin-top:14px">มีใบสูตรให้ จึง<b>ไม่ต้องท่องสูตร</b> แต่ต้อง<b>รู้ว่าตัวแปรแต่ละตัวคืออะไร</b> เลือกสูตรให้ตรงโจทย์ และตีความคำตอบได้ ทุกสมการในสไลด์มีกล่องบอกความหมายตัวแปรไว้ใต้สมการ</p>
   <p class="small" style="margin-top:16px">เลื่อนสไลด์: ปุ่ม ← → ด้านล่าง · ลูกศรบนคีย์บอร์ด · ปัดจอซ้าย-ขวา · เลือกหัวข้อจากเมนูได้ · ⚠ = สไลด์อาจารย์พิมพ์ผิด · <span class="extra">เสริม</span> = ไม่มีในสไลด์ ใส่ไว้ช่วยทำโจทย์</p>
 </section>
 
@@ -255,14 +272,20 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
   <h2>ต้นทุนชัดแจ้ง · ต้นทุนแอบแฝง · กำไร</h2>
   <div class="g2">
     <div class="col">
-      <div class="eq">$$\text{Economic Cost} = \text{Explicit} + \text{Implicit}$$</div>
-      <ul class="pts">
-        <li><b>Explicit (ชัดแจ้ง)</b> = จ่ายเงินจริง ตรวจสอบทางบัญชีได้<br><span class="small">วัตถุดิบ ค่าแรง ค่าเช่า ค่าน้ำไฟ</span></li>
-        <li><b>Implicit (แอบแฝง)</b> = ไม่ได้จ่ายเงิน แต่เป็นค่าเสียโอกาสของทรัพยากรที่เจ้าของมี<br><span class="small">เงินเดือนที่ลาออกมา · บ้านตัวเองที่ไม่ได้ปล่อยเช่า · เวลา ทักษะ</span></li>
-      </ul>
+      <div class="eq">$$\text{Economic Cost} = \text{Explicit} + \text{Implicit}$$
+        <ul class="vars wide">
+          <li><b>Economic Cost</b><span>ต้นทุนทางเศรษฐศาสตร์ (ต้นทุนทั้งหมดที่แท้จริง)</span></li>
+          <li><b>Explicit</b><span>ต้นทุนชัดแจ้ง = จ่ายเงินจริง ลงบัญชีได้ เช่น วัตถุดิบ ค่าแรง ค่าเช่า ค่าน้ำไฟ</span></li>
+          <li><b>Implicit</b><span>ต้นทุนแอบแฝง = ไม่ได้จ่ายเงิน แต่เสียโอกาส เช่น เงินเดือนที่ลาออกมา บ้านตัวเองที่ไม่ได้ปล่อยเช่า</span></li>
+        </ul>
+      </div>
       <div>
         <h3>กำไร <span class="extra">เสริม</span></h3>
-        <div class="eq">$$\begin{aligned}\text{กำไรทางบัญชี} &amp;= TR - \text{Explicit} \\ \text{กำไรทางเศรษฐศาสตร์} &amp;= TR - (\text{Explicit} + \text{Implicit})\end{aligned}$$</div>
+        <div class="eq">$$\begin{aligned}\text{กำไรทางบัญชี} &amp;= TR - \text{Explicit} \\ \text{กำไรทางเศรษฐศาสตร์} &amp;= TR - (\text{Explicit} + \text{Implicit})\end{aligned}$$
+          <ul class="vars wide">
+            <li><b>TR</b><span>รายรับรวม (Total Revenue) = ราคา × ปริมาณที่ขาย</span></li>
+          </ul>
+        </div>
       </div>
     </div>
     <div class="col">
@@ -283,20 +306,21 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
   <h2>ต้นทุนการผลิตระยะสั้น</h2>
   <div class="gr">
     <div class="col">
-      <ul class="pts">
-        <li><b>TFC (คงที่)</b> ไม่เปลี่ยนตามปริมาณผลิต เช่น ค่าเช่าโรงงาน เครื่องจักร</li>
-        <li><b>TVC (ผันแปร)</b> เปลี่ยนตามปริมาณผลิต เช่น วัตถุดิบ แรงงานรายชิ้น</li>
-        <li><b>MC</b> ต้นทุนที่เพิ่มขึ้นเมื่อผลิตเพิ่ม 1 หน่วย</li>
+      <ul class="vars solo wide">
+        <li><b>Q</b><span>ปริมาณผลผลิต (จำนวนหน่วยที่ผลิต)</span></li>
+        <li><b>Δ</b><span>“การเปลี่ยนแปลงของ” เช่น ΔQ = ผลผลิตที่เพิ่มขึ้น</span></li>
+        <li><b>TFC</b><span>ต้นทุนคงที่รวม ไม่เปลี่ยนตาม Q เช่น ค่าเช่าโรงงาน เครื่องจักร</span></li>
+        <li><b>TVC</b><span>ต้นทุนผันแปรรวม เปลี่ยนตาม Q เช่น วัตถุดิบ แรงงานรายชิ้น</span></li>
       </ul>
       <p class="warn">สไลด์เขียน MC = ΔTFC/ΔQ ที่ถูกคือ <b>ΔTC/ΔQ</b> (หรือ ΔTVC/ΔQ) เพราะ TFC ไม่เปลี่ยนตาม Q</p>
     </div>
     <div class="tbl"><table>
-      <tr><th>ตัว</th><th>สูตร</th><th>ตัวอย่าง Q = 100</th></tr>
-      <tr><td><b>TC</b></td><td>\(TFC + TVC\)</td><td>5,000 + 3,000 = <b>8,000</b></td></tr>
-      <tr><td><b>ATC</b></td><td>\(TC/Q = AFC + AVC\)</td><td>8,000 / 100 = <b>80</b></td></tr>
-      <tr><td><b>AFC</b></td><td>\(TFC/Q\)</td><td>5,000 / 100 = <b>50</b></td></tr>
-      <tr><td><b>AVC</b></td><td>\(TVC/Q\)</td><td>3,000 / 100 = <b>30</b></td></tr>
-      <tr><td><b>MC</b></td><td>\(\Delta TC/\Delta Q\)</td><td>TC 8,000 → 8,070 เมื่อ Q 100 → 101 = <b>70</b></td></tr>
+      <tr><th>ตัวแปร</th><th>สูตร</th><th>ตัวอย่าง Q = 100</th></tr>
+      <tr><td><b>TC</b><span class="vs">ต้นทุนรวม</span></td><td>\(TFC + TVC\)</td><td>5,000 + 3,000 = <b>8,000</b></td></tr>
+      <tr><td><b>ATC (AC)</b><span class="vs">ต้นทุนรวมเฉลี่ยต่อหน่วย</span></td><td>\(TC/Q = AFC + AVC\)</td><td>8,000 / 100 = <b>80</b></td></tr>
+      <tr><td><b>AFC</b><span class="vs">ต้นทุนคงที่เฉลี่ยต่อหน่วย</span></td><td>\(TFC/Q\)</td><td>5,000 / 100 = <b>50</b></td></tr>
+      <tr><td><b>AVC</b><span class="vs">ต้นทุนผันแปรเฉลี่ยต่อหน่วย</span></td><td>\(TVC/Q\)</td><td>3,000 / 100 = <b>30</b></td></tr>
+      <tr><td><b>MC</b><span class="vs">ต้นทุนส่วนเพิ่ม (ผลิตเพิ่ม 1 หน่วย)</span></td><td>\(\Delta TC/\Delta Q\)</td><td>TC 8,000 → 8,070 เมื่อ Q 100 → 101 = <b>70</b></td></tr>
     </table></div>
   </div>
 </section>
@@ -305,7 +329,15 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
   <p class="tag">ข้อ 1 · ต้นทุน</p>
   <h2>เส้นต้นทุนระยะสั้น</h2>
   <div class="g2">
-    <figure class="fig"><img src="img/cost-curves.webp" width="660" height="590" alt="เส้น MC AC AVC AFC: MC ตัด AVC และ AC ที่จุดต่ำสุด AFC ลดลงตลอด"><figcaption>MC ตัด AVC และ AC ที่จุดต่ำสุดของแต่ละเส้น</figcaption></figure>
+    <div class="col">
+      <figure class="fig"><img src="img/cost-curves.webp" width="660" height="590" alt="เส้น MC AC AVC AFC: MC ตัด AVC และ AC ที่จุดต่ำสุด AFC ลดลงตลอด"><figcaption>MC ตัด AVC และ AC ที่จุดต่ำสุดของแต่ละเส้น</figcaption></figure>
+      <ul class="vars solo">
+        <li><b>MC</b><span>ต้นทุนส่วนเพิ่ม</span></li>
+        <li><b>AC</b><span>ต้นทุนรวมเฉลี่ย</span></li>
+        <li><b>AVC</b><span>ต้นทุนผันแปรเฉลี่ย</span></li>
+        <li><b>AFC</b><span>ต้นทุนคงที่เฉลี่ย</span></li>
+      </ul>
+    </div>
     <div class="col">
       <ul class="pts">
         <li><b>MC &lt; AC</b> → AC <b>ลดลง</b></li>
@@ -329,14 +361,21 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
         <li>Optimum output = <b>Q4</b> (จุดต่ำสุดของ LAC)</li>
         <li>Economies of scale = <b>Q1 → Q4</b> (LAC ลดลง)</li>
         <li>Diseconomies of scale = <b>Q4 → Q7</b> (LAC เพิ่มขึ้น)</li>
-        <li><b>LMC</b> = ต้นทุนของการผลิตเพิ่ม 1 หน่วย เมื่อปรับปัจจัยได้ทั้งหมด</li>
       </ul>
       <div class="ex">
         <p class="q">โรงงานน้ำดื่ม ต้นทุนเฉลี่ยต่อขวด: เล็ก 5 · กลาง 3 · ใหญ่ 4 บาท ระยะยาวควรเลือกขนาดไหน</p>
         <p class="a">ขนาดกลาง เพราะ AC ต่ำสุด = Minimum Efficient Scale</p>
       </div>
     </div>
-    <figure class="fig"><img src="img/lac.webp" width="900" height="494" alt="เส้น LAC ห่อหุ้มเส้น SAC1 ถึง SAC7 ต่ำสุดที่ Q4"><figcaption>LAC คือเส้นที่ห่อหุ้ม SAC ของโรงงานทุกขนาด</figcaption></figure>
+    <div class="col">
+      <figure class="fig"><img src="img/lac.webp" width="900" height="494" alt="เส้น LAC ห่อหุ้มเส้น SAC1 ถึง SAC7 ต่ำสุดที่ Q4"><figcaption>LAC คือเส้นที่ห่อหุ้ม SAC ของโรงงานทุกขนาด</figcaption></figure>
+      <ul class="vars solo wide">
+        <li><b>LAC</b><span>ต้นทุนเฉลี่ยระยะยาว (Long-run Average Cost)</span></li>
+        <li><b>SAC₁–SAC₇</b><span>ต้นทุนเฉลี่ยระยะสั้นของโรงงานขนาดที่ 1–7</span></li>
+        <li><b>LMC</b><span>ต้นทุนส่วนเพิ่มระยะยาว: ผลิตเพิ่ม 1 หน่วยเมื่อปรับปัจจัยได้ทั้งหมด</span></li>
+        <li><b>Q₁–Q₇</b><span>ระดับผลผลิต</span></li>
+      </ul>
+    </div>
   </div>
 </section>
 
@@ -354,8 +393,15 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
           <li><b>ผู้ประกอบการ</b> คนจัดการปัจจัยทั้งหมดและรับความเสี่ยง</li>
         </ul>
       </div>
-      <div class="eq">$$TP = f(A, K, L)$$</div>
-      <p class="small">A = ความรู้/เทคโนโลยี · K = ทุน · L = แรงงาน</p>
+      <div class="eq">$$TP = f(A, K, L)$$
+        <ul class="vars">
+          <li><b>TP</b><span>ผลผลิตรวม (Total Product)</span></li>
+          <li><b>f(·)</b><span>ฟังก์ชันการผลิต: ใส่ปัจจัยเข้าไป ได้ผลผลิตออกมา</span></li>
+          <li><b>A</b><span>ความรู้ ทักษะ เทคโนโลยี</span></li>
+          <li><b>K</b><span>ทุน (Capital)</span></li>
+          <li><b>L</b><span>แรงงาน (Labor)</span></li>
+        </ul>
+      </div>
     </div>
     <div class="col">
       <div class="tbl"><table>
@@ -383,8 +429,17 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
   <h2>TP · AP · MP</h2>
   <div class="g2">
     <div class="col">
-      <div class="eq">$$AP = \frac{TP}{L} \qquad MP_L = \frac{\Delta TP}{\Delta L}$$</div>
-      <div class="box"><b>กฎการลดน้อยถอยลงของผลผลิตส่วนเพิ่ม</b><br>เพิ่มปัจจัยแปรผัน (แรงงาน) โดยที่ปัจจัยอื่นคงที่ MP จะ<b>เพิ่มขึ้นในช่วงแรก</b> → <b>ลดลง</b> → สุดท้าย<b>ติดลบ</b></div>
+      <div class="eq">$$AP = \frac{TP}{L} \qquad MP_L = \frac{\Delta TP}{\Delta L}$$
+        <ul class="vars">
+          <li><b>TP</b><span>ผลผลิตรวม</span></li>
+          <li><b>AP</b><span>ผลผลิตเฉลี่ยต่อแรงงาน 1 คน</span></li>
+          <li><b>\(MP_L\)</b><span>ผลผลิตส่วนเพิ่ม: ได้เพิ่มเท่าไรเมื่อเพิ่มแรงงาน 1 คน</span></li>
+          <li><b>L</b><span>จำนวนแรงงาน (ปัจจัยแปรผัน)</span></li>
+          <li><b>Δ</b><span>การเปลี่ยนแปลง</span></li>
+          <li><b>K</b><span>ทุน (ปัจจัยคงที่ = 1 ในตาราง)</span></li>
+        </ul>
+      </div>
+      <div class="box"><b>กฎการลดน้อยถอยลงของผลผลิตส่วนเพิ่ม</b><br>เพิ่มแรงงานโดยที่ปัจจัยอื่นคงที่ MP จะ<b>เพิ่มขึ้นในช่วงแรก</b> → <b>ลดลง</b> → สุดท้าย<b>ติดลบ</b></div>
       <p class="warn">ตาราง MP ที่ L = 4 เขียนไว้ 3 ที่ถูกคือ 52 − 39 = <b>13</b></p>
     </div>
     <div class="tbl"><table>
@@ -397,7 +452,7 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
       <tr><td class="n">6</td><td class="n">66</td><td class="n">11.0</td><td class="n">5</td></tr>
       <tr class="on"><td class="n">7</td><td class="n"><b>66</b></td><td class="n">9.4</td><td class="n"><b>0</b></td></tr>
       <tr><td class="n">8</td><td class="n">64</td><td class="n">8.0</td><td class="n">−2</td><td>III</td></tr>
-    </table><p class="small" style="margin-top:6px">ปัจจัยคงที่ K = 1 ทุกแถว</p></div>
+    </table></div>
   </div>
 </section>
 
@@ -405,13 +460,20 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
   <p class="tag">ข้อ 1 · การผลิต</p>
   <h2>ช่วงการผลิต 3 ช่วง</h2>
   <div class="g2">
-    <figure class="fig"><img src="img/stages.webp" width="880" height="660" alt="กราฟ TP AP MP แบ่งช่วงการผลิต I II III ที่จุด N1 และ N2"><figcaption>N = MP สูงสุด · N1 = AP สูงสุด · N2 = TP สูงสุด (MP = 0)</figcaption></figure>
+    <div class="col">
+      <figure class="fig"><img src="img/stages.webp" width="880" height="660" alt="กราฟ TP AP MP แบ่งช่วงการผลิต I II III ที่จุด N1 และ N2"></figure>
+      <ul class="vars solo">
+        <li><b>N</b><span>จุดที่ MP สูงสุด (จุดเปลี่ยนความโค้งของ TP)</span></li>
+        <li><b>N₁</b><span>จุดที่ AP สูงสุด (MP = AP)</span></li>
+        <li><b>N₂</b><span>จุดที่ TP สูงสุด (MP = 0)</span></li>
+      </ul>
+    </div>
     <div class="col">
       <div class="tbl"><table>
         <tr><th>ช่วง</th><th>ลักษณะ</th></tr>
-        <tr><td><b>I</b><br><span class="small">0 → N1</span></td><td>TP เพิ่มเร็ว · AP เพิ่มขึ้น · MP &gt; AP</td></tr>
-        <tr class="on"><td><b>II</b><br><span class="small">N1 → N2</span></td><td>TP ยังเพิ่มแต่ช้าลง · AP และ MP ลดลง · <b>ช่วงที่ควรผลิต</b></td></tr>
-        <tr><td><b>III</b><br><span class="small">หลัง N2</span></td><td>TP ลดลง · <b>MP ติดลบ</b></td></tr>
+        <tr><td><b>I</b><br><span class="small">0 → N₁</span></td><td>TP เพิ่มเร็ว · AP เพิ่มขึ้น · MP &gt; AP</td></tr>
+        <tr class="on"><td><b>II</b><br><span class="small">N₁ → N₂</span></td><td>TP ยังเพิ่มแต่ช้าลง · AP และ MP ลดลง · <b>ช่วงที่ควรผลิต</b></td></tr>
+        <tr><td><b>III</b><br><span class="small">หลัง N₂</span></td><td>TP ลดลง · <b>MP ติดลบ</b></td></tr>
       </table></div>
       <ul class="pts">
         <li>MP &gt; AP → AP เพิ่ม</li>
@@ -428,7 +490,7 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
   <h2>GDP และรายได้ประชาชาติ</h2>
   <div class="g2">
     <div class="col">
-      <p class="lead"><b class="hl">GDP</b> = มูลค่าสินค้าและบริการ<b>ขั้นสุดท้าย</b> ที่ผลิต<b>ภายในประเทศ</b> ใน<b>ช่วงเวลาหนึ่ง</b></p>
+      <p class="lead"><b class="hl">GDP</b> (ผลิตภัณฑ์มวลรวมภายในประเทศ) = มูลค่าสินค้าและบริการ<b>ขั้นสุดท้าย</b> ที่ผลิต<b>ภายในประเทศ</b> ใน<b>ช่วงเวลาหนึ่ง</b></p>
       <ul class="pts">
         <li><b>ขั้นสุดท้าย</b> = พร้อมบริโภคหรือลงทุน ไม่นับวัตถุดิบหรือสินค้ากึ่งสำเร็จรูป</li>
         <li><b>ภายในประเทศ</b> = ในอาณาเขตประเทศ ไม่สนสัญชาติผู้ผลิต</li>
@@ -444,13 +506,13 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
     <div class="col">
       <h3>จาก GDP ไปถึงรายได้ที่ใช้จ่ายได้</h3>
       <div class="tbl"><table>
-        <tr><td><b>GNP</b></td><td>GDP + รายได้จากต่างประเทศ − รายได้ที่ส่งกลับต่างชาติ</td></tr>
-        <tr><td><b>NNP</b></td><td>GNP − ค่าเสื่อมราคา</td></tr>
-        <tr><td><b>NI</b></td><td>NNP − ภาษีทางอ้อม + เงินอุดหนุน</td></tr>
-        <tr><td><b>PI</b></td><td>NI − เงินที่ไม่ได้จ่าย + เงินที่ได้รับ (เงินโอน)</td></tr>
-        <tr><td><b>DI</b></td><td>PI − ภาษีเงินได้</td></tr>
+        <tr><td><b>GNP</b><span class="vs">ผลิตภัณฑ์ประชาชาติรวม</span></td><td>GDP + รายได้จากต่างประเทศ − รายได้ที่ส่งกลับต่างชาติ</td></tr>
+        <tr><td><b>NNP</b><span class="vs">ผลิตภัณฑ์ประชาชาติสุทธิ</span></td><td>GNP − ค่าเสื่อมราคา</td></tr>
+        <tr><td><b>NI</b><span class="vs">รายได้ประชาชาติ</span></td><td>NNP − ภาษีทางอ้อม + เงินอุดหนุน</td></tr>
+        <tr><td><b>PI</b><span class="vs">รายได้ส่วนบุคคล</span></td><td>NI − เงินที่ไม่ได้จ่ายให้บุคคล + เงินโอนที่ได้รับ</td></tr>
+        <tr><td><b>DI</b><span class="vs">รายได้ที่ใช้จ่ายได้จริง</span></td><td>PI − ภาษีเงินได้</td></tr>
       </table></div>
-      <p class="small">ใช้ NI ดูภาพรวมเศรษฐกิจ · ใช้ GDP ต่อหัวเทียบมาตรฐานการครองชีพ · ใช้กำหนดนโยบาย</p>
+      <p class="small">ค่าเสื่อมราคา = มูลค่าเครื่องจักรและอาคารที่สึกหรอไป · ภาษีทางอ้อม = ภาษีที่บวกในราคาสินค้า เช่น VAT</p>
     </div>
   </div>
 </section>
@@ -466,8 +528,17 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
         <tr><td><b>รายได้</b></td><td>ค่าจ้าง + ดอกเบี้ย + ค่าเช่า + กำไร</td></tr>
         <tr><td><b>รายจ่าย</b></td><td>C + I + G + (X − M)</td></tr>
       </table></div>
-      <div class="eq">$$Y = C + I + G + (X - M)$$</div>
-      <p class="small">C บริโภคเอกชน · I ลงทุนเอกชน · G รายจ่ายรัฐ · X ส่งออก · M นำเข้า · (X − M) ดุลการค้า</p>
+      <div class="eq">$$Y = C + I + G + (X - M)$$
+        <ul class="vars">
+          <li><b>Y</b><span>GDP / รายได้ประชาชาติ</span></li>
+          <li><b>C</b><span>การบริโภคของภาคเอกชน</span></li>
+          <li><b>I</b><span>การลงทุนของภาคเอกชน (เครื่องจักร อาคาร สินค้าคงคลัง)</span></li>
+          <li><b>G</b><span>รายจ่ายของรัฐบาล</span></li>
+          <li><b>X</b><span>มูลค่าส่งออก</span></li>
+          <li><b>M</b><span>มูลค่านำเข้า</span></li>
+          <li><b>X − M</b><span>ดุลการค้า (ส่งออกสุทธิ)</span></li>
+        </ul>
+      </div>
     </div>
     <div class="col">
       <div class="ex">
@@ -486,21 +557,46 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
 
 <section class="slide" id="ae" data-sec="ข้อ 1 · มหภาคและการผลิต (10)">
   <p class="tag">ข้อ 1 · GDP</p>
-  <h2>ส่วนประกอบของรายจ่ายรวม</h2>
-  <div class="g2">
+  <h2>ฟังก์ชันของรายจ่ายแต่ละส่วน</h2>
+  <div class="gr">
     <div class="col">
-      <div class="eq">$$\begin{aligned} C &amp;= C_0 + MPC\cdot Y_d \qquad Y_d = Y - T \\ I &amp;= I_0 - b\,r \\ G &amp;= G_0 \\ X &amp;= X_0 \\ M &amp;= M_0 + m\,Y \end{aligned}$$</div>
+      <div class="eq">$$\begin{aligned} C &amp;= C_0 + MPC\cdot Y_d \\ Y_d &amp;= Y - T \\ I &amp;= I_0 - b\,r \\ G &amp;= G_0 \\ X &amp;= X_0 \\ M &amp;= M_0 + m\,Y \end{aligned}$$</div>
       <ul class="pts">
-        <li><b>MPC</b> = ΔC / ΔY<sub>d</sub> อยู่ระหว่าง 0–1 · <b>MPC + MPS = 1</b></li>
-        <li>G, X ไม่ขึ้นกับรายได้ในประเทศ</li>
-        <li><b>m (MPM)</b> สูง → รายได้รั่วไปกับการนำเข้า → ตัวทวีคูณลดลง</li>
+        <li>MPC อยู่ระหว่าง 0–1 และ <b>MPC + MPS = 1</b></li>
         <li>ดอกเบี้ยขึ้น → I ลด · บาทอ่อน → X เพิ่ม</li>
+        <li>m สูง → รายได้รั่วไปกับการนำเข้า → ตัวทวีคูณลดลง</li>
       </ul>
     </div>
+    <ul class="vars solo wide">
+      <li><b>C</b><span>การบริโภคทั้งหมด</span></li>
+      <li><b>\(C_0\)</b><span>การบริโภคอัตโนมัติ: ต้องบริโภคแม้รายได้ = 0</span></li>
+      <li><b>MPC</b><span>ความโน้มเอียงบริโภคส่วนเพิ่ม: รายได้เพิ่ม 1 บาท บริโภคเพิ่มกี่บาท (= ΔC/ΔY<sub>d</sub>)</span></li>
+      <li><b>MPS</b><span>ความโน้มเอียงออมส่วนเพิ่ม = 1 − MPC</span></li>
+      <li><b>\(Y_d\)</b><span>รายได้ที่ใช้จ่ายได้ (หลังหักภาษี)</span></li>
+      <li><b>Y</b><span>รายได้ประชาชาติรวม</span></li>
+      <li><b>T</b><span>ภาษี</span></li>
+      <li><b>I</b><span>การลงทุน</span></li>
+      <li><b>\(I_0\)</b><span>การลงทุนอัตโนมัติ (ไม่ขึ้นกับดอกเบี้ย)</span></li>
+      <li><b>b</b><span>ความไวของการลงทุนต่อดอกเบี้ย เช่น b = 20 → ดอกเบี้ยขึ้น 1 หน่วย ลงทุนลด 20</span></li>
+      <li><b>r</b><span>อัตราดอกเบี้ย</span></li>
+      <li><b>\(G_0\)</b><span>รายจ่ายรัฐที่กำหนดไว้ล่วงหน้า (ไม่ขึ้นกับรายได้)</span></li>
+      <li><b>\(X_0\)</b><span>มูลค่าส่งออก ขึ้นกับความต้องการของต่างประเทศ</span></li>
+      <li><b>M</b><span>การนำเข้า</span></li>
+      <li><b>\(M_0\)</b><span>การนำเข้าอัตโนมัติ</span></li>
+      <li><b>m</b><span>ความโน้มเอียงนำเข้าส่วนเพิ่ม (MPM): รายได้เพิ่ม 1 บาท นำเข้าเพิ่มกี่บาท (= ΔM/ΔY)</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide" id="ae-examples" data-sec="ข้อ 1 · มหภาคและการผลิต (10)">
+  <p class="tag">ข้อ 1 · GDP</p>
+  <h2>ตัวอย่าง MPC · การลงทุน · MPM</h2>
+  <div class="g2">
     <div class="col">
       <div class="ex">
         <p class="q">รายได้ 10,000 → 12,000 · บริโภค 8,000 → 9,600</p>
-        <p class="a">MPC = 1,600 / 2,000 = 0.8 · MPS = 0.2</p>
+        <p>MPC = ΔC / ΔY<sub>d</sub> = 1,600 / 2,000</p>
+        <p class="a">MPC = 0.8 · MPS = 0.2 (รายได้เพิ่ม 1 บาท ใช้ 80 สตางค์ ออม 20 สตางค์)</p>
       </div>
       <div class="ex">
         <p class="q">I₀ = 500 · b = 20 · r = 5</p>
@@ -508,11 +604,22 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
       </div>
       <div class="ex">
         <p class="q">รายได้ 1,000 → 1,500 · นำเข้า 300 → 400</p>
-        <p class="a">MPM = 100 / 500 = 0.2</p>
+        <p class="a">MPM = ΔM / ΔY = 100 / 500 = 0.2</p>
       </div>
-      <div>
-        <h3>รายได้ดุลยภาพ <span class="extra">เสริม</span></h3>
-        <div class="eq">$$Y = \frac{C_0 - MPC\cdot T + I + G + X - M_0}{1 - MPC + m}$$</div>
+    </div>
+    <div class="col">
+      <h3>รายได้ดุลยภาพ <span class="extra">เสริม</span></h3>
+      <div class="eq">$$Y = \frac{C_0 - MPC\cdot T + I + G + X - M_0}{1 - MPC + m}$$
+        <ul class="vars wide">
+          <li><b>Y</b><span>รายได้ประชาชาติที่รายได้ = รายจ่ายรวม</span></li>
+          <li><b>อื่นๆ</b><span>ความหมายเดียวกับสไลด์ก่อน (C₀ บริโภคอัตโนมัติ · T ภาษี · M₀ นำเข้าอัตโนมัติ · m = MPM)</span></li>
+          <li><b>\(\frac{1}{1-MPC+m}\)</b><span>ตัวทวีคูณของเศรษฐกิจเปิด</span></li>
+        </ul>
+      </div>
+      <div class="ex">
+        <p class="q">C₀ = 200 · MPC = 0.8 · T = 100 · I = 400 · G = 600 · X = 400 · M₀ = 100 · m = 0.2</p>
+        <p>(200 − 80 + 400 + 600 + 400 − 100) / (1 − 0.8 + 0.2) = 1,420 / 0.4</p>
+        <p class="a">Y = 3,550</p>
       </div>
     </div>
   </div>
@@ -523,14 +630,25 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
   <h2>Nominal GDP · Real GDP · Deflator</h2>
   <div class="g2">
     <div class="col">
-      <div class="eq">$$\begin{aligned} \text{Nominal} &amp;= \textstyle\sum Q_{\text{ปีนั้น}} \times P_{\text{ปีนั้น}} \\ \text{Real} &amp;= \textstyle\sum Q_{\text{ปีนั้น}} \times P_{\text{ปีฐาน}} \\ \text{Deflator} &amp;= \frac{\text{Nominal}}{\text{Real}} \times 100 \\ \text{Growth} &amp;= \frac{\text{Real}_t - \text{Real}_{t-1}}{\text{Real}_{t-1}} \times 100 \end{aligned}$$</div>
-      <ul class="pts">
-        <li>Nominal เพิ่มได้จาก<b>ปริมาณ</b>หรือ<b>ราคา</b> → ดูการเติบโตจริงต้องใช้ <b>Real</b></li>
-        <li>ปีฐาน: Real = Nominal · Deflator = 100</li>
-        <li>Deflator = 110 → ราคาสูงกว่าปีฐาน <b>10%</b></li>
-      </ul>
+      <div class="eq">$$\begin{aligned} \text{Nominal GDP} &amp;= \textstyle\sum Q_t \times P_t \\ \text{Real GDP} &amp;= \textstyle\sum Q_t \times P_{\text{ฐาน}} \\ \text{GDP Deflator} &amp;= \frac{\text{Nominal}}{\text{Real}} \times 100 \\ \text{Growth} &amp;= \frac{\text{Real}_t - \text{Real}_{t-1}}{\text{Real}_{t-1}} \times 100 \end{aligned}$$
+        <ul class="vars">
+          <li><b>Nominal</b><span>GDP ราคาปัจจุบัน (ยังรวมผลเงินเฟ้อ)</span></li>
+          <li><b>Real</b><span>GDP ราคาคงที่ (ตัดเงินเฟ้อออกแล้ว)</span></li>
+          <li><b>\(Q_t\)</b><span>ปริมาณสินค้าในปีที่คิด</span></li>
+          <li><b>\(P_t\)</b><span>ราคาสินค้าในปีที่คิด</span></li>
+          <li><b>\(P_{\text{ฐาน}}\)</b><span>ราคาในปีฐาน</span></li>
+          <li><b>Σ</b><span>ผลรวมของสินค้าทุกชนิด</span></li>
+          <li><b>Deflator</b><span>ดัชนีราคาทั้งเศรษฐกิจ เทียบปีฐาน (ปีฐาน = 100)</span></li>
+          <li><b>Growth</b><span>อัตราการเติบโตจริง (%)</span></li>
+          <li><b>t, t−1</b><span>ปีนี้, ปีก่อน</span></li>
+        </ul>
+      </div>
     </div>
     <div class="col">
+      <ul class="pts">
+        <li>Nominal เพิ่มได้จาก<b>ปริมาณ</b>หรือ<b>ราคา</b> → ดูการเติบโตจริงต้องใช้ <b>Real</b></li>
+        <li>Deflator = 110 → ราคาสูงกว่าปีฐาน <b>10%</b></li>
+      </ul>
       <div class="ex">
         <p class="q">ปีฐาน 2022</p>
         <table>
@@ -557,13 +675,19 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
         <tr><td>สินค้านำเข้า</td><td><b>นับ</b></td><td><b>ไม่นับ</b></td></tr>
         <tr><td>ความถี่</td><td>รายเดือน</td><td>ไตรมาส/ปี</td></tr>
       </table></div>
-      <div class="eq">$$\text{Inflation} = \frac{CPI_t - CPI_{t-1}}{CPI_{t-1}} \times 100$$</div>
-      <p class="small">CPI 100 → 103 = ราคาผู้บริโภคเฉลี่ยขึ้น 3%</p>
+      <div class="eq">$$\text{Inflation} = \frac{CPI_t - CPI_{t-1}}{CPI_{t-1}} \times 100$$
+        <ul class="vars wide">
+          <li><b>CPI</b><span>ดัชนีราคาผู้บริโภค (ราคาตะกร้าสินค้าที่ครัวเรือนซื้อ เทียบปีฐาน)</span></li>
+          <li><b>\(CPI_t\)</b><span>CPI ปีนี้</span></li>
+          <li><b>\(CPI_{t-1}\)</b><span>CPI ปีก่อน (หรือปีฐาน)</span></li>
+          <li><b>Inflation</b><span>อัตราเงินเฟ้อ (%)</span></li>
+        </ul>
+      </div>
     </div>
     <div class="ex">
       <p class="q">ประเทศ KOSEN · ปีฐาน 2020 · ปีปัจจุบัน 2024</p>
       <table>
-        <tr><th>สินค้า</th><th class="n">Q 2024</th><th class="n">P 2020</th><th class="n">P 2024</th></tr>
+        <tr><th>สินค้า</th><th class="n">ปริมาณปี 2024</th><th class="n">ราคาปี 2020</th><th class="n">ราคาปี 2024</th></tr>
         <tr><td>ข้าว</td><td class="n">4,000</td><td class="n">10</td><td class="n">12</td></tr>
         <tr><td>เสื้อผ้า</td><td class="n">2,000</td><td class="n">50</td><td class="n">60</td></tr>
       </table>
@@ -601,22 +725,42 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
   <div class="tbl"><table class="cards">
     <tr><th>เป้าหมาย</th><th>สูตร</th><th>ตัวอย่าง</th></tr>
     <tr><td><b>1. เติบโตต่อเนื่อง</b></td><td>\(\dfrac{GDP_t - GDP_{t-1}}{GDP_{t-1}}\times 100\)</td><td>15.5 → 16.2 ล้านล้าน = <b>4.52%</b> → ช่วงขยายตัว</td></tr>
-    <tr><td><b>2. จ้างงานเต็มที่</b></td><td>\(\dfrac{\text{ผู้ว่างงาน}}{\text{กำลังแรงงาน}}\times 100\)</td><td>400,000 / 39,000,000 = <b>1.03%</b></td></tr>
+    <tr><td><b>2. จ้างงานเต็มที่</b></td><td>\(\dfrac{\text{ผู้ว่างงาน}}{\text{กำลังแรงงาน}}\times 100\)</td><td>400,000 / 39,000,000 = <b>1.03%</b><span class="vs">เต็มที่ = ว่างงานที่อัตราธรรมชาติ ไม่ใช่ 0%</span></td></tr>
     <tr><td><b>3. ราคามีเสถียรภาพ</b></td><td>\(\dfrac{CPI_t - CPI_{t-1}}{CPI_{t-1}}\times 100\)</td><td>102 → 105 = <b>2.94%</b> (อยู่ในกรอบ ธปท. 1–3%)</td></tr>
-    <tr><td><b>4. ดุลการชำระเงินสมดุล</b></td><td>CA = X − M + รายได้สุทธิจากต่างประเทศ</td><td>8.5 − 8.0 + (−0.3) = <b>+0.2</b> → เกินดุล</td></tr>
+    <tr><td><b>4. ดุลการชำระเงินสมดุล</b></td><td>\(CA = X - M + NI_{\text{abroad}}\)</td><td>8.5 − 8.0 + (−0.3) = <b>+0.2</b> → เกินดุล</td></tr>
     <tr><td><b>5. กระจายรายได้เป็นธรรม</b></td><td>\(G = \dfrac{A}{A+B}\)</td><td>Gini 0.36 · 0 = เท่าเทียม · 1 = เหลื่อมล้ำสุด</td></tr>
   </table></div>
-  <div class="g2" style="margin-top:20px">
-    <p class="warn">ตัวอย่างดุลบัญชีเดินสะพัดในสไลด์เขียน 12.0 − 11.5 แต่โจทย์ให้ 8.5 และ 8.0 (คำตอบยังได้ +0.2)</p>
-    <p><b>จ้างงานเต็มที่</b> ไม่ใช่ว่างงาน 0% แต่หมายถึงว่างงานที่<b>อัตราธรรมชาติ</b> (ยังมีว่างงานเชิงโครงสร้างและช่วงเปลี่ยนงาน)</p>
+  <div class="g2" style="margin-top:18px">
+    <ul class="vars solo wide">
+      <li><b>t, t−1</b><span>ปีนี้, ปีก่อน</span></li>
+      <li><b>ผู้ว่างงาน</b><span>คนที่อยากทำงานแต่ไม่มีงาน</span></li>
+      <li><b>กำลังแรงงาน</b><span>คนมีงานทำ + ผู้ว่างงาน</span></li>
+      <li><b>CA</b><span>ดุลบัญชีเดินสะพัด (&gt; 0 เกินดุล · &lt; 0 ขาดดุล)</span></li>
+    </ul>
+    <ul class="vars solo wide">
+      <li><b>X, M</b><span>ส่งออก, นำเข้า</span></li>
+      <li><b>\(NI_{\text{abroad}}\)</b><span>รายได้สุทธิจากต่างประเทศ (ดอกเบี้ย ปันผล ค่าแรง กำไรที่ได้รับ − ที่จ่ายออก)</span></li>
+      <li><b>G</b><span>ค่าสัมประสิทธิ์ Gini</span></li>
+      <li><b>A, B</b><span>พื้นที่บนกราฟลอเรนซ์ (ดูสไลด์ถัดไป)</span></li>
+    </ul>
   </div>
+  <p class="warn" style="margin-top:14px">ตัวอย่างดุลบัญชีเดินสะพัดในสไลด์เขียน 12.0 − 11.5 แต่โจทย์ให้ 8.5 และ 8.0 (คำตอบยังได้ +0.2)</p>
 </section>
 
 <section class="slide" id="gini" data-sec="ข้อ 1 · มหภาคและการผลิต (10)">
   <p class="tag">ข้อ 1 · การเติบโต</p>
   <h2>Gini และผลเมื่อเป้าหมายล้มเหลว</h2>
   <div class="g2">
-    <figure class="fig"><img src="img/gini.webp" width="820" height="800" alt="เส้นลอเรนซ์เทียบกับเส้นเสมอภาค พื้นที่ A และ B"><figcaption>A = พื้นที่ระหว่างเส้นเสมอภาคกับเส้นลอเรนซ์ · B = พื้นที่ใต้เส้นลอเรนซ์ · A ยิ่งกว้าง ยิ่งเหลื่อมล้ำ</figcaption></figure>
+    <div class="col">
+      <figure class="fig"><img src="img/gini.webp" width="820" height="800" alt="เส้นลอเรนซ์เทียบกับเส้นเสมอภาค พื้นที่ A และ B" style="max-height:min(36vh,330px)"></figure>
+      <div class="eq">$$G = \frac{A}{A+B}$$
+        <ul class="vars wide">
+          <li><b>G</b><span>ค่า Gini: 0 = เท่าเทียมสมบูรณ์ · 1 = เหลื่อมล้ำสูงสุด</span></li>
+          <li><b>A</b><span>พื้นที่ระหว่างเส้นเสมอภาค (45°) กับเส้นลอเรนซ์ · ยิ่งกว้างยิ่งเหลื่อมล้ำ</span></li>
+          <li><b>B</b><span>พื้นที่ใต้เส้นลอเรนซ์</span></li>
+        </ul>
+      </div>
+    </div>
     <div class="tbl"><table>
       <tr><th>ถ้าล้มเหลว</th><th>ผลกระทบ</th></tr>
       <tr><td>โตช้า</td><td>รายได้ภาษีลด · การลงทุนไม่ขยาย</td></tr>
@@ -639,17 +783,22 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
         <tr><td><b>ทุน</b></td><td>\(Y/K\)</td><td>การลงทุน เทคโนโลยีที่ใช้กับทุน</td></tr>
         <tr class="on"><td><b>รวม (TFP)</b></td><td>\(Y = A\cdot F(K,L)\)</td><td>นวัตกรรม การจัดการ สถาบัน</td></tr>
       </table></div>
+      <ul class="vars solo">
+        <li><b>Y</b><span>ผลผลิตรวม (GDP)</span></li>
+        <li><b>L</b><span>แรงงานที่ใช้</span></li>
+        <li><b>K</b><span>ทุนที่ใช้</span></li>
+        <li><b>A</b><span>TFP ผลิตภาพรวม</span></li>
+        <li><b>F(K, L)</b><span>ฟังก์ชันการผลิต</span></li>
+      </ul>
       <ul class="pts">
-        <li><b>TFP</b> = ผลผลิตส่วนที่ K และ L อธิบายไม่ได้</li>
-        <li>บอกได้ว่าทำไมประเทศที่ K และ L ใกล้กันจึงมี GDP ต่างกัน</li>
-        <li>เป็นตัวขับเคลื่อนการเติบโตระยะยาวใน <b>Solow model</b></li>
-        <li>“ผลิตภาพทางเศรษฐกิจ” ในระดับมหภาค มักหมายถึง <b>TFP</b></li>
+        <li><b>TFP</b> = ผลผลิตส่วนที่ K และ L อธิบายไม่ได้ บอกว่าทำไมประเทศที่ K, L ใกล้กันจึงมี GDP ต่างกัน</li>
+        <li>เป็นตัวขับเคลื่อนการเติบโตระยะยาวใน <b>Solow model</b> และคือ “ผลิตภาพทางเศรษฐกิจ” ระดับมหภาค</li>
       </ul>
     </div>
     <div class="col">
       <div class="ex">
         <p class="q">GDP 100 ล้านบาท · แรงงาน 50 คน</p>
-        <p class="a">ผลิตภาพแรงงาน = 2 ล้านบาท/คน</p>
+        <p class="a">ผลิตภาพแรงงาน = 100 / 50 = 2 ล้านบาท/คน</p>
       </div>
       <div class="ex">
         <p class="q">เครื่องจักร 10 เครื่องผลิตได้ 1,000 หน่วย → เพิ่มเป็น 20 เครื่องผลิตได้ 1,600 หน่วย</p>
@@ -668,7 +817,7 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
       <p class="lead">กฎ กติกา และแรงจูงใจ ที่กำหนดพฤติกรรมของคน องค์กร และรัฐ</p>
       <ul class="pts">
         <li><b>North (1990)</b> สถาบัน = โครงสร้างที่มนุษย์สร้างขึ้นเพื่อกำหนดพฤติกรรม</li>
-        <li><b>Acemoglu &amp; Robinson (2012)</b> สถาบันแบบ <b>Inclusive</b> ส่งเสริมการเติบโต · แบบ <b>Extractive</b> ทำให้ถดถอย</li>
+        <li><b>Acemoglu &amp; Robinson (2012)</b> สถาบันแบบ <b>Inclusive</b> (เปิดให้ทุกคนมีส่วนร่วม) ส่งเสริมการเติบโต · แบบ <b>Extractive</b> (เอื้อคนกลุ่มเดียว) ทำให้ถดถอย</li>
       </ul>
       <h3>องค์ประกอบ 4 ข้อ</h3>
       <ol class="steps">
@@ -686,6 +835,11 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
         <tr><td>อันดับ EoDB</td><td>49 → 21</td><td>91 → 69</td></tr>
         <tr><td>FDI ต่อปี</td><td>$4–6 พันล้าน (ติดการเมือง)</td><td>$10–15 พันล้าน (ปฏิรูป + FTA)</td></tr>
       </table></div>
+      <ul class="vars solo wide">
+        <li><b>EoDB</b><span>ดัชนีความสะดวกในการทำธุรกิจ (World Bank) อันดับ 1 = ดีที่สุด จาก 190</span></li>
+        <li><b>FDI</b><span>เงินลงทุนโดยตรงจากต่างประเทศ</span></li>
+        <li><b>FTA</b><span>ข้อตกลงการค้าเสรี</span></li>
+      </ul>
     </div>
   </div>
 </section>
@@ -700,7 +854,7 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
     <tr><td><b>3. เทคโนโลยี/R&amp;D</b></td><td>ต้นทุนลด · ผลผลิตต่อหน่วยทุนและแรงงานเพิ่ม</td><td>Made in China 2025</td></tr>
     <tr><td><b>4. ปฏิรูปภาษี + ส่งเสริมลงทุน</b></td><td>ลดภาษีนิติบุคคล → ลงทุนและจ้างงานเพิ่ม</td><td>สหราชอาณาจักร 2015</td></tr>
     <tr><td><b>5. เสถียรภาพเศรษฐกิจ</b></td><td>คุมเงินเฟ้อและค่าเงิน → ความเชื่อมั่นเพิ่ม</td><td>Fed ลดดอกเบี้ย + ซื้อสินทรัพย์ (2008, 2020)</td></tr>
-    <tr><td><b>6. การค้าระหว่างประเทศ</b></td><td>Comparative Advantage (Ricardo) · ตลาดใหญ่ขึ้น → Economies of scale · FDI</td><td>NAFTA → USMCA</td></tr>
+    <tr><td><b>6. การค้าระหว่างประเทศ</b></td><td>Comparative Advantage (Ricardo: ผลิตสิ่งที่ตัวเองต้นทุนต่ำกว่าแล้วแลกกัน) · ตลาดใหญ่ขึ้น → Economies of scale · FDI</td><td>NAFTA → USMCA</td></tr>
     <tr><td><b>7. ลดภาษีและต้นทุนธุรกิจ</b></td><td>ต้นทุนคงที่และต้นทุนธุรกรรมลด → ออมและลงทุนเพิ่ม (Solow)</td><td>Energiewende เยอรมนี</td></tr>
   </table></div>
 </section>
@@ -711,15 +865,28 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
   <div class="g2">
     <div class="col">
       <p class="lead">การออม = <b class="hl">เลื่อนการบริโภคไปอนาคต</b> และเป็นแหล่งทุนของการลงทุน</p>
-      <h3>เศรษฐกิจปิด</h3>
-      <div class="eq">$$\begin{aligned} Y &amp;= C + I + G \;\Rightarrow\; S = I \\ S &amp;= \underbrace{(Y - T - C)}_{\text{เอกชน}} + \underbrace{(T - G)}_{\text{รัฐ}} \end{aligned}$$</div>
-      <p class="small">T − G &gt; 0 = งบประมาณเกินดุล · T − G &lt; 0 = ขาดดุล</p>
-      <h3>เศรษฐกิจเปิด</h3>
-      <div class="eq">$$S = I + (X - M)$$</div>
-      <p class="small">เกินดุลการค้า = การออมมากกว่าการลงทุนในประเทศ</p>
+      <div class="eq">$$\begin{aligned} \text{ปิด:}\quad Y &amp;= C + I + G \;\Rightarrow\; S = I \\ S &amp;= (Y - T - C) + (T - G) \\ \text{เปิด:}\quad S &amp;= I + (X - M) \end{aligned}$$
+        <ul class="vars">
+          <li><b>S</b><span>การออมของประเทศ</span></li>
+          <li><b>Y</b><span>รายได้ประชาชาติ</span></li>
+          <li><b>C</b><span>การบริโภค</span></li>
+          <li><b>I</b><span>การลงทุน</span></li>
+          <li><b>G</b><span>รายจ่ายรัฐบาล</span></li>
+          <li><b>T</b><span>ภาษีที่รัฐเก็บได้</span></li>
+          <li><b>Y − T − C</b><span>เงินออมภาคเอกชน</span></li>
+          <li><b>T − G</b><span>เงินออมภาครัฐ (&gt; 0 งบเกินดุล · &lt; 0 ขาดดุล)</span></li>
+          <li><b>X − M</b><span>ดุลการค้า (ส่งออก − นำเข้า)</span></li>
+        </ul>
+      </div>
+      <p class="small">ปิด = ไม่ค้าขายกับต่างประเทศ · เปิด = มีส่งออกนำเข้า · เกินดุลการค้า = ออมมากกว่าลงทุนในประเทศ</p>
     </div>
     <div class="col">
       <figure class="fig"><img src="img/keynes-saving.webp" width="760" height="900" alt="Keynesian: เส้น C = A + cY ตัด AD = Y และเส้นการออม S = −A + (1−c)Y"><figcaption>รายได้ต่ำกว่าจุดตัด = ออมติดลบ (Dissaving) · สูงกว่า = ออมได้</figcaption></figure>
+      <ul class="vars solo wide">
+        <li><b>AD</b><span>อุปสงค์รวม (การใช้จ่ายรวม)</span></li>
+        <li><b>A</b><span>การบริโภคอิสระ (บริโภคตอนรายได้ = 0)</span></li>
+        <li><b>c</b><span>MPC · 1 − c = MPS</span></li>
+      </ul>
     </div>
   </div>
 </section>
@@ -727,16 +894,20 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
 <section class="slide" id="saving-theory" data-sec="ข้อ 1 · มหภาคและการผลิต (10)">
   <p class="tag">ข้อ 1 · ออมและลงทุน</p>
   <h2>ทฤษฎีการออม</h2>
-  <div class="g2">
+  <div class="gl">
     <div class="tbl"><table>
-      <tr><th>ทฤษฎี</th><th>แนวคิด</th></tr>
-      <tr><td><b>Keynesian</b></td><td>ออมตาม<b>รายได้ปัจจุบัน</b><br>\(C = a + bY\) · \(S = -a + (1-b)Y\)<br><span class="small">b = MPC · 1 − b = MPS</span></td></tr>
-      <tr><td><b>Life-Cycle</b><br><span class="small">Modigliani, Brumberg</span></td><td>วัยเรียนกู้ → วัยทำงานออม → เกษียณใช้เงินออม<br>\(C = \frac{1}{T}\big(W + \sum Y_t\big)\)</td></tr>
-      <tr><td><b>Permanent Income</b><br><span class="small">Friedman</span></td><td>บริโภคตาม<b>รายได้ถาวร</b> · รายได้ชั่วคราว (โบนัส) มักถูกเก็บออม → บริโภคราบเรียบ<br>\(C_t = k\cdot Y_t^{p}\)</td></tr>
+      <tr><th>ทฤษฎี</th><th>แนวคิดและสมการ</th></tr>
+      <tr><td><b>Keynesian</b></td><td>ออมตาม<b>รายได้ปัจจุบัน</b><br>\(C = a + bY\) · \(S = -a + (1-b)Y\)
+        <span class="vs">C = การบริโภค · S = การออม · Y = รายได้ปัจจุบัน · a = บริโภคอิสระ (ตอนรายได้ = 0) · b = MPC · 1 − b = MPS</span></td></tr>
+      <tr><td><b>Life-Cycle</b><br><span class="small">Modigliani, Brumberg</span></td><td>วัยเรียนกู้ → วัยทำงานออม → เกษียณใช้เงินออม<br>\(C = \frac{1}{T}\big(W + \sum_{t=1}^{T} Y_t\big)\)
+        <span class="vs">C = การบริโภคเฉลี่ยต่อปี · T = จำนวนปีที่คาดว่าจะมีชีวิต (<b>ไม่ใช่ภาษี</b>) · W = ความมั่งคั่งเริ่มต้น · Y<sub>t</sub> = รายได้ปีที่ t</span></td></tr>
+      <tr><td><b>Permanent Income</b><br><span class="small">Friedman</span></td><td>บริโภคตาม<b>รายได้ถาวร</b> · รายได้ชั่วคราว (โบนัส) มักถูกเก็บออม → บริโภคราบเรียบ<br>\(C_t = k\cdot Y_t^{p}\)
+        <span class="vs">C<sub>t</sub> = การบริโภคช่วงเวลา t · Y<sub>t</sub><sup>p</sup> = รายได้ถาวร · k = สัดส่วนของรายได้ถาวรที่นำไปบริโภค</span></td></tr>
     </table></div>
     <div class="col">
       <div class="box"><b>Low Saving Trap</b><br>รายได้ต่ำ → ออมต่ำ → ลงทุนต่ำ → โตต่ำ → รายได้ต่ำ วนไปเรื่อยๆ (กับดักความยากจน)</div>
       <div class="box"><b>Paradox of Thrift</b><br>ทุกคนออมพร้อมกัน → บริโภคลด → AD ลด → GDP ลด → การออมรวม<b>อาจไม่เพิ่ม</b></div>
+      <p class="warn">สไลด์ Friedman สลับความหมาย k กับ Y<sup>p</sup> ที่ถูกคือ Y<sup>p</sup> = รายได้ถาวร และ k = สัดส่วนที่บริโภค</p>
     </div>
   </div>
 </section>
@@ -746,14 +917,21 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
   <h2>ทฤษฎีการลงทุน</h2>
   <div class="gl">
     <div class="col">
-      <div class="eq">$$I = \Delta K \qquad I = I_0 - b\,r$$</div>
-      <div class="tbl"><table>
-        <tr><th>ทฤษฎี</th><th>สูตร</th><th>ตัดสินใจ</th></tr>
-        <tr><td><b>MEC</b><br><span class="small">Keynes</span></td><td>\(MEC = \dfrac{R}{C} - 1\)</td><td>MEC ≥ r → ลงทุน</td></tr>
-        <tr><td><b>Accelerator</b></td><td>\(I_t = v\,(Y_t - Y_{t-1})\)</td><td>Y คงที่ → I = 0 · Y ลด → I ติดลบ</td></tr>
-        <tr><td><b>Tobin's q</b></td><td>\(q = \dfrac{\text{มูลค่าตลาด}}{\text{ต้นทุนทดแทนทุน}}\)</td><td>q &gt; 1 → ลงทุน</td></tr>
+      <div class="eq">$$I = \Delta K \qquad I = I_0 - b\,r$$
+        <ul class="vars">
+          <li><b>I</b><span>การลงทุน</span></li>
+          <li><b>ΔK</b><span>ทุน (เครื่องจักร อาคาร) ที่เพิ่มขึ้น</span></li>
+          <li><b>\(I_0\)</b><span>การลงทุนอิสระ (ไม่ขึ้นกับดอกเบี้ย)</span></li>
+          <li><b>b</b><span>ความไวของการลงทุนต่อดอกเบี้ย</span></li>
+          <li><b>r</b><span>อัตราดอกเบี้ย</span></li>
+        </ul>
+      </div>
+      <div class="tbl"><table class="cards">
+        <tr><th>ทฤษฎี</th><th>สูตรและตัวแปร</th><th>ตัดสินใจ</th></tr>
+        <tr><td><b>MEC</b><br><span class="small">Keynes</span></td><td>\(MEC = \dfrac{R}{C} - 1\)<span class="vs">MEC = ผลตอบแทนที่คาดหวังจากทุนใหม่ · R = รายรับที่คาดว่าจะได้ · C = ราคาของสินทรัพย์ทุน (<b>ไม่ใช่การบริโภค</b>)</span></td><td>MEC ≥ r → ลงทุน</td></tr>
+        <tr><td><b>Accelerator</b></td><td>\(I_t = v\,(Y_t - Y_{t-1})\)<span class="vs">I<sub>t</sub> = ลงทุนปีนี้ · v = ค่าตัวเร่ง (accelerator) · Y<sub>t</sub> = ผลผลิตปีนี้ · Y<sub>t−1</sub> = ปีก่อน</span></td><td>Y คงที่ → I = 0 · Y ลด → I ติดลบ</td></tr>
+        <tr><td><b>Tobin's q</b></td><td>\(q = \dfrac{\text{มูลค่าตลาดของบริษัท}}{\text{ต้นทุนสร้างทุนใหม่ทดแทน}}\)</td><td>q &gt; 1 → ลงทุน</td></tr>
       </table></div>
-      <p class="small">จุดอ่อน: MEC วัดจริงยาก · Accelerator ไม่รวมดอกเบี้ยและความเสี่ยง · q วัดยากและบิดเบือนเมื่อตลาดเป็นฟองสบู่</p>
     </div>
     <div class="col">
       <div class="ex">
@@ -765,6 +943,7 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
         <p class="q">v = 3 · GDP ปีก่อน 10 · ปีนี้ 10.5 ล้านล้าน</p>
         <p class="a">I = 3(10.5 − 10) = 1.5 ล้านล้านบาท</p>
       </div>
+      <p class="small">จุดอ่อน: MEC วัดจริงยาก · Accelerator ไม่รวมดอกเบี้ยและความเสี่ยง · q วัดยากและบิดเบือนเมื่อตลาดเป็นฟองสบู่</p>
     </div>
   </div>
 </section>
@@ -775,16 +954,23 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
   <div class="g2">
     <div class="col">
       <h3>1. Multiplier Effect</h3>
-      <div class="eq">$$\Delta Y = \frac{1}{1 - MPC}\,\Delta I$$</div>
+      <div class="eq">$$\Delta Y = \frac{1}{1 - MPC}\,\Delta I$$
+        <ul class="vars wide">
+          <li><b>ΔY</b><span>รายได้ประชาชาติที่เพิ่มขึ้น</span></li>
+          <li><b>ΔI</b><span>การลงทุนที่เพิ่มขึ้น</span></li>
+          <li><b>MPC</b><span>ความโน้มเอียงบริโภคส่วนเพิ่ม</span></li>
+          <li><b>\(\frac{1}{1-MPC}\)</b><span>ตัวทวีคูณ: ลงทุน 1 บาท รายได้เพิ่มกี่บาท</span></li>
+        </ul>
+      </div>
       <p>เงินหมุนหลายรอบ: จ้างคนงาน → คนงานนำเงินไปใช้ → ร้านค้าขายได้ → ผลิตและจ้างงานเพิ่ม</p>
       <div class="ex">
         <p class="q">MPC = 0.8 · ลงทุนเพิ่ม 100</p>
-        <p class="a">ตัวคูณ = 5 → Y เพิ่ม 500</p>
+        <p class="a">ตัวคูณ = 1/(1 − 0.8) = 5 → Y เพิ่ม 500</p>
       </div>
     </div>
     <div class="col">
       <div class="box"><b>2. Crowding-in</b> (ผลบวก)<br>รัฐลงทุนในโครงการเพิ่มผลิตภาพ → เอกชนลงทุนตาม<br><span class="small">EEC: รัฐสร้างรถไฟเชื่อม 3 สนามบิน ท่าเรือแหลมฉบัง → เอกชนสร้างนิคม โรงงาน โรงแรม</span></div>
-      <div class="box" style="background:var(--hot-soft)"><b style="color:var(--hot)">3. Crowding-out</b> (ผลลบ)<br>รัฐกู้มาก → ดอกเบี้ยพันธบัตรขึ้น → เอกชนกู้ยาก → การลงทุนเอกชนลด<br><span class="small">รุนแรงเมื่อ<b>ใกล้ full employment</b> และเงินออมจำกัด · ถ้ามีทรัพยากรว่างงานมากจะเกิดน้อย · ตัวอย่าง: กู้หลังวิกฤต 2540, กู้สู้โควิด 2020</span></div>
+      <div class="box" style="background:var(--hot-soft)"><b style="color:var(--hot)">3. Crowding-out</b> (ผลลบ)<br>รัฐกู้มาก → ดอกเบี้ยพันธบัตรขึ้น → เอกชนกู้ยาก → การลงทุนเอกชนลด<br><span class="small">รุนแรงเมื่อ<b>ใกล้ full employment</b> (ใช้แรงงานเต็มที่แล้ว) และเงินออมจำกัด · ถ้ามีทรัพยากรว่างงานมากจะเกิดน้อย · ตัวอย่าง: กู้หลังวิกฤต 2540, กู้สู้โควิด 2020</span></div>
     </div>
   </div>
 </section>
@@ -835,6 +1021,11 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
         <li>สินเชื่อ &gt; 120% ของ GDP</li>
         <li>ตลาดหุ้น ~100% · ตลาดพันธบัตร ~80% ของ GDP</li>
       </ul>
+      <ul class="vars solo wide">
+        <li><b>NPL</b><span>หนี้เสีย (สินเชื่อที่ผิดนัดชำระ)</span></li>
+        <li><b>บสย.</b><span>บรรษัทประกันสินเชื่ออุตสาหกรรมขนาดย่อม</span></li>
+        <li><b>FIDF fee</b><span>เงินนำส่งกองทุนเพื่อการฟื้นฟูฯ ที่ธนาคารจ่าย</span></li>
+      </ul>
     </div>
     <div class="col">
       <h3>มาตรการผ่านสถาบันการเงิน</h3>
@@ -851,19 +1042,45 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
 </section>
 
 <!-- ================= ข้อ 2 ================= -->
-<section class="slide" id="lagrange" data-sec="ข้อ 2 · Lagrange (4)">
+<section class="slide" id="lagrange-profit" data-sec="ข้อ 2 · Lagrange (4)">
   <p class="tag">ข้อ 2 · 4 คะแนน</p>
-  <h2>Lagrange: หาค่าเหมาะสุดภายใต้ข้อจำกัด</h2>
+  <h2>Lagrange 1: กำไรสูงสุดภายใต้ข้อจำกัด</h2>
   <div class="g2">
-    <div class="col">
-      <h3>1) Profit Maximization</h3>
-      <div class="eq">$$\begin{aligned} &amp;\max_{x,y}\ \pi(x,y) \quad \text{s.t.}\ g(x,y) = \bar R \\ &amp;\mathcal{L} = \pi(x,y) + \lambda\,[\bar R - g(x,y)] \\ &amp;\frac{\partial\mathcal{L}}{\partial x} = \frac{\partial\pi}{\partial x} - \lambda\frac{\partial g}{\partial x} = 0 \\ &amp;\frac{\partial\mathcal{L}}{\partial y} = \frac{\partial\pi}{\partial y} - \lambda\frac{\partial g}{\partial y} = 0 \\ &amp;\frac{\partial\mathcal{L}}{\partial\lambda} = \bar R - g(x,y) = 0 \end{aligned}$$</div>
-    </div>
-    <div class="col">
-      <h3>2) Cost Minimization</h3>
-      <div class="eq">$$\begin{aligned} &amp;\min_{L,K}\ C = wL + rK \quad \text{s.t.}\ f(L,K) = \bar Q \\ &amp;\mathcal{L} = wL + rK + \lambda\,[\bar Q - f(L,K)] \\ &amp;\frac{\partial\mathcal{L}}{\partial L} = w - \lambda MP_L = 0 \\ &amp;\frac{\partial\mathcal{L}}{\partial K} = r - \lambda MP_K = 0 \\ &amp;\frac{\partial\mathcal{L}}{\partial\lambda} = \bar Q - f(L,K) = 0 \end{aligned}$$
+    <div class="eq">$$\begin{aligned} &amp;\max_{x,y}\ \pi(x,y) \quad \text{s.t.}\ g(x,y) = \bar R \\[4pt] &amp;\mathcal{L} = \pi(x,y) + \lambda\,[\bar R - g(x,y)] \\[4pt] &amp;\frac{\partial\mathcal{L}}{\partial x} = \frac{\partial\pi}{\partial x} - \lambda\frac{\partial g}{\partial x} = 0 \\ &amp;\frac{\partial\mathcal{L}}{\partial y} = \frac{\partial\pi}{\partial y} - \lambda\frac{\partial g}{\partial y} = 0 \\ &amp;\frac{\partial\mathcal{L}}{\partial\lambda} = \bar R - g(x,y) = 0 \end{aligned}$$</div>
+    <ul class="vars solo wide">
+      <li><b>π(x, y)</b><span>ฟังก์ชันกำไร (สิ่งที่อยากให้มากที่สุด)</span></li>
+      <li><b>x, y</b><span>ตัวแปรที่เลือกได้ เช่น ปริมาณสินค้า 2 ชนิดที่จะผลิต</span></li>
+      <li><b>g(x, y)</b><span>ฟังก์ชันข้อจำกัด เช่น ทรัพยากรหรือกำลังผลิตที่ใช้</span></li>
+      <li><b>\(\bar R\)</b><span>ค่าคงที่ของข้อจำกัด เช่น ทรัพยากร/กำลังผลิตที่มีทั้งหมด</span></li>
+      <li><b>s.t.</b><span>subject to = “ภายใต้เงื่อนไข”</span></li>
+      <li><b>ℒ</b><span>ฟังก์ชันลากรานจ์ (เป้าหมาย + λ × ข้อจำกัด)</span></li>
+      <li><b>λ</b><span>ตัวคูณลากรานจ์: กำไรที่เพิ่มขึ้นถ้าข้อจำกัด \(\bar R\) เพิ่ม 1 หน่วย (shadow price)</span></li>
+      <li><b>∂ℒ/∂x</b><span>อนุพันธ์ย่อย: ดิฟ ℒ เทียบ x โดยถือตัวอื่นเป็นค่าคงที่</span></li>
+      <li><b>x*, y*, λ*</b><span>คำตอบที่ได้จากการแก้ระบบสมการ FOC</span></li>
+      <li><b>FOC</b><span>First-Order Conditions: เงื่อนไขอนุพันธ์ = 0</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide" id="lagrange-cost" data-sec="ข้อ 2 · Lagrange (4)">
+  <p class="tag">ข้อ 2 · 4 คะแนน</p>
+  <h2>Lagrange 2: ต้นทุนต่ำสุดภายใต้ข้อจำกัด</h2>
+  <div class="g2">
+    <div class="eq">$$\begin{aligned} &amp;\min_{L,K}\ C = wL + rK \quad \text{s.t.}\ f(L,K) = \bar Q \\[4pt] &amp;\mathcal{L} = wL + rK + \lambda\,[\bar Q - f(L,K)] \\[4pt] &amp;\frac{\partial\mathcal{L}}{\partial L} = w - \lambda MP_L = 0 \\ &amp;\frac{\partial\mathcal{L}}{\partial K} = r - \lambda MP_K = 0 \\ &amp;\frac{\partial\mathcal{L}}{\partial\lambda} = \bar Q - f(L,K) = 0 \end{aligned}$$
       $$\boxed{\dfrac{MP_L}{MP_K} = \dfrac{w}{r}}$$</div>
-    </div>
+    <ul class="vars solo wide">
+      <li><b>C</b><span>ต้นทุนรวม (สิ่งที่อยากให้น้อยที่สุด)</span></li>
+      <li><b>L</b><span>ปริมาณแรงงานที่ใช้</span></li>
+      <li><b>K</b><span>ปริมาณทุนที่ใช้</span></li>
+      <li><b>w</b><span>ค่าจ้างแรงงานต่อหน่วย (wage)</span></li>
+      <li><b>r</b><span>ค่าเช่าทุนต่อหน่วย (rent) · ในบทนี้ r ไม่ใช่ดอกเบี้ย</span></li>
+      <li><b>f(L, K)</b><span>ฟังก์ชันการผลิต</span></li>
+      <li><b>\(\bar Q\)</b><span>ปริมาณผลผลิตที่ต้องผลิตให้ได้</span></li>
+      <li><b>\(MP_L\)</b><span>ผลผลิตส่วนเพิ่มของแรงงาน = ∂f/∂L</span></li>
+      <li><b>\(MP_K\)</b><span>ผลผลิตส่วนเพิ่มของทุน = ∂f/∂K</span></li>
+      <li><b>λ</b><span>ต้นทุนที่เพิ่มขึ้นถ้าต้องผลิตเพิ่ม 1 หน่วย (= MC)</span></li>
+      <li><b>ผลลัพธ์</b><span>ใช้ปัจจัยจน MP<sub>L</sub>/MP<sub>K</sub> เท่ากับอัตราส่วนราคา w/r</span></li>
+    </ul>
   </div>
 </section>
 
@@ -881,17 +1098,17 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
       </ol>
     </div>
     <div class="col">
-      <div class="box"><b>λ* หมายถึงอะไร</b>
-        <ul class="pts" style="margin-top:6px">
-          <li>Cost min: <b>λ* = MC</b> ต้นทุนที่เพิ่มถ้าผลิตเพิ่ม 1 หน่วย</li>
-          <li>Profit max: <b>λ*</b> กำไรที่เพิ่มถ้าข้อจำกัดคลายออก 1 หน่วย (shadow price)</li>
+      <h3>ทริกดิฟ Cobb-Douglas</h3>
+      <div class="eq">$$Q = A L^{a} K^{b} \;\Rightarrow\; MP_L = \frac{aQ}{L},\ \ MP_K = \frac{bQ}{K}$$
+        $$\frac{MP_L}{MP_K} = \frac{a}{b}\cdot\frac{K}{L}$$
+        <ul class="vars">
+          <li><b>Q</b><span>ผลผลิต</span></li>
+          <li><b>A</b><span>ค่าคงที่ (เทคโนโลยี)</span></li>
+          <li><b>a</b><span>เลขชี้กำลังของ L</span></li>
+          <li><b>b</b><span>เลขชี้กำลังของ K</span></li>
         </ul>
       </div>
-      <div>
-        <h3>ทริกดิฟ Cobb-Douglas</h3>
-        <div class="eq">$$Q = A L^{a} K^{b} \;\Rightarrow\; MP_L = \frac{aQ}{L},\ \ MP_K = \frac{bQ}{K}$$
-        $$\frac{MP_L}{MP_K} = \frac{a}{b}\cdot\frac{K}{L}$$</div>
-      </div>
+      <p class="small">เช่น Q = L<sup>0.5</sup>K<sup>0.5</sup> → MP<sub>L</sub>/MP<sub>K</sub> = (0.5/0.5)(K/L) = K/L</p>
     </div>
   </div>
 </section>
@@ -902,7 +1119,12 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
   <div class="g2">
     <div class="col">
       <p class="lead"><b>min</b> \(C = 4L + 16K\) &nbsp;s.t.&nbsp; \(L^{0.5}K^{0.5} = 20\)</p>
-      <h3>ตั้ง ℒ และ FOC</h3>
+      <ul class="vars solo">
+        <li><b>L, K</b><span>แรงงาน, ทุน ที่ต้องหา</span></li>
+        <li><b>4</b><span>= w ค่าจ้างต่อหน่วย</span></li>
+        <li><b>16</b><span>= r ค่าเช่าทุนต่อหน่วย</span></li>
+        <li><b>20</b><span>= \(\bar Q\) ผลผลิตที่ต้องได้</span></li>
+      </ul>
       <div class="eq">$$\begin{aligned} \mathcal{L} &amp;= 4L + 16K + \lambda\,[20 - L^{0.5}K^{0.5}] \\ \partial L:&amp;\quad 4 - 0.5\lambda L^{-0.5}K^{0.5} = 0 \\ \partial K:&amp;\quad 16 - 0.5\lambda L^{0.5}K^{-0.5} = 0 \\ \partial\lambda:&amp;\quad L^{0.5}K^{0.5} = 20 \end{aligned}$$</div>
     </div>
     <div class="col">
@@ -925,17 +1147,27 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
   <div class="g2">
     <div class="col">
       <p class="lead"><b>max</b> \(\pi = 60x + 40y - x^2 - y^2\) &nbsp;s.t.&nbsp; \(x + y = 30\)</p>
+      <ul class="vars solo">
+        <li><b>π</b><span>กำไร</span></li>
+        <li><b>x, y</b><span>ปริมาณสินค้า 2 ชนิด</span></li>
+        <li><b>30</b><span>= \(\bar R\) กำลังผลิตรวม</span></li>
+        <li><b>λ</b><span>กำไรที่เพิ่มต่อกำลังผลิต 1 หน่วย</span></li>
+      </ul>
       <div class="eq">$$\begin{aligned} \mathcal{L} &amp;= 60x + 40y - x^2 - y^2 + \lambda\,[30 - x - y] \\ \partial x:&amp;\quad 60 - 2x - \lambda = 0 \\ \partial y:&amp;\quad 40 - 2y - \lambda = 0 \\ \partial\lambda:&amp;\quad x + y = 30 \end{aligned}$$</div>
       <p>ลบสมการแรกด้วยสมการที่สอง: \(20 - 2x + 2y = 0 \Rightarrow x - y = 10\)</p>
       <div class="box">
         <p><b>x* = 20 · y* = 10 · λ* = 60 − 40 = 20</b></p>
         <p><b>π* = 1,200 + 400 − 400 − 100 = 1,100</b></p>
-        <p>ถ้ากำลังผลิตเพิ่มอีก 1 หน่วย กำไรเพิ่ม ≈ 20</p>
       </div>
     </div>
     <div class="col">
       <h3>อีกแบบ: ผลผลิตสูงสุดภายใต้งบ</h3>
       <p class="lead"><b>max</b> \(Q = L^{0.5}K^{0.5}\) &nbsp;s.t.&nbsp; \(4L + 16K = 320\)</p>
+      <ul class="vars solo">
+        <li><b>Q</b><span>ผลผลิตที่อยากให้มากสุด</span></li>
+        <li><b>320</b><span>= งบประมาณ C</span></li>
+        <li><b>4, 16</b><span>= w, r</span></li>
+      </ul>
       <div class="eq">$$\mathcal{L} = L^{0.5}K^{0.5} + \lambda\,[320 - 4L - 16K]$$</div>
       <p>ได้เงื่อนไขเดิม \(\dfrac{MP_L}{MP_K} = \dfrac{w}{r}\) → K = L/4 → 4L + 4L = 320</p>
       <p class="box"><b>L = 40 · K = 10 · Q = 20</b><br><span class="small">คำตอบเดียวกับตัวอย่าง A (เป็นปัญหาคู่กัน)</span></p>
@@ -951,15 +1183,22 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
     <div class="col">
       <figure class="fig"><img src="img/isoquant.webp" width="800" height="740" alt="แผนภาพ Isoquant IQ, IQ1, IQ2 จุด A B C D" style="max-height:min(30vh,280px)"></figure>
       <ul class="pts">
-        <li><b>Isoquant</b> = ส่วนผสม L และ K ที่ให้<b>ผลผลิตเท่ากัน</b></li>
+        <li><b>Isoquant (IQ)</b> = ส่วนผสม L และ K ที่ให้<b>ผลผลิตเท่ากัน</b></li>
         <li>เส้นไกลจุดกำเนิดกว่า = ผลผลิตมากกว่า</li>
         <li>โค้งเว้าเข้าหาจุดกำเนิด เพราะปัจจัยทดแทนกันได้</li>
       </ul>
     </div>
     <div class="col">
-      <figure class="fig"><img src="img/mrts.webp" width="900" height="797" alt="MRTS ลดลงจาก 4:1 เป็น 3:1 และ 2:1 ตามแนวเส้น Isoquant" style="max-height:min(30vh,280px)"></figure>
-      <div class="eq">$$MRTS_{LK} = -\frac{\Delta K}{\Delta L} = \frac{MP_L}{MP_K}$$</div>
-      <p>K ที่ลดลงได้เมื่อเพิ่ม L 1 หน่วยโดยผลผลิตเท่าเดิม = <b>ความชันของ Isoquant</b> และ<b>ลดลงเรื่อยๆ</b> (4 → 3 → 2)</p>
+      <div class="eq">$$MRTS_{LK} = -\frac{\Delta K}{\Delta L} = \frac{MP_L}{MP_K}$$
+        <ul class="vars wide">
+          <li><b>\(MRTS_{LK}\)</b><span>อัตราทดแทนทางเทคนิค: เพิ่ม L 1 หน่วย ลด K ได้กี่หน่วยโดยผลผลิตเท่าเดิม</span></li>
+          <li><b>ΔK</b><span>ทุนที่ลดลง</span></li>
+          <li><b>ΔL</b><span>แรงงานที่เพิ่มขึ้น</span></li>
+          <li><b>\(MP_L\), \(MP_K\)</b><span>ผลผลิตส่วนเพิ่มของแรงงาน, ของทุน</span></li>
+        </ul>
+      </div>
+      <figure class="fig"><img src="img/mrts.webp" width="900" height="797" alt="MRTS ลดลงจาก 4:1 เป็น 3:1 และ 2:1 ตามแนวเส้น Isoquant" style="max-height:min(28vh,260px)"></figure>
+      <p class="small">MRTS = ความชันของ Isoquant และลดลงเรื่อยๆ (4 → 3 → 2)</p>
     </div>
   </div>
 </section>
@@ -969,21 +1208,33 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
   <h2>Isocost และจุดเหมาะสม</h2>
   <div class="g2">
     <div class="col">
-      <h3>Isocost (ต้นทุนเท่ากัน)</h3>
-      <div class="eq">$$C = wL + rK \qquad \text{ความชัน} = -\frac{w}{r}$$</div>
+      <div class="eq">$$C = wL + rK \qquad \text{ความชัน} = -\frac{w}{r}$$
+        <ul class="vars">
+          <li><b>C</b><span>งบหรือต้นทุนรวม</span></li>
+          <li><b>w</b><span>ค่าจ้างแรงงานต่อหน่วย</span></li>
+          <li><b>r</b><span>ค่าเช่าทุนต่อหน่วย</span></li>
+          <li><b>L, K</b><span>แรงงาน, ทุน</span></li>
+        </ul>
+      </div>
       <ul class="pts">
         <li>จุดตัดแกน: L = C/w · K = C/r</li>
-        <li>C เพิ่ม → เส้นเลื่อนออกขนาน</li>
-        <li>w หรือ r เปลี่ยน → เส้นหมุน</li>
+        <li>C เพิ่ม → เส้นเลื่อนออกขนาน · w หรือ r เปลี่ยน → เส้นหมุน</li>
       </ul>
       <h3>จุดเหมาะสม = Isocost สัมผัส Isoquant</h3>
-      <div class="eq">$$\frac{MP_L}{MP_K} = \frac{w}{r} \iff \frac{MP_L}{w} = \frac{MP_K}{r}$$</div>
+      <div class="eq">$$\frac{MP_L}{MP_K} = \frac{w}{r} \iff \frac{MP_L}{w} = \frac{MP_K}{r}$$
+        <ul class="vars wide">
+          <li><b>\(MP_L/w\)</b><span>ผลผลิตที่ได้ต่อเงิน 1 บาทที่จ่ายให้แรงงาน</span></li>
+          <li><b>\(MP_K/r\)</b><span>ผลผลิตที่ได้ต่อเงิน 1 บาทที่จ่ายให้ทุน</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="col">
+      <figure class="fig"><img src="img/optimum.webp" width="780" height="600" alt="Isocost สัมผัส Isoquant ที่จุด E"><figcaption>E = จุดสัมผัส: ต้นทุนต่ำสุดสำหรับผลผลิตที่กำหนด · Iq = Isoquant</figcaption></figure>
       <ul class="pts">
-        <li>\(MP_L/w &gt; MP_K/r\) → ใช้ <b>L เพิ่ม</b> ลด K</li>
-        <li>\(MP_L/w &lt; MP_K/r\) → ใช้ <b>K เพิ่ม</b> ลด L</li>
+        <li>\(MP_L/w &gt; MP_K/r\) → แรงงานคุ้มกว่า ใช้ <b>L เพิ่ม</b> ลด K</li>
+        <li>\(MP_L/w &lt; MP_K/r\) → ทุนคุ้มกว่า ใช้ <b>K เพิ่ม</b> ลด L</li>
       </ul>
     </div>
-    <figure class="fig"><img src="img/optimum.webp" width="780" height="600" alt="Isocost สัมผัส Isoquant ที่จุด E"><figcaption>E = จุดสัมผัส: ผลผลิตที่กำหนดด้วยต้นทุนต่ำสุด หรือผลผลิตสูงสุดภายใต้งบ</figcaption></figure>
   </div>
 </section>
 
@@ -992,8 +1243,16 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
   <h2>Expansion Path และตัวอย่าง</h2>
   <div class="g2">
     <div class="col">
-      <figure class="fig"><img src="img/expansion.webp" width="890" height="730" alt="Expansion Path ลากผ่านจุดสัมผัส X Y Z ของ Isocost หลายระดับ"></figure>
+      <figure class="fig"><img src="img/expansion.webp" width="890" height="730" alt="Expansion Path ลากผ่านจุดสัมผัส X Y Z ของ Isocost หลายระดับ" style="max-height:min(34vh,320px)"></figure>
       <p>เส้นลากผ่าน<b>จุดสัมผัสทุกระดับต้นทุน</b> (X, Y, Z) = วิธีขยายการผลิตอย่างมีประสิทธิภาพ</p>
+      <div class="eq">$$\frac{MP_K}{MP_L} = \frac{P_K}{P_L}$$
+        <ul class="vars">
+          <li><b>\(P_K\)</b><span>ราคาทุน (= r)</span></li>
+          <li><b>\(P_L\)</b><span>ราคาแรงงาน (= w)</span></li>
+          <li><b>q, q′, q″</b><span>Isoquant ผลผลิตระดับต่างๆ</span></li>
+          <li><b>C, C′, C″</b><span>Isocost ต้นทุนระดับต่างๆ</span></li>
+        </ul>
+      </div>
     </div>
     <div class="ex">
       <p class="q">\(Q = L^{0.5}K^{0.5}\) · w = 20 · r = 5 · งบ C = 400 ควรใช้ L และ K เท่าไร</p>
@@ -1010,15 +1269,22 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
   <h2>ฟังก์ชันการผลิตและผลได้ต่อขนาด</h2>
   <div class="g2">
     <div class="col">
-      <div class="eq">$$Q = A\,L^{\alpha}K^{\beta}$$</div>
-      <p class="small">A = TFP · α, β = ความยืดหยุ่นของผลผลิตต่อ L และ K</p>
+      <div class="eq">$$Q = A\,L^{\alpha}K^{\beta}$$
+        <ul class="vars wide">
+          <li><b>Q</b><span>ผลผลิต</span></li>
+          <li><b>A</b><span>TFP / เทคโนโลยี (ไม่มีผลต่อ RTS)</span></li>
+          <li><b>L, K</b><span>แรงงาน, ทุน</span></li>
+          <li><b>α</b><span>เลขชี้กำลังของ L = ความยืดหยุ่น: L เพิ่ม 1% → Q เพิ่ม α%</span></li>
+          <li><b>β</b><span>เลขชี้กำลังของ K: K เพิ่ม 1% → Q เพิ่ม β%</span></li>
+          <li><b>RTS</b><span>Returns to Scale ผลได้ต่อขนาด</span></li>
+        </ul>
+      </div>
       <div class="tbl"><table>
         <tr><th>α + β</th><th>ผลได้ต่อขนาด</th><th>เพิ่มปัจจัยทุกตัว 2 เท่า</th></tr>
-        <tr><td><b>&gt; 1</b></td><td><b>Increasing</b></td><td>ผลผลิตเพิ่ม<b>มากกว่า</b> 2 เท่า</td></tr>
-        <tr><td><b>= 1</b></td><td><b>Constant</b></td><td>เพิ่ม 2 เท่าพอดี</td></tr>
-        <tr><td><b>&lt; 1</b></td><td><b>Decreasing</b></td><td>ผลผลิตเพิ่ม<b>น้อยกว่า</b> 2 เท่า</td></tr>
+        <tr><td><b>&gt; 1</b></td><td><b>Increasing (IRS)</b></td><td>ผลผลิตเพิ่ม<b>มากกว่า</b> 2 เท่า</td></tr>
+        <tr><td><b>= 1</b></td><td><b>Constant (CRS)</b></td><td>เพิ่ม 2 เท่าพอดี</td></tr>
+        <tr><td><b>&lt; 1</b></td><td><b>Decreasing (DRS)</b></td><td>ผลผลิตเพิ่ม<b>น้อยกว่า</b> 2 เท่า</td></tr>
       </table></div>
-      <p class="box">สัญลักษณ์ในสไลด์สลับกันไปมา ไม่ต้องสนว่าตัวไหนชื่อ α หรือ β ให้<b>บวกเลขชี้กำลังทั้งหมด</b>แล้วเทียบกับ 1 · ค่า A ไม่มีผล</p>
     </div>
     <div class="col">
       <div class="ex">
@@ -1035,6 +1301,7 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
         <p class="q">\(Q = L^{0.3}K^{0.5}\)</p>
         <p class="a">0.8 &lt; 1 → Decreasing RTS (×2 → ผลผลิต ×1.74)</p>
       </div>
+      <p class="box">สไลด์สลับชื่อ α กับ β ไปมา ไม่ต้องสนชื่อ ให้<b>บวกเลขชี้กำลังทั้งหมด</b>แล้วเทียบกับ 1</p>
     </div>
   </div>
 </section>
@@ -1044,7 +1311,12 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
   <h2>Economies of Scale กับ Returns to Scale</h2>
   <div class="g2">
     <div class="col">
-      <figure class="fig"><img src="img/scale.webp" width="900" height="474" alt="LRAC: ช่วง Economies of scale ช่วง Constant returns to scale และช่วง Diseconomies of scale"><figcaption>LRAC ลดลง = Economies · ช่วงแบน = Constant (MES) · LRAC เพิ่ม = Diseconomies</figcaption></figure>
+      <figure class="fig"><img src="img/scale.webp" width="900" height="474" alt="LRAC: ช่วง Economies of scale ช่วง Constant returns to scale และช่วง Diseconomies of scale"></figure>
+      <ul class="vars solo wide">
+        <li><b>LRAC</b><span>ต้นทุนเฉลี่ยระยะยาว</span></li>
+        <li><b>AC₁–AC₇</b><span>ต้นทุนเฉลี่ยของโรงงานขนาดที่ 1–7</span></li>
+        <li><b>MES</b><span>Minimum Efficient Scale: ขนาดเล็กสุดที่ต้นทุนเฉลี่ยต่ำสุด</span></li>
+      </ul>
       <div class="box">IRS ↔ Economies of scale · CRS ↔ LAC แบน · DRS ↔ Diseconomies of scale</div>
     </div>
     <div class="col">
@@ -1065,11 +1337,13 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
   <h2>ต้นทุนทางสังคมและผลกระทบภายนอก</h2>
   <div class="g2">
     <div class="col">
-      <div class="eq">$$\text{Social Cost} = \text{Private Cost} + \text{External Cost}$$</div>
-      <ul class="pts">
-        <li><b>Private Cost</b> = ผู้ผลิตหรือผู้บริโภคจ่ายเอง เช่น วัตถุดิบ ค่าแรง ค่าขนส่ง</li>
-        <li><b>External Cost</b> = ตกกับคนอื่นโดยไม่มีใครชดเชย เช่น มลพิษ ความแออัด ปัญหาสุขภาพ</li>
-      </ul>
+      <div class="eq">$$\text{Social Cost} = \text{Private Cost} + \text{External Cost}$$
+        <ul class="vars wide">
+          <li><b>Social Cost</b><span>ต้นทุนทางสังคม: ต้นทุนทั้งหมดที่สังคมแบกรับ</span></li>
+          <li><b>Private Cost</b><span>ต้นทุนเอกชน: ผู้ผลิตหรือผู้บริโภคจ่ายเอง เช่น วัตถุดิบ ค่าแรง ค่าขนส่ง</span></li>
+          <li><b>External Cost</b><span>ต้นทุนภายนอก: ตกกับคนอื่นโดยไม่มีใครชดเชย เช่น มลพิษ ความแออัด ค่ารักษาสุขภาพ</span></li>
+        </ul>
+      </div>
       <div class="tbl"><table>
         <tr><th>กรณี</th><th>ผลที่เกิด</th></tr>
         <tr><td><b>Private &lt; Social</b><br><span class="small">ผลกระทบภายนอกเชิงลบ · มลพิษ รถติด</span></td><td>ผลิต/บริโภค<b>มากเกินไป</b></td></tr>
@@ -1115,12 +1389,16 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
       <figcaption>ส่วนที่แรเงา = ผลิตเกินกว่าที่สังคมควรได้</figcaption>
     </figure>
     <div class="col">
-      <ul class="pts">
-        <li><b>MSC = MPC + ต้นทุนภายนอก</b> เส้น MSC จึงอยู่เหนือ MPC</li>
-        <li>ตลาดผลิตที่ <b class="hl">Q ตลาด</b> (MPC ตัด D)</li>
-        <li>สังคมควรผลิตที่ <b class="hot">Q*</b> (MSC ตัด D) ซึ่งน้อยกว่า</li>
-        <li>สรุป: ผลกระทบภายนอกเชิงลบ → <b>ผลิตมากเกินไป</b></li>
+      <ul class="vars solo wide">
+        <li><b>P</b><span>ราคา</span></li>
+        <li><b>Q</b><span>ปริมาณ</span></li>
+        <li><b>D</b><span>อุปสงค์ (ความต้องการซื้อ)</span></li>
+        <li><b>MPC</b><span>ต้นทุนส่วนเพิ่มของเอกชน (Marginal <u>Private</u> Cost) · <b>ไม่ใช่ MPC การบริโภค</b></span></li>
+        <li><b>MSC</b><span>ต้นทุนส่วนเพิ่มทางสังคม = MPC + ต้นทุนภายนอก</span></li>
+        <li><b>Q ตลาด</b><span>ปริมาณที่ตลาดผลิตจริง (MPC ตัด D)</span></li>
+        <li><b>Q*</b><span>ปริมาณที่เหมาะกับสังคม (MSC ตัด D)</span></li>
       </ul>
+      <p>MSC อยู่เหนือ MPC → Q* &lt; Q ตลาด → ผลกระทบภายนอกเชิงลบทำให้<b>ผลิตมากเกินไป</b></p>
       <p class="box"><b>แนวแก้</b> ผลเสีย → เก็บภาษีเท่าต้นทุนภายนอก หรือออกกฎคุมมลพิษ · ผลดี → ให้เงินอุดหนุน เช่น วัคซีนฟรี</p>
     </div>
   </div>
@@ -1132,16 +1410,16 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
   <h2>ทดสอบตัวเอง 1: ข้อ 1</h2>
   <div class="g2">
     <div>
-      <details class="qz"><summary>TFC = 2,000 · TVC = 1,500 · Q = 50 จงหา ATC, AFC, AVC</summary><div>ATC = 70 · AFC = 40 · AVC = 30</div></details>
-      <details class="qz"><summary>TP ที่ L = 5 คือ 61 และที่ L = 6 คือ 66 จงหา MP และ AP ที่ L = 6</summary><div>MP = 5 · AP = 11</div></details>
+      <details class="qz"><summary>TFC = 2,000 · TVC = 1,500 · Q = 50 จงหา ATC, AFC, AVC</summary><div>ATC = 3,500/50 = 70 · AFC = 40 · AVC = 30</div></details>
+      <details class="qz"><summary>TP ที่ L = 5 คือ 61 และที่ L = 6 คือ 66 จงหา MP และ AP ที่ L = 6</summary><div>MP = 66 − 61 = 5 · AP = 66/6 = 11</div></details>
       <details class="qz"><summary>MP = 0 แปลว่า TP อยู่ตรงไหน</summary><div>TP สูงสุด (รอยต่อช่วง II กับ III)</div></details>
-      <details class="qz"><summary>ลาออกจากงานเงินเดือน 25,000 มาเปิดร้าน ค่าของ 15,000 จงหา Economic Cost</summary><div>15,000 + 25,000 = 40,000</div></details>
+      <details class="qz"><summary>ลาออกจากงานเงินเดือน 25,000 มาเปิดร้าน ค่าของ 15,000 จงหา Economic Cost</summary><div>Explicit 15,000 + Implicit 25,000 = 40,000</div></details>
     </div>
     <div>
-      <details class="qz"><summary>MPC = 0.75 รัฐลงทุนเพิ่ม 200 GDP เพิ่มเท่าไร</summary><div>ตัวคูณ = 4 → ΔY = 800</div></details>
-      <details class="qz"><summary>Nominal GDP = 550 · Real GDP = 500 จงหา Deflator และตีความ</summary><div>Deflator = 110 → ราคาสูงกว่าปีฐาน 10%</div></details>
-      <details class="qz"><summary>CPI 120 → 126 เงินเฟ้อเท่าไร</summary><div>5%</div></details>
-      <details class="qz"><summary>ส่งออก 5 · นำเข้า 6 · รายได้สุทธิจากต่างประเทศ +0.4 ดุลบัญชีเดินสะพัดเป็นอย่างไร</summary><div>CA = −0.6 → ขาดดุล</div></details>
+      <details class="qz"><summary>MPC = 0.75 รัฐลงทุนเพิ่ม 200 GDP เพิ่มเท่าไร</summary><div>ตัวคูณ = 1/(1 − 0.75) = 4 → ΔY = 800</div></details>
+      <details class="qz"><summary>Nominal GDP = 550 · Real GDP = 500 จงหา Deflator และตีความ</summary><div>550/500 × 100 = 110 → ราคาสูงกว่าปีฐาน 10%</div></details>
+      <details class="qz"><summary>CPI 120 → 126 เงินเฟ้อเท่าไร</summary><div>(126 − 120)/120 × 100 = 5%</div></details>
+      <details class="qz"><summary>ส่งออก 5 · นำเข้า 6 · รายได้สุทธิจากต่างประเทศ +0.4 ดุลบัญชีเดินสะพัดเป็นอย่างไร</summary><div>CA = 5 − 6 + 0.4 = −0.6 → ขาดดุล</div></details>
       <details class="qz"><summary>รัฐกู้มากตอนเศรษฐกิจใกล้ full employment จะเกิดอะไร</summary><div>Crowding-out: ดอกเบี้ยขึ้น การลงทุนเอกชนลด</div></details>
     </div>
   </div>
@@ -1152,13 +1430,13 @@ details.qz div { padding: 8px 0 2px; color: var(--accent); font-weight: 600; }
   <h2>ทดสอบตัวเอง 2: ข้อ 2–5</h2>
   <div class="g2">
     <div>
-      <details class="qz"><summary>min C = 10L + 10K s.t. L<sup>0.5</sup>K<sup>0.5</sup> = 50</summary><div>K = L → L* = K* = 50 · C* = 1,000 · λ* = 20</div></details>
-      <details class="qz"><summary>max π = 100x + 80y − 2x² − 2y² s.t. x + y = 20</summary><div>100 − 4x = 80 − 4y → x − y = 5 → x* = 12.5 · y* = 7.5 · λ* = 50</div></details>
+      <details class="qz"><summary>min C = 10L + 10K s.t. L<sup>0.5</sup>K<sup>0.5</sup> = 50</summary><div>w/r = 1 → K = L → L* = K* = 50 · C* = 1,000 · λ* = 20</div></details>
+      <details class="qz"><summary>max π = 100x + 80y − 2x² − 2y² s.t. x + y = 20</summary><div>100 − 4x = λ = 80 − 4y → x − y = 5 → x* = 12.5 · y* = 7.5 · λ* = 50</div></details>
       <details class="qz"><summary>MP<sub>L</sub> = 30 · MP<sub>K</sub> = 40 · w = 10 · r = 20 ควรปรับอย่างไร</summary><div>MP<sub>L</sub>/w = 3 &gt; MP<sub>K</sub>/r = 2 → ใช้ L เพิ่ม ลด K</div></details>
     </div>
     <div>
-      <details class="qz"><summary>Q = 3L<sup>0.6</sup>K<sup>0.6</sup> ผลได้ต่อขนาดแบบไหน</summary><div>1.2 &gt; 1 → Increasing RTS</div></details>
-      <details class="qz"><summary>Q = 10L<sup>0.5</sup>K<sup>0.5</sup> ผลได้ต่อขนาดแบบไหน</summary><div>0.5 + 0.5 = 1 → Constant RTS (เลข 10 ไม่มีผล)</div></details>
+      <details class="qz"><summary>Q = 3L<sup>0.6</sup>K<sup>0.6</sup> ผลได้ต่อขนาดแบบไหน</summary><div>0.6 + 0.6 = 1.2 &gt; 1 → Increasing RTS</div></details>
+      <details class="qz"><summary>Q = 10L<sup>0.5</sup>K<sup>0.5</sup> ผลได้ต่อขนาดแบบไหน</summary><div>0.5 + 0.5 = 1 → Constant RTS (เลข 10 คือ A ไม่มีผล)</div></details>
       <details class="qz"><summary>ฟาร์มหมูมีต้นทุนเอกชน 500,000 ทำน้ำเน่าเสียหาย 150,000 จงหา Social Cost และผลที่เกิด</summary><div>650,000 · Private &lt; Social → ผลิตมากเกินไป (เชิงลบ)</div></details>
     </div>
   </div>

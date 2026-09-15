@@ -1,0 +1,987 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="สรุปสอบ Final วิชา TC4 (Thai Culture/Social Studies 4) ภาค 1/2569: ต้นทุน การผลิต GDP การเติบโต Lagrange ผลได้ต่อขนาด และต้นทุนทางสังคม">
+<title>สรุปสอบ Final TC4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --ground: #EFF2EF;
+  --surface: #FFFFFF;
+  --ink: #16211C;
+  --muted: #55645C;
+  --rule: #D2DBD5;
+  --accent: #1E6A4F;
+  --accent-soft: #DAEBE2;
+  --hot: #B9460F;
+  --hot-ink: #FFFFFF;
+  --hot-soft: #F8E1D3;
+  --warn: #8F6400;
+  --warn-soft: #F6EBCF;
+  --code-bg: #E4EAE6;
+  --display: "Chakra Petch", "IBM Plex Sans Thai", "Noto Sans Thai", Tahoma, sans-serif;
+  --body: "IBM Plex Sans Thai", "Noto Sans Thai", "Leelawadee UI", Tahoma, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #101613; --surface: #17201B; --ink: #E3EAE6; --muted: #97A69E; --rule: #28342E;
+    --accent: #7CC7A5; --accent-soft: #1B3129; --hot: #F0874A; --hot-ink: #1A0E06; --hot-soft: #3A2114;
+    --warn: #E2B447; --warn-soft: #342A12; --code-bg: #1E2924;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #101613; --surface: #17201B; --ink: #E3EAE6; --muted: #97A69E; --rule: #28342E;
+  --accent: #7CC7A5; --accent-soft: #1B3129; --hot: #F0874A; --hot-ink: #1A0E06; --hot-soft: #3A2114;
+  --warn: #E2B447; --warn-soft: #342A12; --code-bg: #1E2924;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--ground); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.7; padding: 0 20px; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.3; }
+p { margin: 0; }
+b, strong { font-weight: 600; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-block: 36px 96px; }
+.mono { font-family: var(--mono); font-size: 0.9em; }
+.muted { color: var(--muted); }
+
+/* ---------- header ---------- */
+.masthead { display: grid; gap: 10px; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+h1 { font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 700; }
+.lede { max-width: 68ch; color: var(--muted); }
+
+/* ---------- sticky bar ---------- */
+.bar {
+  position: sticky; top: 0; z-index: 10; margin-top: 24px; padding-block: 10px;
+  background: color-mix(in srgb, var(--ground) 92%, transparent); backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--rule); display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center;
+}
+.jump { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; }
+.jump a {
+  font: 500 13px/1 var(--body); text-decoration: none; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--rule); border-radius: 999px; padding: 7px 12px; white-space: nowrap;
+}
+.jump a b { font-family: var(--mono); font-weight: 500; color: var(--hot); margin-right: 4px; }
+.jump a.cur { background: var(--ink); color: var(--ground); border-color: var(--ink); }
+.jump a.cur b { color: inherit; }
+.mode {
+  font: 600 13px/1 var(--body); background: var(--accent); color: var(--surface); border: 0; border-radius: 6px;
+  padding: 9px 14px; cursor: pointer; white-space: nowrap;
+}
+
+/* ---------- slides ---------- */
+.slide {
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 10px;
+  padding: 26px 28px 30px; margin-top: 22px; scroll-margin-top: 70px;
+}
+.s-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; padding-bottom: 12px; margin-bottom: 18px; border-bottom: 2px solid var(--ink); }
+.s-head h2 { font-size: clamp(1.35rem, 3vw, 1.7rem); font-weight: 600; }
+.q {
+  font: 600 12px/1 var(--mono); letter-spacing: 0.04em; color: var(--hot-ink); background: var(--hot);
+  padding: 5px 8px; border-radius: 3px; white-space: nowrap; align-self: center;
+}
+.q.soft { background: transparent; color: var(--hot); box-shadow: inset 0 0 0 1.5px var(--hot); }
+.cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 30px; }
+.cols.w3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.cols > * { min-width: 0; }
+.span2 { grid-column: 1 / -1; }
+.slide h3 { font-size: 1.08rem; font-weight: 600; margin-bottom: 6px; color: var(--accent); }
+.slide ul, .slide ol { margin: 0; padding-left: 1.15em; display: grid; gap: 3px; }
+.slide li::marker { color: var(--muted); }
+.stack { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-content: start; }
+
+.f {
+  font-family: var(--mono); font-size: 14.5px; background: var(--code-bg); border-radius: 5px;
+  padding: 8px 12px; overflow-x: auto; white-space: pre; line-height: 1.65; margin: 4px 0;
+}
+.f b { color: var(--accent); font-weight: 500; }
+.key { background: var(--accent-soft); border-left: 4px solid var(--accent); padding: 10px 14px; border-radius: 0 6px 6px 0; }
+.key b { color: var(--accent); }
+.warn { background: var(--warn-soft); color: var(--ink); border-left: 4px solid var(--warn); padding: 8px 12px; border-radius: 0 6px 6px 0; font-size: 14.5px; }
+.warn::before { content: "⚠ สไลด์พิมพ์ผิด: "; font-weight: 600; color: var(--warn); }
+.extra-tag { font: 600 11px/1 var(--mono); color: var(--muted); border: 1px solid var(--rule); border-radius: 3px; padding: 3px 5px; vertical-align: 2px; margin-left: 4px; }
+.ex { border: 1px dashed var(--rule); border-radius: 6px; padding: 10px 14px; font-size: 15px; }
+.ex > .t { font-weight: 600; }
+.ans { color: var(--accent); font-weight: 600; }
+
+.fig { margin: 0; background: #fff; border-radius: 6px; border: 1px solid var(--rule); padding: 8px; display: grid; justify-items: center; }
+.fig img { display: block; height: auto; max-height: 340px; width: auto; }
+.fig figcaption { font-size: 12.5px; color: #55645C; margin-top: 4px; text-align: center; }
+
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; vertical-align: top; padding: 6px 10px; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; color: var(--muted); font-size: 13px; white-space: nowrap; }
+td.n, th.n { text-align: right; font-family: var(--mono); font-size: 13.5px; }
+tr.hl td { background: var(--accent-soft); }
+
+/* exam map */
+.exam { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
+.exam li { border: 1px solid var(--rule); border-radius: 8px; padding: 12px 14px; display: grid; gap: 6px; align-content: start; background: var(--ground); }
+.exam a { text-decoration: none; color: inherit; display: grid; gap: 6px; }
+.exam .pts { font: 700 1.6rem/1 var(--display); color: var(--hot); }
+.exam .pts small { font: 500 12px var(--body); color: var(--muted); margin-left: 4px; }
+.exam .nm { font-weight: 600; line-height: 1.4; }
+.exam .cv { font-size: 13px; color: var(--muted); line-height: 1.5; }
+.weight { display: flex; height: 10px; border-radius: 3px; overflow: hidden; margin-top: 14px; gap: 2px; }
+.weight span { background: var(--hot); }
+.weight span:nth-child(n+2) { background: var(--accent); }
+.rules { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 14px; font-size: 15px; }
+
+/* self-test */
+details.qz { border-bottom: 1px solid var(--rule); padding-block: 8px; }
+details.qz summary { cursor: pointer; font-weight: 500; }
+details.qz summary::marker { color: var(--accent); }
+details.qz div { padding: 6px 0 4px 1.2em; color: var(--accent); }
+
+.svgfig { width: 100%; max-width: 360px; height: auto; display: block; margin: 0 auto; }
+.svgfig .ax { stroke: var(--ink); stroke-width: 1.5; fill: none; }
+.svgfig .d { stroke: var(--ink); stroke-width: 2.2; fill: none; }
+.svgfig .s1 { stroke: var(--accent); stroke-width: 2.2; fill: none; }
+.svgfig .s2 { stroke: var(--hot); stroke-width: 2.2; fill: none; }
+.svgfig .dash { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 4 4; }
+.svgfig .dwl { fill: var(--hot); fill-opacity: 0.25; }
+.svgfig text { font-family: var(--mono); font-size: 11px; fill: var(--muted); }
+.svgfig .lb { fill: var(--ink); font-size: 12px; }
+.svgfig .la { fill: var(--accent); font-size: 12px; }
+.svgfig .lh { fill: var(--hot); font-size: 12px; }
+
+.foot { margin-top: 40px; font-size: 13.5px; color: var(--muted); }
+
+/* ---------- deck mode ---------- */
+.decknav { display: none; }
+body.deck .masthead, body.deck .foot { display: none; }
+body.deck .bar { margin-top: 0; }
+body.deck .slide { display: none; margin-top: 16px; min-height: calc(100vh - 150px); }
+body.deck .slide.on { display: block; }
+body.deck .decknav {
+  display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; justify-content: center; align-items: center; gap: 14px;
+  padding: 10px 16px; background: color-mix(in srgb, var(--ground) 94%, transparent); backdrop-filter: blur(6px); border-top: 1px solid var(--rule);
+}
+.decknav button { font: 600 15px/1 var(--body); background: var(--surface); color: var(--ink); border: 1px solid var(--rule); border-radius: 6px; padding: 10px 18px; cursor: pointer; }
+.decknav button:disabled { opacity: 0.4; cursor: default; }
+.decknav .cnt { font-family: var(--mono); font-size: 13px; color: var(--muted); min-width: 5.5em; text-align: center; }
+.prog { position: fixed; top: 0; left: 0; height: 3px; background: var(--hot); z-index: 30; display: none; transition: width .2s; }
+body.deck .prog { display: block; }
+.hint { font-size: 12px; color: var(--muted); }
+
+@media (max-width: 900px) {
+  .exam { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cols.w3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+  .cols, .cols.w3 { grid-template-columns: minmax(0, 1fr); }
+  .slide { padding: 18px 16px 22px; }
+  .fig img { max-height: 280px; }
+  .bar { flex-wrap: nowrap; }
+  .jump { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; min-width: 0; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { flex: none; }
+  .hint { display: none; }
+}
+@media (max-width: 480px) {
+  body { padding: 0 16px; }
+  .exam { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+@media print {
+  .bar, .decknav, .prog { display: none !important; }
+  body.deck .slide { display: block; min-height: 0; }
+  .slide { break-inside: avoid-page; }
+}
+</style>
+</head>
+<body>
+<div class="prog" id="prog"></div>
+<div class="wrap">
+
+<header class="masthead">
+  <p class="eyebrow">TC4 · Thai Culture/Social Studies 4 · Final 1/2569 · อ.ดร. ไพลิน สันติกุล</p>
+  <h1>สรุปสอบ Final TC4</h1>
+  <p class="lede">สรุปจากสไลด์ (5) ต้นทุนและการผลิต, (6) GDP, (7)–(8) การเติบโตทางเศรษฐกิจและบทบาทรัฐ เรียงตามข้อสอบ 5 ข้อ ตัวอย่างคำนวณทุกข้อคิดเลขซ้ำแล้ว จุดที่สไลด์พิมพ์ผิดมีป้าย ⚠ บอกไว้ กดปุ่ม <b>โหมดสไลด์</b> เพื่ออ่านทีละหน้า (ใช้ปุ่มลูกศร ← → หรือปัดจอ)</p>
+</header>
+
+<nav class="bar" aria-label="ไปยังหัวข้อ">
+  <div class="jump" id="jump">
+    <a href="#overview"><b>0</b>ภาพรวม</a>
+    <a href="#cost"><b>1</b>มหภาค+การผลิต</a>
+    <a href="#lagrange"><b>2</b>Lagrange</a>
+    <a href="#mix"><b>3</b>ส่วนผสมปัจจัย</a>
+    <a href="#rts"><b>4</b>ผลได้ต่อขนาด</a>
+    <a href="#social"><b>5</b>ต้นทุนสังคม</a>
+    <a href="#quiz"><b>✓</b>ทดสอบตัวเอง</a>
+  </div>
+  <button class="mode" id="mode" type="button" aria-pressed="false">▶ โหมดสไลด์</button>
+</nav>
+
+<main>
+
+<!-- ============ 0 OVERVIEW ============ -->
+<section class="slide" id="overview">
+  <div class="s-head"><h2>ข้อสอบ 5 ข้อ รวม 20 คะแนน</h2></div>
+  <ul class="exam">
+    <li><a href="#cost"><span class="pts">10<small>คะแนน</small></span><span class="nm">1. เศรษฐศาสตร์มหภาคและการผลิต</span><span class="cv">ต้นทุน · TP/AP/MP · GDP · Real/Nominal · CPI · วัฏจักร · เป้าหมายมหภาค · ผลิตภาพ · ออม/ลงทุน · ระบบการเงิน</span></a></li>
+    <li><a href="#lagrange"><span class="pts">4<small>คะแนน</small></span><span class="nm">2. กำไรสูงสุด / ต้นทุนต่ำสุดภายใต้ข้อจำกัด</span><span class="cv">Lagrange · FOC · แก้หา x*, y*, λ*</span></a></li>
+    <li><a href="#mix"><span class="pts">2<small>คะแนน</small></span><span class="nm">3. การเลือกส่วนผสมของปัจจัยการผลิต</span><span class="cv">Isoquant · MRTS · Isocost · MP<sub>L</sub>/MP<sub>K</sub> = w/r</span></a></li>
+    <li><a href="#rts"><span class="pts">2<small>คะแนน</small></span><span class="nm">4. ฟังก์ชันการผลิตและผลได้ต่อขนาด</span><span class="cv">Cobb-Douglas · α+β เทียบกับ 1</span></a></li>
+    <li><a href="#social"><span class="pts">2<small>คะแนน</small></span><span class="nm">5. ต้นทุนทางสังคมและผลกระทบภายนอก</span><span class="cv">Social = Private + External</span></a></li>
+  </ul>
+  <div class="weight" aria-hidden="true"><span style="flex:10"></span><span style="flex:4"></span><span style="flex:2"></span><span style="flex:2"></span><span style="flex:2"></span></div>
+  <div class="rules">
+    <span>✅ เอาเครื่องคิดเลขเข้าได้</span>
+    <span>✅ มีใบรวมสูตรแจกพร้อมข้อสอบ</span>
+    <span>❌ ห้ามนำโน้ต/เอกสารทุกชนิดเข้าห้อง</span>
+  </div>
+  <p class="key" style="margin-top:16px">มีใบสูตรให้ จึง<b>ไม่ต้องท่องสูตร</b> สิ่งที่ต้องฝึกคือ <b>รู้ว่าโจทย์แบบไหนใช้สูตรไหน</b> ตั้งสมการ Lagrange ให้ถูก และ<b>ตีความผลลัพธ์</b> เช่น เกินดุลหรือขาดดุล IRS หรือ DRS ผลิตมากเกินไปหรือไม่</p>
+</section>
+
+<!-- ============ 1A COST ============ -->
+<section class="slide" id="cost">
+  <div class="s-head"><span class="q">ข้อ 1 · 10 คะแนน</span><h2>แนวคิดต้นทุน</h2></div>
+  <div class="cols">
+    <div class="stack">
+      <div>
+        <h3>ค่าเสียโอกาส (Opportunity Cost)</h3>
+        <p>มูลค่าของ<b>ทางเลือกที่ดีที่สุดที่ต้องสละไป</b> แม้ไม่ได้จ่ายเงินจริงก็นับ</p>
+      </div>
+      <div class="ex"><p class="t">ห้องว่าง: เปิดโซนกาแฟเองกำไร 10,000 หรือให้เช่า 15,000/เดือน → เลือกเปิดกาแฟ</p><p>ค่าเสียโอกาส = <span class="ans">15,000 บาท</span> (ค่าเช่าที่ไม่ได้รับ)</p></div>
+      <div class="ex"><p class="t">วันหยุดของ A: งานพิเศษได้ 2,000 · เที่ยวเสียค่าใช้จ่าย 1,000 · ดูหนังที่บ้านฟรี → A เลือกไปเที่ยว</p><p>ค่าเสียโอกาส = <span class="ans">ค่าจ้าง 2,000</span> (ทางเลือกที่ดีที่สุดที่สละไป) · ต้นทุนรวมของการไปเที่ยว = 1,000 + 2,000 = 3,000</p></div>
+      <div>
+        <h3>ชัดแจ้ง vs แอบแฝง</h3>
+        <div class="f"><b>Economic Cost</b> = Explicit + Implicit</div>
+        <ul>
+          <li><b>Explicit</b> = จ่ายเงินจริง ลงบัญชีได้ เช่น วัตถุดิบ ค่าแรง ค่าเช่า ค่าน้ำไฟ</li>
+          <li><b>Implicit</b> = ไม่ได้จ่ายเงิน แต่เสียโอกาส เช่น เงินเดือนที่ลาออกมา ค่าเช่าบ้านตัวเองที่ไม่ได้ปล่อยเช่า</li>
+        </ul>
+      </div>
+      <div class="ex"><p class="t">คุณแพรวลาออกจากงานเงินเดือน 30,000 มาเปิดร้านกาแฟในบ้านตัวเอง (บ้านปล่อยเช่าได้ 10,000) ค่าวัตถุดิบ+แรงงาน 20,000</p><p>Explicit = <span class="ans">20,000</span> · Implicit = 30,000 + 10,000 = <span class="ans">40,000</span> · Economic = <span class="ans">60,000</span></p></div>
+    </div>
+    <div class="stack">
+      <div>
+        <h3>ต้นทุนเอกชน vs ต้นทุนสังคม <span class="extra-tag">รายละเอียดในข้อ 5</span></h3>
+        <div class="f"><b>Social Cost</b> = Private Cost + External Cost</div>
+      </div>
+      <div>
+        <h3>กำไร <span class="extra-tag">เสริม</span></h3>
+        <div class="f">กำไรทางบัญชี       = TR − Explicit
+กำไรทางเศรษฐศาสตร์ = TR − (Explicit + Implicit)</div>
+      </div>
+      <div>
+        <h3>ต้นทุนระยะสั้น</h3>
+        <div class="tbl"><table>
+          <tr><th>ตัว</th><th>สูตร</th><th>ตัวอย่าง (Q = 100)</th></tr>
+          <tr><td>TC</td><td class="mono">TFC + TVC</td><td>5,000 + 3,000 = 8,000</td></tr>
+          <tr><td>TFC</td><td>ไม่เปลี่ยนตาม Q (ค่าเช่า เครื่องจักร)</td><td>5,000</td></tr>
+          <tr><td>TVC</td><td>เปลี่ยนตาม Q (วัตถุดิบ แรงงานรายชิ้น)</td><td>3,000</td></tr>
+          <tr><td>ATC</td><td class="mono">TC/Q = AFC + AVC</td><td>8,000/100 = 80</td></tr>
+          <tr><td>AFC</td><td class="mono">TFC/Q</td><td>50</td></tr>
+          <tr><td>AVC</td><td class="mono">TVC/Q</td><td>30</td></tr>
+          <tr><td>MC</td><td class="mono">ΔTC/ΔQ</td><td>(8,070−8,000)/1 = 70</td></tr>
+        </table></div>
+        <p class="warn">สไลด์เขียน MC = ΔTFC/ΔQ ที่ถูกคือ MC = ΔTC/ΔQ (= ΔTVC/ΔQ) เพราะ TFC ไม่เปลี่ยนตาม Q</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1B COST CURVES ============ -->
+<section class="slide" id="cost-curves">
+  <div class="s-head"><span class="q">ข้อ 1</span><h2>เส้นต้นทุนระยะสั้นและระยะยาว</h2></div>
+  <div class="cols">
+    <div class="stack">
+      <figure class="fig"><img src="img/cost-curves.webp" width="660" height="590" alt="เส้น MC AC AVC AFC: MC ตัด AVC และ AC ที่จุดต่ำสุด AFC ลดลงตลอด" loading="lazy"><figcaption>MC ตัด AVC และ AC ที่จุดต่ำสุดของแต่ละเส้น</figcaption></figure>
+      <ul>
+        <li><b>MC &lt; AC → AC ลดลง</b> · <b>MC &gt; AC → AC เพิ่มขึ้น</b></li>
+        <li>AC &gt; AVC เสมอ ช่องห่างระหว่างสองเส้นคือ AFC ซึ่งแคบลงเรื่อยๆ</li>
+        <li><b>AFC ลดลงตลอด</b> (ต้นทุนคงที่ถูกเฉลี่ยไปบนจำนวนหน่วยที่มากขึ้น)</li>
+        <li>AC, AVC, MC เป็นรูปตัว U เพราะกฎผลได้ลดน้อยถอยลง</li>
+      </ul>
+    </div>
+    <div class="stack">
+      <figure class="fig"><img src="img/lac.webp" width="900" height="494" alt="เส้น LAC ห่อหุ้มเส้น SAC1 ถึง SAC7 ต่ำสุดที่ Q4" loading="lazy"><figcaption>LAC = เส้นห่อหุ้ม (envelope) ของ SAC ทุกขนาดโรงงาน</figcaption></figure>
+      <ul>
+        <li><b>ระยะยาว</b> = ปรับขนาดโรงงานและปัจจัยได้ทุกตัว</li>
+        <li>Optimum output = <b>Q4</b> (จุดต่ำสุดของ LAC)</li>
+        <li>Economies of scale = <b>Q1 → Q4</b> (LAC ลดลง)</li>
+        <li>Diseconomies of scale = <b>Q4 → Q7</b> (LAC เพิ่มขึ้น)</li>
+        <li><b>LMC</b> = ต้นทุนของการผลิตเพิ่ม 1 หน่วยเมื่อปรับปัจจัยได้ทั้งหมด</li>
+      </ul>
+      <div class="ex"><p class="t">โรงงานน้ำดื่ม ต้นทุนเฉลี่ยต่อขวด: เล็ก 5 · กลาง 3 · ใหญ่ 4 บาท ในระยะยาวควรเลือกขนาดไหน</p><p>→ <span class="ans">ขนาดกลาง</span> เพราะ AC ต่ำสุด = Minimum Efficient Scale</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1C PRODUCTION ============ -->
+<section class="slide" id="production">
+  <div class="s-head"><span class="q">ข้อ 1</span><h2>การผลิตระยะสั้น: TP · AP · MP</h2></div>
+  <div class="cols">
+    <div class="stack">
+      <div>
+        <h3>พื้นฐาน</h3>
+        <ul>
+          <li><b>ปัจจัยการผลิต 4 ชนิด:</b> ที่ดิน (Land) · แรงงาน (Labor) · ทุน (Capital คือสิ่งที่มนุษย์สร้าง เช่น เครื่องจักร) · ผู้ประกอบการ (Entrepreneurship)</li>
+          <li class="mono">TP = f(A, K, L)  A = ความรู้/เทคโนโลยี</li>
+          <li><b>ปัจจัยคงที่</b> (เครื่องจักร อาคาร ที่ดิน) ปรับไม่ได้ในระยะสั้น · <b>ปัจจัยแปรผัน</b> (แรงงาน วัตถุดิบ พลังงาน)</li>
+          <li><b>ระยะสั้น</b> = มีปัจจัยคงที่อย่างน้อย 1 ตัว · <b>ระยะยาว</b> = ปรับได้ทุกตัว</li>
+          <li><b>สัดส่วนคงที่</b>: ต้องเพิ่ม L และ K ตามกันเท่านั้น · <b>สัดส่วนไม่คงที่</b>: สัดส่วนปรับได้</li>
+        </ul>
+      </div>
+      <div class="f"><b>AP</b> = TP / L        <b>MP<sub>L</sub></b> = ΔTP / ΔL</div>
+      <div class="key"><b>กฎการลดน้อยถอยลงของ MP:</b> เมื่อเพิ่มปัจจัยแปรผันโดยที่ปัจจัยอื่นคงที่ ผลผลิตส่วนเพิ่มจะ<b>เพิ่มขึ้นในช่วงแรก</b> จากนั้น<b>ลดลง</b> และสุดท้าย<b>ติดลบ</b></div>
+      <div class="tbl"><table>
+        <tr><th class="n">K</th><th class="n">L</th><th class="n">TP</th><th class="n">AP</th><th class="n">MP</th><th>ช่วง</th></tr>
+        <tr><td class="n">1</td><td class="n">1</td><td class="n">10</td><td class="n">10.0</td><td class="n">10</td><td rowspan="3">I</td></tr>
+        <tr><td class="n">1</td><td class="n">2</td><td class="n">24</td><td class="n">12.0</td><td class="n">14</td></tr>
+        <tr><td class="n">1</td><td class="n">3</td><td class="n">39</td><td class="n">13.0</td><td class="n">15</td></tr>
+        <tr class="hl"><td class="n">1</td><td class="n">4</td><td class="n">52</td><td class="n">13.0</td><td class="n">13</td><td rowspan="4">II</td></tr>
+        <tr><td class="n">1</td><td class="n">5</td><td class="n">61</td><td class="n">12.2</td><td class="n">9</td></tr>
+        <tr><td class="n">1</td><td class="n">6</td><td class="n">66</td><td class="n">11.0</td><td class="n">5</td></tr>
+        <tr class="hl"><td class="n">1</td><td class="n">7</td><td class="n">66</td><td class="n">9.4</td><td class="n">0</td></tr>
+        <tr><td class="n">1</td><td class="n">8</td><td class="n">64</td><td class="n">8.0</td><td class="n">−2</td><td>III</td></tr>
+      </table></div>
+      <p class="warn">ตาราง MP ที่ L = 4 เขียนไว้ 3 ที่ถูกคือ 52 − 39 = 13</p>
+    </div>
+    <div class="stack">
+      <figure class="fig"><img src="img/stages.webp" width="880" height="660" alt="กราฟ TP AP MP แบ่งช่วงการผลิต I II III ที่จุด N1 และ N2" loading="lazy"><figcaption>N = MP สูงสุด (จุดเปลี่ยนโค้ง) · N1 = AP สูงสุด · N2 = TP สูงสุด (MP = 0)</figcaption></figure>
+      <div class="tbl"><table>
+        <tr><th>ช่วง</th><th>เกิดอะไรขึ้น</th></tr>
+        <tr><td><b>I</b> (0 → N1)</td><td>TP เพิ่มเร็ว · AP เพิ่มขึ้น · MP &gt; AP</td></tr>
+        <tr><td><b>II</b> (N1 → N2)</td><td>TP ยังเพิ่มแต่ช้าลง · AP และ MP ลดลง · <b>ช่วงที่ควรผลิต</b></td></tr>
+        <tr><td><b>III</b> (หลัง N2)</td><td>TP ลดลง · <b>MP ติดลบ</b></td></tr>
+      </table></div>
+      <ul>
+        <li>MP &gt; AP → AP เพิ่ม · MP = AP → AP สูงสุด · MP &lt; AP → AP ลด</li>
+        <li>MP = 0 ตรงจุดที่ TP สูงสุด</li>
+      </ul>
+      <div>
+        <h3>PPF (เส้นเป็นไปได้ในการผลิต)</h3>
+        <ul>
+          <li>จุดบนเส้น = มีประสิทธิภาพ · จุดใต้เส้น = ไม่มีประสิทธิภาพ · จุดนอกเส้น = ผลิตไม่ได้</li>
+          <li>เส้นโค้งออก = ค่าเสียโอกาสเพิ่มขึ้นเรื่อยๆ · เส้นเลื่อนออก = เศรษฐกิจเติบโต (ทรัพยากรหรือเทคโนโลยีเพิ่ม)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1D GDP ============ -->
+<section class="slide" id="gdp">
+  <div class="s-head"><span class="q">ข้อ 1</span><h2>GDP และรายได้ประชาชาติ</h2></div>
+  <div class="cols">
+    <div class="stack">
+      <div>
+        <h3>GDP คือ</h3>
+        <p>มูลค่าสินค้าและบริการ<b>ขั้นสุดท้าย</b> (ไม่นับวัตถุดิบหรือสินค้ากึ่งสำเร็จรูป) ที่ผลิต<b>ภายในประเทศ</b> (ไม่สนว่าผู้ผลิตสัญชาติไหน) ใน<b>ช่วงเวลาหนึ่ง</b> (ปีหรือไตรมาส)</p>
+      </div>
+      <div class="tbl"><table>
+        <tr><th></th><th>GDP</th><th>NI / GNP</th></tr>
+        <tr><td>นับจาก</td><td><b>สถานที่ผลิต</b> (ในประเทศ)</td><td><b>สัญชาติ</b>ของผู้มีรายได้</td></tr>
+        <tr><td>คนไทยทำงานต่างประเทศ</td><td>ไม่นับ</td><td>นับ</td></tr>
+        <tr><td>บริษัทต่างชาติในไทย</td><td>นับ</td><td>ไม่นับ</td></tr>
+      </table></div>
+      <div>
+        <h3>จาก GDP ไปจนถึงรายได้ที่ใช้จ่ายได้</h3>
+        <div class="f">GNP = GDP + รายได้จากต่างประเทศ − รายได้ที่ส่งกลับต่างชาติ
+NNP = GNP − ค่าเสื่อมราคา
+NI  = NNP − ภาษีทางอ้อม + เงินอุดหนุน
+PI  = NI − เงินที่ไม่ได้จ่าย + เงินที่ได้รับ (เงินโอน)
+DI  = PI − ภาษีเงินได้</div>
+      </div>
+      <div>
+        <h3>วัด GDP ได้ 3 วิธี</h3>
+        <ul>
+          <li><b>ผลผลิต (มูลค่าเพิ่ม):</b> ขายข้าวสุก 100 − ข้าวสาร 40 = <b>60</b></li>
+          <li><b>รายได้:</b> ค่าจ้าง + ดอกเบี้ย + ค่าเช่า + กำไร</li>
+          <li><b>รายจ่าย:</b> <span class="mono">Y = C + I + G + (X − M)</span></li>
+        </ul>
+      </div>
+      <div class="ex"><p class="t">C = 5,000 · I = 3,000 · G = 2,000 · X = 1,500 · M = 2,500 (ล้านบาท)</p><p>GDP = 5,000 + 3,000 + 2,000 + (1,500 − 2,500) = <span class="ans">9,000 ล้านบาท</span> · M &gt; X แปลว่าขาดดุลการค้า ทำให้ GDP ลดลง</p></div>
+      <p class="warn">เฉลยในสไลด์เขียน 8,000 แต่บวกจริงได้ 9,000</p>
+      <p class="muted" style="font-size:14.5px">ใช้ NI เพื่อดูภาพรวมเศรษฐกิจ · ใช้ GDP ต่อหัวเทียบมาตรฐานการครองชีพระหว่างประเทศ · ใช้ข้อมูลนี้กำหนดนโยบาย เช่น GDP โตต่ำ → ใช้นโยบายการคลังขยายตัว + นโยบายการเงินผ่อนคลาย</p>
+    </div>
+    <div class="stack">
+      <div>
+        <h3>ส่วนประกอบของรายจ่ายรวม</h3>
+        <div class="f"><b>C</b> = C₀ + MPC·Yd      Yd = Y − T
+<b>I</b> = I₀ − b·r
+<b>G</b> = G₀                (รัฐกำหนดไว้ ไม่ขึ้นกับ Y)
+<b>X</b> = X₀                (ขึ้นกับความต้องการของต่างประเทศ)
+<b>M</b> = M₀ + m·Y          m = MPM</div>
+        <ul>
+          <li><b>MPC</b> = ΔC/ΔYd (อยู่ระหว่าง 0–1) · <b>MPC + MPS = 1</b></li>
+          <li><b>MPM</b> = ΔM/ΔY ถ้าสูง รายได้จะรั่วไปกับการนำเข้า ตัวทวีคูณจึงลดลง</li>
+          <li>บาทอ่อน → ส่งออกเพิ่ม · ดอกเบี้ยขึ้น → การลงทุนลดลง</li>
+        </ul>
+      </div>
+      <div class="ex">
+        <p>รายได้ 10,000 → 12,000 · บริโภค 8,000 → 9,600 → MPC = 1,600/2,000 = <span class="ans">0.8</span> MPS = <span class="ans">0.2</span></p>
+        <p>I₀ = 500, b = 20, r = 5 → I = 500 − 20(5) = <span class="ans">400</span></p>
+        <p>รายได้ 1,000 → 1,500 · นำเข้า 300 → 400 → MPM = 100/500 = <span class="ans">0.2</span></p>
+      </div>
+      <div>
+        <h3>หารายได้ดุลยภาพ <span class="extra-tag">เสริม</span></h3>
+        <div class="f">Y = C₀ + MPC(Y − T) + I + G + X − M₀ − mY
+Y = [C₀ − MPC·T + I + G + X − M₀] / (1 − MPC + m)</div>
+        <p style="font-size:14.5px">ตัวอย่าง C₀ = 200, MPC = 0.8, T = 100, I = 400, G = 600, X = 400, M₀ = 100, m = 0.2 → Y = 1,420 / 0.4 = <span class="ans">3,550</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1E REAL GDP ============ -->
+<section class="slide" id="real-gdp">
+  <div class="s-head"><span class="q">ข้อ 1</span><h2>Nominal vs Real GDP · Deflator · CPI</h2></div>
+  <div class="cols">
+    <div class="stack">
+      <div class="f"><b>Nominal GDP</b> = Σ(ปริมาณปีนั้น × ราคาปีนั้น)
+<b>Real GDP</b>    = Σ(ปริมาณปีนั้น × ราคาปีฐาน)
+<b>GDP Deflator</b> = Nominal / Real × 100
+<b>Real GDP</b>    = Nominal / Deflator × 100
+<b>Growth %</b>    = (Real<sub>t</sub> − Real<sub>t−1</sub>) / Real<sub>t−1</sub> × 100
+<b>Inflation %</b> = (CPI<sub>t</sub> − CPI<sub>t−1</sub>) / CPI<sub>t−1</sub> × 100</div>
+      <ul>
+        <li>Nominal เพิ่มได้จาก<b>ปริมาณ</b>หรือ<b>ราคา</b> (เงินเฟ้อ) → ถ้าจะดูการเติบโตจริงต้องใช้ <b>Real</b></li>
+        <li>ปีฐาน: Real = Nominal · Deflator = 100</li>
+        <li>Deflator = 110 → ราคาโดยรวมสูงกว่าปีฐาน 10%</li>
+      </ul>
+      <div class="ex">
+        <p class="t">ปีฐาน 2022 · แอปเปิ้ล 100 ลูก @10 ส้ม 50 ลูก @20 → ปี 2023 แอปเปิ้ล 80 ลูก @20 ส้ม 70 ลูก @30</p>
+        <p>Nominal: 2022 = <b>2,000</b> · 2023 = 1,600 + 2,100 = <b>3,700</b> (+85%)</p>
+        <p>Real 2023 = 80×10 + 70×20 = <b>2,200</b> → เติบโตจริง <span class="ans">10%</span> · Deflator 2023 = <span class="ans">168.2</span></p>
+      </div>
+    </div>
+    <div class="stack">
+      <div class="tbl"><table>
+        <tr><th></th><th>CPI</th><th>GDP Deflator</th></tr>
+        <tr><td>วัดราคาของ</td><td>ตะกร้าสินค้าที่ผู้บริโภคซื้อ</td><td>สินค้าทุกชนิดที่ผลิตในประเทศ</td></tr>
+        <tr><td>สินค้านำเข้า</td><td><b>นับ</b></td><td><b>ไม่นับ</b></td></tr>
+        <tr><td>ความถี่</td><td>รายเดือน</td><td>รายไตรมาส/รายปี</td></tr>
+        <tr><td>ใช้ดู</td><td>ค่าครองชีพ · เงินเฟ้อ</td><td>ระดับราคาทั้งเศรษฐกิจ</td></tr>
+      </table></div>
+      <div class="ex">
+        <p class="t">แบบฝึกหัดประเทศ KOSEN (ปีฐาน 2020, ปีปัจจุบัน 2024)</p>
+        <div class="tbl"><table>
+          <tr><th>สินค้า</th><th class="n">Q 2024</th><th class="n">P 2020</th><th class="n">P 2024</th></tr>
+          <tr><td>ข้าว</td><td class="n">4,000</td><td class="n">10</td><td class="n">12</td></tr>
+          <tr><td>เสื้อผ้า</td><td class="n">2,000</td><td class="n">50</td><td class="n">60</td></tr>
+        </table></div>
+        <p>(1.1) Nominal = 4,000×12 + 2,000×60 = <span class="ans">168,000</span></p>
+        <p>(1.2) Real = 4,000×10 + 2,000×50 = <span class="ans">140,000</span></p>
+        <p>(1.3) Deflator = 168,000/140,000 × 100 = <span class="ans">120</span></p>
+        <p>(2.1) ตะกร้า ข้าว 3,000 + เสื้อผ้า 1,000: ปี 2020 = 80,000 · ปี 2024 = 96,000 → CPI = 120 → เงินเฟ้อ <span class="ans">20%</span></p>
+        <p>(2.3) ข้อนี้ได้เท่ากันเพราะราคาทั้งสองสินค้าขึ้น 20% เท่ากัน โดยทั่วไป <b>CPI เหมาะกว่า</b>สำหรับดูราคาสินค้าผู้บริโภค เพราะใช้ตะกร้าที่ครัวเรือนซื้อจริงและนับสินค้านำเข้าด้วย</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1F CYCLE & GOALS ============ -->
+<section class="slide" id="goals">
+  <div class="s-head"><span class="q">ข้อ 1</span><h2>วัฏจักรธุรกิจและเป้าหมายเศรษฐศาสตร์มหภาค</h2></div>
+  <div class="cols">
+    <div class="stack">
+      <figure class="fig"><img src="img/business-cycle.webp" width="900" height="588" alt="วัฏจักรธุรกิจ: Peak, Contraction, Trough, Expansion รอบเส้นแนวโน้มการเติบโต" loading="lazy"><figcaption>วัดจาก Real GDP · แกว่งรอบเส้นแนวโน้มระยะยาว</figcaption></figure>
+      <div class="tbl"><table>
+        <tr><th>ช่วง</th><th>ลักษณะ</th></tr>
+        <tr><td><b>ขยายตัว</b></td><td>GDP เพิ่มหลายไตรมาส · จ้างงานและลงทุนเพิ่ม · หุ้นขึ้น</td></tr>
+        <tr><td><b>จุดสูงสุด</b></td><td>ผลิตเต็มกำลัง · ว่างงานต่ำสุด · เงินเฟ้อเริ่มขึ้น</td></tr>
+        <tr><td><b>ถดถอย</b></td><td>GDP ลด<b>ติดกัน ≥ 2 ไตรมาส</b> · เลิกจ้าง · ความเชื่อมั่นลด</td></tr>
+        <tr><td><b>จุดต่ำสุด</b></td><td>ว่างงานสูง · อุปสงค์อ่อน · เป็นจุดเริ่มฟื้นตัว</td></tr>
+      </table></div>
+      <div class="key"><b>ซบเซา</b> → นโยบายการคลังขยายตัว (G↑ ภาษี↓) + นโยบายการเงินผ่อนคลาย (ดอกเบี้ย↓)<br><b>ร้อนแรง/เงินเฟ้อสูง</b> → นโยบายการคลังตึงตัว + นโยบายการเงินเข้มงวด (ดอกเบี้ย↑)</div>
+    </div>
+    <div class="stack">
+      <div class="tbl"><table>
+        <tr><th>เป้าหมาย</th><th>ตัวชี้วัด / สูตร</th><th>ตัวอย่าง</th></tr>
+        <tr><td>1. เติบโตต่อเนื่อง</td><td class="mono">(GDP<sub>t</sub>−GDP<sub>t−1</sub>)/GDP<sub>t−1</sub>×100</td><td>15.5 → 16.2 = <b>4.52%</b> → ขยายตัว</td></tr>
+        <tr><td>2. จ้างงานเต็มที่</td><td class="mono">ผู้ว่างงาน/กำลังแรงงาน×100</td><td>400,000/39,000,000 = <b>1.03%</b></td></tr>
+        <tr><td>3. ราคามีเสถียรภาพ</td><td class="mono">(CPI<sub>t</sub>−CPI<sub>t−1</sub>)/CPI<sub>t−1</sub>×100</td><td>102 → 105 = <b>2.94%</b> (อยู่ในกรอบ ธปท. 1–3%)</td></tr>
+        <tr><td>4. ดุลการชำระเงินสมดุล</td><td class="mono">CA = X − M + รายได้สุทธิจากต่างประเทศ</td><td>8.5 − 8.0 + (−0.3) = <b>+0.2</b> → เกินดุล</td></tr>
+        <tr><td>5. กระจายรายได้เป็นธรรม</td><td class="mono">Gini = A/(A+B)</td><td>0.36 (0 = เท่าเทียม, 1 = เหลื่อมล้ำสุด)</td></tr>
+      </table></div>
+      <p class="warn">ตัวอย่างดุลบัญชีเดินสะพัดในสไลด์ใช้ 12.0 − 11.5 แต่โจทย์ให้ 8.5 กับ 8.0 คำตอบยังได้ +0.2 เหมือนกัน</p>
+      <ul>
+        <li><b>จ้างงานเต็มที่</b> ไม่ได้แปลว่าว่างงาน 0% แต่หมายถึงว่างงานอยู่ที่<b>อัตราธรรมชาติ</b> (ยังมีการว่างงานเชิงโครงสร้างและช่วงเปลี่ยนงาน)</li>
+        <li><b>ถ้าเป้าหมายล้มเหลว:</b> โตช้า → ภาษีเก็บได้ลดลง · ว่างงาน → ปัญหาสังคม · ขาดดุลเรื้อรัง → วิกฤตค่าเงิน · เงินเฟ้อ/เงินฝืด → ค่าครองชีพสูงหรือการลงทุนลดลง · เหลื่อมล้ำ → ความขัดแย้งทางการเมือง</li>
+      </ul>
+      <figure class="fig"><img src="img/gini.webp" width="820" height="800" alt="เส้นลอเรนซ์เทียบกับเส้นเสมอภาค พื้นที่ A และ B" loading="lazy" style="max-height:230px"><figcaption>A = พื้นที่ระหว่างเส้นเสมอภาคกับเส้นลอเรนซ์ · B = พื้นที่ใต้เส้นลอเรนซ์</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1G PRODUCTIVITY & POLICY ============ -->
+<section class="slide" id="productivity">
+  <div class="s-head"><span class="q">ข้อ 1</span><h2>ผลิตภาพ สถาบัน และนโยบายรัฐ</h2></div>
+  <div class="cols">
+    <div class="stack">
+      <div class="tbl"><table>
+        <tr><th>ผลิตภาพ</th><th>สูตร</th><th>ปัจจัยกำหนด</th></tr>
+        <tr><td>แรงงาน</td><td class="mono">Y/L</td><td>การศึกษา ทักษะ เทคโนโลยี</td></tr>
+        <tr><td>ทุน</td><td class="mono">Y/K</td><td>การลงทุน เทคโนโลยีที่ใช้กับทุน</td></tr>
+        <tr><td><b>TFP (A)</b></td><td class="mono">Y = A·F(K, L)</td><td>นวัตกรรม การจัดการ สถาบัน</td></tr>
+      </table></div>
+      <div class="ex">
+        <p>GDP 100 ล้าน · แรงงาน 50 คน → ผลิตภาพแรงงาน = <span class="ans">2 ล้านบาท/คน</span></p>
+        <p>เครื่องจักร 10 เครื่องผลิตได้ 1,000 → <b>100</b> · เพิ่มเป็น 20 เครื่องผลิตได้ 1,600 → <b>80</b> ผลผลิตรวมเพิ่ม แต่<span class="ans">ผลิตภาพทุนลดลง</span></p>
+      </div>
+      <ul>
+        <li><b>TFP</b> คือผลผลิตส่วนที่ทุนและแรงงานอธิบายไม่ได้ ใช้บอกว่าทำไมประเทศที่มี K และ L เท่ากันจึงมี GDP ต่างกัน และเป็นตัวขับเคลื่อนการเติบโตระยะยาวใน <b>Solow model</b></li>
+        <li>เมื่อพูดถึง “ผลิตภาพทางเศรษฐกิจ” ในระดับมหภาค มักหมายถึง <b>TFP</b></li>
+      </ul>
+      <div>
+        <h3>สถาบันทางเศรษฐกิจ (Institutions)</h3>
+        <ul>
+          <li><b>North (1990):</b> สถาบัน = กฎกติกาที่มนุษย์สร้างขึ้นเพื่อกำหนดพฤติกรรม</li>
+          <li><b>Acemoglu &amp; Robinson (2012):</b> สถาบันแบบ <b>Inclusive</b> ช่วยให้โต · แบบ <b>Extractive</b> ทำให้ถดถอย</li>
+          <li>องค์ประกอบ: (1) สิทธิในทรัพย์สิน (เกาหลีใต้ vs เกาหลีเหนือ) (2) กฎหมายและการบังคับใช้สัญญา (3) นโยบายรัฐและระบอบการเมือง (4) ธรรมาภิบาล</li>
+          <li><b>กรณีศึกษา:</b> ไทยออก พ.ร.บ.อำนวยความสะดวกฯ ปี 2015 ทำให้อันดับ EoDB จาก 49 → 21 แต่ FDI อยู่ที่ $4–6 พันล้าน/ปี เพราะติดปัจจัยการเมือง · เวียดนามปฏิรูปกฎหมายปี 2014 ร่วมกับทำ FTA ทำให้ FDI $10–15 พันล้าน/ปี</li>
+          <li>กลไก: ต้นทุนธุรกรรม↓ ความไม่แน่นอน↓ → การลงทุน↑ → <b>A (TFP)↑</b></li>
+        </ul>
+      </div>
+    </div>
+    <div class="stack">
+      <h3>นโยบายรัฐเพื่อการเติบโตระยะยาว (7 แนวทาง)</h3>
+      <div class="tbl"><table>
+        <tr><th>นโยบาย</th><th>กลไก</th><th>กรณีศึกษา</th></tr>
+        <tr><td>1. โครงสร้างพื้นฐาน</td><td>ต้นทุนขนส่ง↓ ผลิตภาพธุรกิจ↑</td><td>รถไฟความเร็วสูงจีน</td></tr>
+        <tr><td>2. การศึกษา/ทักษะ</td><td>ผลิตภาพแรงงาน↑ (ทุนมนุษย์)</td><td>Educate to Innovate (สหรัฐฯ, STEM)</td></tr>
+        <tr><td>3. เทคโนโลยี/R&amp;D</td><td>ต้นทุน↓ ผลผลิตต่อหน่วย K และ L↑</td><td>Made in China 2025</td></tr>
+        <tr><td>4. ปฏิรูปภาษี + ส่งเสริมลงทุน</td><td>ภาษีนิติบุคคล↓ → การลงทุน การจ้างงาน↑</td><td>สหราชอาณาจักร 2015</td></tr>
+        <tr><td>5. เสถียรภาพเศรษฐกิจ</td><td>คุมเงินเฟ้อและค่าเงิน → ความเชื่อมั่น↑</td><td>Fed ลดดอกเบี้ย + ซื้อสินทรัพย์ (2008, 2020)</td></tr>
+        <tr><td>6. การค้าระหว่างประเทศ</td><td>Comparative Advantage (Ricardo) · ตลาดใหญ่ขึ้น → Economies of scale · FDI</td><td>NAFTA → USMCA</td></tr>
+        <tr><td>7. ภาษีและต้นทุนธุรกิจ↓</td><td>ต้นทุนคงที่และต้นทุนธุรกรรม↓ → การออมและการลงทุน↑ (Solow)</td><td>Energiewende (เยอรมนี)</td></tr>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1H SAVING & INVESTMENT ============ -->
+<section class="slide" id="saving">
+  <div class="s-head"><span class="q">ข้อ 1</span><h2>การออม การลงทุน และระบบการเงิน</h2></div>
+  <div class="cols w3">
+    <div class="stack">
+      <h3>การออม</h3>
+      <p style="font-size:15px">การออม = เลื่อนการบริโภคไปในอนาคต และเป็นแหล่งทุนของการลงทุน</p>
+      <div class="f">ปิด:  Y = C + I + G → S = I
+     S = (Y−T−C) + (T−G)
+         เอกชน     รัฐ
+เปิด: S = I + (X − M)</div>
+      <ul style="font-size:15px">
+        <li>T − G &gt; 0 = งบประมาณเกินดุล · &lt; 0 = ขาดดุล</li>
+        <li>เกินดุลการค้า → การออม &gt; การลงทุนในประเทศ</li>
+      </ul>
+      <figure class="fig"><img src="img/keynes-saving.webp" width="760" height="900" alt="Keynesian: เส้น C = A + cY ตัด AD = Y และเส้นการออม S = −A + (1−c)Y" loading="lazy" style="max-height:260px"><figcaption>ต่ำกว่าจุดตัด = ออมติดลบ (Dissaving) · สูงกว่า = ออม</figcaption></figure>
+      <div class="tbl"><table>
+        <tr><th>ทฤษฎี</th><th>แนวคิด</th></tr>
+        <tr><td>Keynesian</td><td class="mono" style="white-space:normal">C = a + bY · S = −a + (1−b)Y ออมตามรายได้ปัจจุบัน</td></tr>
+        <tr><td>Life-Cycle<br><span class="muted">Modigliani, Brumberg</span></td><td>วัยเรียนกู้ → วัยทำงานออม → เกษียณใช้เงินออม · <span class="mono">C = (W + ΣY)/T</span></td></tr>
+        <tr><td>Permanent Income<br><span class="muted">Friedman</span></td><td>บริโภคตาม<b>รายได้ถาวร</b> ถ้าได้รายได้ชั่วคราว (โบนัส) มักเก็บออม → consumption smoothing · <span class="mono">C = k·Y<sup>p</sup></span></td></tr>
+      </table></div>
+      <ul style="font-size:15px">
+        <li><b>Low Saving Trap:</b> รายได้ต่ำ → ออมต่ำ → ลงทุนต่ำ → โตต่ำ → รายได้ต่ำ (วนเป็นกับดักความยากจน)</li>
+        <li><b>Paradox of Thrift:</b> ถ้าทุกคนออมพร้อมกัน → C↓ AD↓ GDP↓ → การออมรวมอาจไม่เพิ่ม</li>
+      </ul>
+    </div>
+    <div class="stack">
+      <h3>การลงทุน</h3>
+      <div class="f">I = ΔK      I = I₀ − b·r</div>
+      <div class="tbl"><table>
+        <tr><th>ทฤษฎี</th><th>สูตร / กฎ</th></tr>
+        <tr><td><b>MEC</b><br><span class="muted">Keynes</span></td><td><span class="mono">MEC = R/C − 1</span><br>MEC ≥ r → ลงทุน</td></tr>
+        <tr><td><b>Accelerator</b></td><td><span class="mono">I<sub>t</sub> = v(Y<sub>t</sub> − Y<sub>t−1</sub>)</span><br>Y คงที่ → I = 0 · Y ลด → I ติดลบ</td></tr>
+        <tr><td><b>Tobin's q</b></td><td><span class="mono">q = มูลค่าตลาด / ต้นทุนทดแทนทุน</span><br>q &gt; 1 → ลงทุน · q &lt; 1 → ไม่ขยาย</td></tr>
+      </table></div>
+      <div class="ex">
+        <p>ลงทุน 1 ล้าน คาดได้คืน 1.2 ล้าน → MEC = <span class="ans">20%</span> · r = 15% → ลงทุน · r = 25% → ไม่ลงทุน</p>
+        <p>v = 3, GDP 10 → 10.5 ล้านล้าน → I = 3(0.5) = <span class="ans">1.5 ล้านล้าน</span></p>
+      </div>
+      <p style="font-size:14px" class="muted">จุดอ่อน: MEC วัดจริงยาก · Accelerator ไม่รวมดอกเบี้ยและความเสี่ยง · q วัดยากและบิดเบือนได้เมื่อตลาดเป็นฟองสบู่</p>
+      <div>
+        <h3>รัฐลงทุนแล้วเกิดอะไรขึ้น</h3>
+        <div class="f">ΔY = ΔI / (1 − MPC)</div>
+        <ul style="font-size:15px">
+          <li><b>Multiplier:</b> MPC = 0.8 → ตัวคูณ = 5 · ลงทุนเพิ่ม 100 → Y เพิ่ม 500</li>
+          <li><b>Crowding-in:</b> รัฐลงทุนในโครงการที่เพิ่มผลิตภาพ แล้วเอกชนลงทุนตาม เช่น <b>EEC</b></li>
+          <li><b>Crowding-out:</b> รัฐกู้มาก → ดอกเบี้ย↑ → การลงทุนเอกชน↓ รุนแรงเมื่อ<b>ใกล้ full employment</b>และเงินออมมีจำกัด ถ้ามีทรัพยากรว่างงานเยอะจะเกิดน้อย</li>
+        </ul>
+      </div>
+    </div>
+    <div class="stack">
+      <h3>ระบบการเงิน</h3>
+      <p style="font-size:15px">เป็นตัวกลางส่งเงินจาก<b>ผู้ออม</b>ไปยัง<b>ผู้ลงทุน/ผู้กู้</b> มีหน้าที่ระดมทุน · จัดสรรทรัพยากร · สร้างสภาพคล่อง · บริหารความเสี่ยง</p>
+      <div class="tbl"><table>
+        <tr><th>ตลาด</th><th>อายุ</th><th>ตัวอย่าง</th></tr>
+        <tr><td>ตลาดเงิน</td><td>&lt; 1 ปี</td><td>ตั๋วเงินคลัง (T-Bills) ใช้บริหารสภาพคล่อง</td></tr>
+        <tr><td>ตลาดทุน</td><td>&gt; 1 ปี</td><td>หุ้น พันธบัตรระยะยาว อนุพันธ์</td></tr>
+      </table></div>
+      <ul style="font-size:15px">
+        <li><b>สถาบันการเงิน:</b> ธนาคารพาณิชย์ (รับฝาก ปล่อยกู้ <b>สร้างปริมาณเงิน</b>) · สถาบันการเงินเฉพาะกิจ (ออมสิน ธ.ก.ส. SME Bank) · บริษัทหลักทรัพย์ ประกัน กองทุนรวม</li>
+        <li><b>เครื่องมือ:</b> หุ้น (เป็นเจ้าของ ได้ปันผล) · พันธบัตร (เป็นหนี้ ได้ดอกเบี้ย) · อนุพันธ์ (Futures, Options, Swaps ใช้ป้องกันความเสี่ยงหรือเก็งกำไร)</li>
+      </ul>
+      <div class="ex" style="font-size:14.5px">
+        <p class="t">กรณีโควิด-19 กับระบบการเงินไทย</p>
+        <p>วิกฤตไม่ได้เริ่มจากภาคการเงิน แต่เริ่มจากการปิดเมือง → รายได้หาย → เสี่ยง NPL · ไทยเป็น <b>bank-based</b> (สินเชื่อ &gt; 120% ของ GDP)</p>
+        <p>มาตรการ: พักหนี้ · Soft loan (ธปท., ออมสิน) · บสย. ค้ำประกันสินเชื่อ SME · ลดดอกเบี้ยนโยบายเหลือ <b>0.50%</b> · ลด FIDF fee 0.46 → 0.23%</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2 LAGRANGE ============ -->
+<section class="slide" id="lagrange">
+  <div class="s-head"><span class="q">ข้อ 2 · 4 คะแนน</span><h2>หากำไรสูงสุด / ต้นทุนต่ำสุดภายใต้ข้อจำกัด (Lagrange)</h2></div>
+  <div class="cols">
+    <div class="stack">
+      <div class="key"><b>ขั้นตอน 5 ขั้น</b>
+        <ol style="margin-top:4px">
+          <li>เขียน<b>ฟังก์ชันเป้าหมาย</b> (max π หรือ min C) และ<b>ข้อจำกัด</b></li>
+          <li>ตั้ง <span class="mono">ℒ = เป้าหมาย + λ[ค่าคงที่ − ข้อจำกัด]</span></li>
+          <li>ดิฟ ℒ เทียบกับตัวแปรทุกตัวและ λ แล้วให้ = 0 (FOC)</li>
+          <li>หารสมการ FOC สองสมการแรกเพื่อตัด λ จะได้ความสัมพันธ์ระหว่าง x กับ y</li>
+          <li>แทนลงในข้อจำกัด → ได้ x*, y* → ย้อนกลับไปหา λ*</li>
+        </ol>
+      </div>
+      <div>
+        <h3>1) Profit Maximization</h3>
+        <div class="f">max π(x, y)   s.t.  g(x, y) = R̄
+ℒ = π(x, y) + λ[R̄ − g(x, y)]
+∂ℒ/∂x = ∂π/∂x − λ·∂g/∂x = 0
+∂ℒ/∂y = ∂π/∂y − λ·∂g/∂y = 0
+∂ℒ/∂λ = R̄ − g(x, y) = 0</div>
+      </div>
+      <div>
+        <h3>2) Cost Minimization</h3>
+        <div class="f">min C = wL + rK   s.t.  f(L, K) = Q̄
+ℒ = wL + rK + λ[Q̄ − f(L, K)]
+∂ℒ/∂L = w − λ·MP<sub>L</sub> = 0
+∂ℒ/∂K = r − λ·MP<sub>K</sub> = 0
+∂ℒ/∂λ = Q̄ − f(L, K) = 0
+⇒  <b>MP<sub>L</sub> / MP<sub>K</sub> = w / r</b></div>
+      </div>
+      <div>
+        <h3>λ หมายถึงอะไร</h3>
+        <ul>
+          <li>Cost min: <b>λ* = MC</b> คือต้นทุนที่เพิ่มขึ้นถ้าต้องผลิตเพิ่มอีก 1 หน่วย</li>
+          <li>Profit max: <b>λ*</b> คือกำไรที่เพิ่มขึ้นถ้าผ่อนข้อจำกัด (R̄) ออกอีก 1 หน่วย (shadow price)</li>
+        </ul>
+      </div>
+      <p class="muted" style="font-size:14px">ทริกดิฟ Cobb-Douglas: ถ้า Q = A·L<sup>a</sup>K<sup>b</sup> จะได้ MP<sub>L</sub> = a·Q/L และ MP<sub>K</sub> = b·Q/K ดังนั้น MP<sub>L</sub>/MP<sub>K</sub> = (a/b)(K/L)</p>
+    </div>
+    <div class="stack">
+      <div class="ex">
+        <p class="t">ตัวอย่าง A (ต้นทุนต่ำสุด): min C = 4L + 16K s.t. L<sup>0.5</sup>K<sup>0.5</sup> = 20</p>
+        <div class="f">ℒ = 4L + 16K + λ[20 − L^0.5 K^0.5]
+∂L:  4  − 0.5λ·L^−0.5·K^0.5 = 0
+∂K:  16 − 0.5λ·L^0.5·K^−0.5 = 0
+∂λ:  L^0.5·K^0.5 = 20
+(∂L)÷(∂K):  4/16 = K/L  →  K = L/4
+แทนค่า:     √(L · L/4) = L/2 = 20</div>
+        <p>→ <span class="ans">L* = 40, K* = 10, C* = 160 + 160 = 320</span></p>
+        <p>λ*: 4 = 0.5λ·√(10/40) = 0.25λ → <span class="ans">λ* = 16</span> (ผลิตเพิ่ม 1 หน่วย ต้นทุนเพิ่มประมาณ 16)</p>
+      </div>
+      <div class="ex">
+        <p class="t">ตัวอย่าง B (กำไรสูงสุด): max π = 60x + 40y − x² − y² s.t. x + y = 30 (กำลังการผลิต)</p>
+        <div class="f">ℒ = 60x + 40y − x² − y² + λ[30 − x − y]
+∂x:  60 − 2x − λ = 0
+∂y:  40 − 2y − λ = 0
+∂λ:  x + y = 30
+ลบสองสมการแรก: 20 − 2x + 2y = 0 → x − y = 10</div>
+        <p>→ <span class="ans">x* = 20, y* = 10, λ* = 60 − 40 = 20</span></p>
+        <p>π* = 1,200 + 400 − 400 − 100 = <span class="ans">1,100</span> · ถ้าเพิ่มกำลังการผลิตอีก 1 หน่วย กำไรจะเพิ่มประมาณ 20</p>
+      </div>
+      <div class="ex">
+        <p class="t">อีกแบบ: ผลผลิตสูงสุดภายใต้งบ max Q = L<sup>0.5</sup>K<sup>0.5</sup> s.t. 4L + 16K = 320</p>
+        <p>ℒ = L<sup>0.5</sup>K<sup>0.5</sup> + λ[320 − 4L − 16K] → ได้เงื่อนไขเดิม MP<sub>L</sub>/MP<sub>K</sub> = w/r → K = L/4 → 4L + 4L = 320 → <span class="ans">L = 40, K = 10, Q = 20</span> (เป็นปัญหาคู่ของตัวอย่าง A)</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3 INPUT MIX ============ -->
+<section class="slide" id="mix">
+  <div class="s-head"><span class="q">ข้อ 3 · 2 คะแนน</span><h2>การเลือกส่วนผสมของปัจจัยการผลิต</h2></div>
+  <div class="cols w3">
+    <div class="stack">
+      <h3>Isoquant (ผลผลิตเท่ากัน)</h3>
+      <figure class="fig"><img src="img/isoquant.webp" width="800" height="740" alt="แผนภาพ Isoquant IQ, IQ1, IQ2 จุด A B C D" loading="lazy" style="max-height:220px"></figure>
+      <ul style="font-size:15px">
+        <li>ทุกจุดบนเส้นเดียวกันให้ผลผลิตเท่ากัน · เส้นที่อยู่ไกลจุดกำเนิดกว่า = ผลผลิตมากกว่า</li>
+        <li>เส้นโค้งเว้าเข้าหาจุดกำเนิด (convex) เพราะปัจจัยทดแทนกันได้บางส่วน</li>
+      </ul>
+      <h3>MRTS</h3>
+      <figure class="fig"><img src="img/mrts.webp" width="900" height="797" alt="MRTS ลดลงจาก 4:1 เป็น 3:1 และ 2:1 ตามแนวเส้น Isoquant" loading="lazy" style="max-height:220px"></figure>
+      <div class="f">MRTS<sub>LK</sub> = −ΔK/ΔL = MP<sub>L</sub>/MP<sub>K</sub></div>
+      <p style="font-size:15px">คือจำนวน K ที่ลดลงได้เมื่อเพิ่ม L 1 หน่วยโดยผลผลิตเท่าเดิม = <b>ความชันของ Isoquant</b> ค่านี้<b>ลดลงเรื่อยๆ</b> (4 → 3 → 2)</p>
+    </div>
+    <div class="stack">
+      <h3>Isocost (ต้นทุนเท่ากัน)</h3>
+      <div class="f">C = wL + rK
+ความชัน = −w/r
+จุดตัดแกน: L = C/w, K = C/r</div>
+      <ul style="font-size:15px">
+        <li>C เพิ่ม → เส้นเลื่อนออกขนาน</li>
+        <li>w หรือ r เปลี่ยน → เส้นหมุน (ความชันเปลี่ยน)</li>
+      </ul>
+      <h3>จุดเหมาะสม (Optimum)</h3>
+      <figure class="fig"><img src="img/optimum.webp" width="780" height="600" alt="Isocost สัมผัส Isoquant ที่จุด E" loading="lazy" style="max-height:230px"><figcaption>E = จุดที่ Isocost สัมผัส Isoquant</figcaption></figure>
+      <div class="key"><b>MRTS = MP<sub>L</sub>/MP<sub>K</sub> = w/r</b><br>หรือเขียนได้ว่า <b>MP<sub>L</sub>/w = MP<sub>K</sub>/r</b> (ผลผลิตต่อเงิน 1 บาทเท่ากันทั้งสองปัจจัย)</div>
+      <ul style="font-size:15px">
+        <li>MP<sub>L</sub>/w &gt; MP<sub>K</sub>/r → ใช้ <b>L เพิ่ม</b> ลด K</li>
+        <li>MP<sub>L</sub>/w &lt; MP<sub>K</sub>/r → ใช้ <b>K เพิ่ม</b> ลด L</li>
+      </ul>
+    </div>
+    <div class="stack">
+      <h3>Expansion Path</h3>
+      <figure class="fig"><img src="img/expansion.webp" width="890" height="730" alt="Expansion Path ลากผ่านจุดสัมผัส X Y Z ของ Isocost หลายระดับ" loading="lazy" style="max-height:230px"></figure>
+      <p style="font-size:15px">เส้นที่ลากผ่าน<b>จุดสัมผัสทุกระดับต้นทุน</b> (X, Y, Z) แสดงว่าถ้าจะขยายการผลิตอย่างมีประสิทธิภาพ ควรเพิ่ม L และ K ไปตามเส้นนี้ · <span class="mono">MP<sub>K</sub>/MP<sub>L</sub> = P<sub>K</sub>/P<sub>L</sub></span></p>
+      <div class="ex">
+        <p class="t">Q = L<sup>0.5</sup>K<sup>0.5</sup>, w = 20, r = 5, งบ C = 400 ควรใช้ L และ K เท่าไร</p>
+        <div class="f">MP_L/MP_K = K/L = w/r = 20/5 = 4
+→ K = 4L
+20L + 5(4L) = 40L = 400</div>
+        <p>→ <span class="ans">L = 10, K = 40, Q = √400 = 20</span></p>
+        <p class="muted" style="font-size:14px">ค่าแรงแพงกว่าค่าทุน จึงควรใช้ทุนมากกว่าแรงงาน</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4 RTS ============ -->
+<section class="slide" id="rts">
+  <div class="s-head"><span class="q">ข้อ 4 · 2 คะแนน</span><h2>ฟังก์ชันการผลิตและผลได้ต่อขนาด</h2></div>
+  <div class="cols">
+    <div class="stack">
+      <div class="f"><b>Cobb-Douglas:</b>  Q = A · L<sup>α</sup> · K<sup>β</sup>
+A = TFP  ·  α = ความยืดหยุ่นของผลผลิตต่อ L  ·  β = ต่อ K</div>
+      <div class="tbl"><table>
+        <tr><th>α + β</th><th>ผลได้ต่อขนาด</th><th>เพิ่มปัจจัยทุกตัว 2 เท่า</th></tr>
+        <tr><td class="mono">&gt; 1</td><td><b>Increasing RTS</b></td><td>ผลผลิตเพิ่ม<b>มากกว่า</b> 2 เท่า</td></tr>
+        <tr><td class="mono">= 1</td><td><b>Constant RTS</b></td><td>ผลผลิตเพิ่ม 2 เท่าพอดี</td></tr>
+        <tr><td class="mono">&lt; 1</td><td><b>Decreasing RTS</b></td><td>ผลผลิตเพิ่ม<b>น้อยกว่า</b> 2 เท่า</td></tr>
+      </table></div>
+      <div class="ex">
+        <p class="t">Q = 2K<sup>0.4</sup>L<sup>0.6</sup></p>
+        <p>0.4 + 0.6 = 1 → <span class="ans">Constant RTS</span></p>
+        <p>K เพิ่ม 1% → Q เพิ่ม <b>0.4%</b> · L เพิ่ม 1% → Q เพิ่ม <b>0.6%</b> (ถ้า A และปัจจัยอีกตัวคงที่)</p>
+        <p>พิสูจน์: 2(2K)<sup>0.4</sup>(2L)<sup>0.6</sup> = 2<sup>0.4+0.6</sup>·Q = <b>2Q</b></p>
+      </div>
+      <div class="ex">
+        <p>Q = 5L<sup>0.7</sup>K<sup>0.5</sup> → 1.2 &gt; 1 → <span class="ans">IRS</span> (ใช้ปัจจัยเพิ่ม 2 เท่า ผลผลิตเพิ่ม 2<sup>1.2</sup> ≈ 2.30 เท่า)</p>
+        <p>Q = L<sup>0.3</sup>K<sup>0.5</sup> → 0.8 &lt; 1 → <span class="ans">DRS</span> (2<sup>0.8</sup> ≈ 1.74 เท่า)</p>
+        <p class="muted" style="font-size:14px">A ไม่มีผลต่อ RTS · ถ้าสมการไม่ใช่ Cobb-Douglas ให้แทน L → tL, K → tK แล้วดูว่า Q ใหม่เพิ่มขึ้นมากกว่า เท่ากับ หรือน้อยกว่า t เท่า</p>
+      </div>
+      <p class="muted" style="font-size:14px">สัญลักษณ์ในสไลด์ไม่ตรงกัน หน้าระยะสั้นเขียน Q = A·L<sup>β</sup>K<sup>α</sup> แต่หน้า RTS เขียน Q = A·L<sup>α</sup>K<sup>β</sup> ไม่ต้องสนว่าตัวไหนชื่ออะไร <b>ให้บวกเลขชี้กำลังทั้งหมด</b>แล้วเทียบกับ 1</p>
+    </div>
+    <div class="stack">
+      <figure class="fig"><img src="img/scale.webp" width="900" height="474" alt="LRAC: ช่วง Economies of scale ช่วง Constant returns to scale และช่วง Diseconomies of scale" loading="lazy"><figcaption>LRAC ลดลง = Economies of scale · ช่วงแบน = Constant RTS (MES) · LRAC เพิ่มขึ้น = Diseconomies</figcaption></figure>
+      <div class="tbl"><table>
+        <tr><th></th><th>Returns to Scale</th><th>Economies of Scale</th></tr>
+        <tr><td>ดูอะไร</td><td><b>ผลผลิต</b>เมื่อเพิ่มปัจจัยทุกตัวในสัดส่วนเดียวกัน</td><td><b>ต้นทุนเฉลี่ยระยะยาว</b>เมื่อขยายขนาด</td></tr>
+        <tr><td>ฝั่งดี</td><td>IRS</td><td>Economies → LAC↓</td></tr>
+        <tr><td>ฝั่งแย่</td><td>DRS</td><td>Diseconomies → LAC↑ (ปัญหาการจัดการ ทรัพยากรมีจำกัด)</td></tr>
+      </table></div>
+      <div class="key">IRS ↔ Economies of scale · CRS ↔ LAC แบน · DRS ↔ Diseconomies of scale</div>
+      <p style="font-size:15px">ต่างจาก<b>กฎการลดน้อยถอยลงของ MP</b> ซึ่งเป็นเรื่อง<b>ระยะสั้น</b>ที่เพิ่มปัจจัยแค่ตัวเดียว ส่วน RTS เป็นเรื่อง<b>ระยะยาว</b>ที่เพิ่มปัจจัยทุกตัวพร้อมกัน</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5 SOCIAL COST ============ -->
+<section class="slide" id="social">
+  <div class="s-head"><span class="q">ข้อ 5 · 2 คะแนน</span><h2>ต้นทุนทางสังคมและผลกระทบภายนอก</h2></div>
+  <div class="cols">
+    <div class="stack">
+      <div class="f"><b>Social Cost</b> = Private Cost + External Cost</div>
+      <ul>
+        <li><b>Private Cost</b> = ต้นทุนที่ผู้ผลิตหรือผู้บริโภคจ่ายเอง เช่น วัตถุดิบ ค่าแรง ค่าขนส่ง ค่าเสียเวลา</li>
+        <li><b>External Cost</b> = ต้นทุนที่ตกกับคนอื่นโดยไม่มีใครจ่ายชดเชย เช่น มลพิษ ความแออัด ปัญหาสุขภาพ</li>
+      </ul>
+      <div class="tbl"><table>
+        <tr><th>กรณี</th><th>ผลที่เกิด</th><th>ตัวอย่าง</th></tr>
+        <tr><td><b>Private &lt; Social</b><br>(ผลกระทบภายนอกเชิงลบ)</td><td>ผลิตหรือบริโภค<b>มากเกินไป</b> (Overproduction)</td><td>โรงงานปล่อยควัน รถติด</td></tr>
+        <tr><td><b>Private &gt; Social</b><br>(ผลกระทบภายนอกเชิงบวก)</td><td>สังคมได้ประโยชน์มากกว่าที่ผู้จ่ายรู้สึก → ตลาดมักผลิต<b>น้อยเกินไป</b></td><td>การศึกษา วัคซีน</td></tr>
+      </table></div>
+      <div class="ex">
+        <p class="t">โรงงานเหล็ก: ต้นทุนเอกชน 1,000,000/เดือน · ชุมชนเสียค่ารักษาสุขภาพเพิ่ม 300,000/เดือน</p>
+        <p>Social Cost = 1,000,000 + 300,000 = <span class="ans">1,300,000 บาท</span></p>
+        <p>โรงงานคิดแค่ 1,000,000 จึง<b>ผลิตมากเกินไป</b> เพราะไม่ต้องรับผิดชอบผลกระทบต่อคนอื่น → เป็น <b>Negative Externality</b></p>
+      </div>
+    </div>
+    <div class="stack">
+      <figure class="fig" style="background:var(--surface)">
+        <svg class="svgfig" viewBox="0 0 320 225" role="img" aria-label="กราฟผลกระทบภายนอกเชิงลบ: เส้น MSC อยู่เหนือ MPC ปริมาณที่ตลาดผลิตมากกว่าปริมาณที่เหมาะสมกับสังคม">
+          <line class="ax" x1="40" y1="190" x2="305" y2="190"/><line class="ax" x1="40" y1="190" x2="40" y2="12"/>
+          <text x="300" y="206">Q</text><text x="24" y="18">P</text>
+          <polygon class="dwl" points="142.8,90.4 179.6,112.8 179.6,72.8"/>
+          <line class="dash" x1="142.8" y1="90.4" x2="142.8" y2="190"/><line class="dash" x1="179.6" y1="112.8" x2="179.6" y2="190"/>
+          <line class="d" x1="60" y1="40" x2="290" y2="180"/>
+          <line class="s1" x1="60" y1="170" x2="290" y2="60"/>
+          <line class="s2" x1="60" y1="130" x2="290" y2="20"/>
+          <text class="lb" x="252" y="176">D</text>
+          <text class="la" x="262" y="88">MPC</text>
+          <text class="lh" x="240" y="30">MSC</text>
+          <text class="lh" x="128" y="206">Q*</text>
+          <text class="la" x="170" y="206">Q ตลาด</text>
+          <text x="186" y="98">ส่วนเกิน</text>
+        </svg>
+        <figcaption>MSC = MPC + ต้นทุนภายนอก · ตลาดผลิตที่ Q ตลาด (MPC = D) ซึ่งมากกว่า Q* ที่เหมาะกับสังคม (MSC = D)</figcaption>
+      </figure>
+      <div class="key"><b>ตอบข้อสอบให้ครบ 3 ส่วน:</b> (1) คำนวณ Social Cost = Private + External (2) บอกว่า Private &lt; Social หรือ Private &gt; Social (3) สรุปว่าผลิตหรือบริโภค<b>มากเกินไป</b>หรือ<b>น้อยเกินไป</b> และเป็นผลกระทบภายนอกเชิงลบหรือเชิงบวก</div>
+      <p style="font-size:15px"><span class="extra-tag">เสริม</span> แนวแก้ปัญหา: ถ้าเป็นผลเสีย → เก็บภาษีเท่ากับต้นทุนภายนอก หรือออกกฎคุมมลพิษ · ถ้าเป็นผลดี → ให้เงินอุดหนุน เช่น วัคซีนฟรี</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="slide" id="quiz">
+  <div class="s-head"><span class="q soft">ทบทวน</span><h2>ทดสอบตัวเอง (กดดูเฉลย)</h2></div>
+  <div class="cols">
+    <div>
+      <details class="qz"><summary>TFC = 2,000, TVC = 1,500, Q = 50 จงหา ATC, AFC, AVC</summary><div>ATC = 3,500/50 = 70 · AFC = 40 · AVC = 30</div></details>
+      <details class="qz"><summary>TP ที่ L = 5 เท่ากับ 61 และที่ L = 6 เท่ากับ 66 จงหา MP และ AP ที่ L = 6</summary><div>MP = 5 · AP = 66/6 = 11</div></details>
+      <details class="qz"><summary>ถ้า MP = 0 ผลผลิตรวม (TP) อยู่ที่ระดับไหน</summary><div>TP สูงสุด ตรงรอยต่อระหว่างช่วง II กับช่วง III</div></details>
+      <details class="qz"><summary>MPC = 0.75 ถ้ารัฐลงทุนเพิ่ม 200 GDP จะเพิ่มเท่าไร</summary><div>ตัวคูณ = 1/(1 − 0.75) = 4 → ΔY = 800</div></details>
+      <details class="qz"><summary>Nominal GDP = 550 และ Real GDP = 500 จงหา Deflator และตีความ</summary><div>Deflator = 110 → ระดับราคาสูงกว่าปีฐาน 10%</div></details>
+      <details class="qz"><summary>GDP โต 4.5% มีการจ้างงานเพิ่ม เศรษฐกิจอยู่ช่วงไหนของวัฏจักร</summary><div>ขยายตัว (Expansion)</div></details>
+      <details class="qz"><summary>รัฐกู้เงินจำนวนมากตอนที่เศรษฐกิจใกล้ full employment จะเกิดผลแบบไหน</summary><div>Crowding-out: ดอกเบี้ยขึ้น ทำให้การลงทุนของเอกชนลดลง</div></details>
+      <details class="qz"><summary>q ของ Tobin = 0.8 บริษัทควรขยายการลงทุนหรือไม่</summary><div>ไม่ควร เพราะ q &lt; 1 มูลค่าตลาดต่ำกว่าต้นทุนทดแทนทุน</div></details>
+    </div>
+    <div>
+      <details class="qz"><summary>min C = 10L + 10K s.t. L<sup>0.5</sup>K<sup>0.5</sup> = 50</summary><div>K/L = w/r = 1 → K = L → L = 50 → L* = K* = 50, C* = 1,000, λ* = 20</div></details>
+      <details class="qz"><summary>max π = 100x + 80y − 2x² − 2y² s.t. x + y = 20</summary><div>FOC: 100 − 4x = λ = 80 − 4y → x − y = 5 → x* = 12.5, y* = 7.5, λ* = 50</div></details>
+      <details class="qz"><summary>MP<sub>L</sub> = 30, MP<sub>K</sub> = 40, w = 10, r = 20 ควรปรับการใช้ปัจจัยอย่างไร</summary><div>MP<sub>L</sub>/w = 3 มากกว่า MP<sub>K</sub>/r = 2 → ใช้ L เพิ่ม ลด K ลงจนสองค่านี้เท่ากัน</div></details>
+      <details class="qz"><summary>Q = 3L<sup>0.6</sup>K<sup>0.6</sup> เป็นผลได้ต่อขนาดแบบไหน</summary><div>1.2 &gt; 1 → Increasing Returns to Scale</div></details>
+      <details class="qz"><summary>ฟาร์มหมูมีต้นทุนเอกชน 500,000 และทำให้น้ำเน่าเสียหาย 150,000 จงหา Social Cost และผลที่เกิด</summary><div>Social Cost = 650,000 · Private &lt; Social → ผลิตมากเกินไป (ผลกระทบภายนอกเชิงลบ)</div></details>
+      <details class="qz"><summary>ลาออกจากงานเงินเดือน 25,000 มาเปิดร้าน ค่าของ 15,000 จงหา Economic Cost</summary><div>Explicit 15,000 + Implicit 25,000 = 40,000</div></details>
+      <details class="qz"><summary>CPI จาก 120 เป็น 126 เงินเฟ้อเท่าไร</summary><div>(126 − 120)/120 × 100 = 5%</div></details>
+      <details class="qz"><summary>ส่งออก 5 นำเข้า 6 รายได้สุทธิจากต่างประเทศ +0.4 ดุลบัญชีเดินสะพัดเป็นอย่างไร</summary><div>CA = 5 − 6 + 0.4 = −0.6 → ขาดดุล</div></details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <p>ที่มา: สไลด์ TC4 (5) Production, Cost, Income and Profit (1)–(2) · (6) GDP · (7) Money, Banking, and Monetary Policy &amp; (8) Economic Growth and the Role of Government (1)–(2) โดย อ.ดร. ไพลิน สันติกุล และเอกสารแนวข้อสอบภาค 1/2569 กราฟทั้งหมดตัดมาจากสไลด์ ยกเว้นกราฟผลกระทบภายนอก ส่วนที่ติดป้าย <span class="extra-tag">เสริม</span> ไม่มีในสไลด์ ใส่ไว้ช่วยทำโจทย์</p>
+</footer>
+
+</div>
+
+<div class="decknav" aria-label="เลื่อนสไลด์">
+  <button type="button" id="prev" aria-label="สไลด์ก่อนหน้า">←</button>
+  <span class="cnt" id="cnt">1 / 1</span>
+  <button type="button" id="next" aria-label="สไลด์ถัดไป">→</button>
+  <span class="hint">← → เลื่อน · Esc ออก</span>
+</div>
+
+<script>
+(() => {
+  const body = document.body;
+  const slides = [...document.querySelectorAll('.slide')];
+  const btn = document.getElementById('mode');
+  const cnt = document.getElementById('cnt');
+  const prog = document.getElementById('prog');
+  const prev = document.getElementById('prev');
+  const next = document.getElementById('next');
+  const jumps = [...document.querySelectorAll('#jump a')];
+  let cur = 0;
+
+  const store = (k, v) => { try { v === undefined ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+  const read = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+
+  // Which nav chip owns a slide: the last chip whose target is at or before it.
+  const chipFor = i => {
+    let best = null;
+    for (const a of jumps) {
+      const t = slides.findIndex(s => s.id === a.hash.slice(1));
+      if (t !== -1 && t <= i) best = a;
+    }
+    return best;
+  };
+  const markChip = i => { const c = chipFor(i); jumps.forEach(a => a.classList.toggle('cur', a === c)); };
+
+  function show(i) {
+    cur = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach((s, k) => s.classList.toggle('on', k === cur));
+    cnt.textContent = `${cur + 1} / ${slides.length}`;
+    prog.style.width = `${((cur + 1) / slides.length) * 100}%`;
+    prev.disabled = cur === 0;
+    next.disabled = cur === slides.length - 1;
+    markChip(cur);
+    history.replaceState(null, '', '#' + slides[cur].id);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  function nearest() {
+    let idx = 0;
+    slides.forEach((s, k) => { if (s.getBoundingClientRect().top < 140) idx = k; });
+    return idx;
+  }
+
+  function setDeck(on, startAt) {
+    body.classList.toggle('deck', on);
+    btn.setAttribute('aria-pressed', String(on));
+    btn.textContent = on ? '☰ อ่านแบบเลื่อนยาว' : '▶ โหมดสไลด์';
+    store('tc4-deck', on ? '1' : undefined);
+    if (on) show(startAt);
+    else {
+      slides.forEach(s => s.classList.remove('on'));
+      slides[cur].scrollIntoView({ behavior: 'instant' });
+    }
+  }
+
+  btn.addEventListener('click', () => setDeck(!body.classList.contains('deck'), nearest()));
+  prev.addEventListener('click', () => show(cur - 1));
+  next.addEventListener('click', () => show(cur + 1));
+
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a || !body.classList.contains('deck')) return;
+    const i = slides.findIndex(s => s.id === a.hash.slice(1));
+    if (i !== -1) { e.preventDefault(); show(i); }
+  });
+
+  document.addEventListener('keydown', e => {
+    if (!body.classList.contains('deck') || e.target.closest('summary, input, textarea')) return;
+    if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); show(cur + 1); }
+    else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); show(cur - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key === 'Escape') setDeck(false);
+  });
+
+  let x0 = null, y0 = null;
+  document.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+  document.addEventListener('touchend', e => {
+    if (x0 === null || !body.classList.contains('deck')) return;
+    const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+    if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.5 && !e.target.closest('.tbl, .f')) show(cur + (dx < 0 ? 1 : -1));
+    x0 = null;
+  }, { passive: true });
+
+  // Highlight the current chip while scrolling in long-read mode.
+  const io = new IntersectionObserver(entries => {
+    if (body.classList.contains('deck')) return;
+    const vis = entries.filter(en => en.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+    if (vis) { cur = slides.indexOf(vis.target); markChip(cur); }
+  }, { rootMargin: '-80px 0px -60% 0px' });
+  slides.forEach(s => io.observe(s));
+
+  const fromHash = slides.findIndex(s => '#' + s.id === location.hash);
+  // ?slides in the URL opens straight into slide mode (handy for sharing).
+  if (new URLSearchParams(location.search).has('slides') || read('tc4-deck') === '1') setDeck(true, fromHash === -1 ? 0 : fromHash);
+})();
+</script>
+</body>
+</html>

@@ -456,8 +456,9 @@ dialog.zoom img { display: block; max-width: 96vw; max-height: 94vh; border-radi
           <figure class="fig"><img loading="lazy" src="img/w11-p18.jpg" alt="Mathematics modifiers for right and left arm"><figcaption>W11 slide 18</figcaption></figure>
           <p><b>Right arm derivation:</b> \(\theta_1 = \alpha + \beta\), with \(\alpha = \operatorname{Atan2}(y_c, x_c)\), \(\gamma = \operatorname{Atan2}(\sqrt{r^2 - d^2}, d)\) and \(\beta = \gamma + \pi\). Since \(\cos(\theta+\pi) = -\cos\theta\) and \(\sin(\theta+\pi) = -\sin\theta\), \(\beta = \operatorname{Atan2}(-\sqrt{r^2-d^2}, -d)\).<br><b>Left arm:</b> \(\theta_1 = \phi - \alpha\), where \(\phi = \operatorname{Atan2}(y_c, x_c)\) and \(\alpha = \operatorname{Atan2}(\sqrt{r^2-d^2}, d)\).</p>
           <p>For θ₂ and θ₃ use the RRR formulas, but with \(r^2 = x_c^2 + y_c^2 - d^2\):</p>
-          <div class="eq">$$D = \frac{x_c^2 + y_c^2 - d^2 + (z_c - d_1)^2 - a_2^2 - a_3^2}{2a_2a_3}$$</div>
-          <div class="warn">Slide 29 writes θ₃ = Atan2(D, ±√(1−D²)) with the arguments reversed, and slide 31 ends with "−d₁" where it should be "−d". Use Atan2(±√(1−D²), D) and −d, which match slides 12, 14 and 18.</div>
+          <div class="eq">$$D = \frac{x_c^2 + y_c^2 - d^2 + (z_c - d_1)^2 - a_2^2 - a_3^2}{2a_2a_3} \qquad \theta_3 = \operatorname{Atan2}\!\left(\pm\sqrt{1 - D^2},\ D\right)$$
+          $$\theta_2 = \operatorname{Atan2}\!\left(z_c - d_1,\ \sqrt{x_c^2 + y_c^2 - d^2}\right) - \operatorname{Atan2}\big(a_3\sin\theta_3,\ a_2 + a_3\cos\theta_3\big)$$</div>
+          <div class="warn">Slide 29 reverses the arguments of every Atan2: θ₃ = Atan2(D, ±√(1−D²)), and θ₂ = Atan2(√(x²+y²−d²), z−d₁) − Atan2(a₂+a₃cosθ₃, a₃sinθ₃). Slide 31 also ends with "−d₁" where it should be "−d". Use the Atan2(y, x) order shown above, which matches slides 12, 13, 14 and 18.</div>
         </div>
 
         <div class="note" id="rrp">

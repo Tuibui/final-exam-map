@@ -8,8 +8,11 @@
 | --- | --- | --- |
 | แนวสอบ Final Mechanical Materials | `index.html` | `/` |
 | สรุปสอบ Final TC4 (Thai Culture/Social Studies 4) | `tc4/index.html` + `tc4/img/` | `/tc4/` |
+| Automation Technology 1 — Final prep (English) | `automation/index.html` + `questions.js` + `app.js` + `img/` | `/automation/` |
 
 หน้า TC4 เป็นสไลด์ เลื่อนด้วย ← → / ปัดจอ / เมนูเลือกหัวข้อ และลิงก์ตรงไปสไลด์ได้ด้วย `#id` เช่น `/tc4/#lagrange-a`
+
+หน้า Automation มี 2 ส่วน: **Part 1** ข้อสอบ multiple choice (`/automation/#exam`) แสดงเฉลยทีละข้อ มีลิงก์ไปเนื้อหา และสรุปผลว่าต้องแก้หัวข้อไหนก่อนสอบ · **Part 2** เนื้อหาทั้งหมด W11–W16 (`/automation/#notes/<id>` เช่น `/automation/#notes/modbus-fc`) เพิ่มข้อสอบได้ใน `automation/questions.js` (ตัวเลือกแรกคือคำตอบที่ถูก ระบบสลับลำดับให้เอง)
 
 ## ดูในเครื่อง
 

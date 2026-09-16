@@ -1,0 +1,1011 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Final exam prep for Automation Technology 1 (Weeks 11–16): a multiple-choice practice exam with answers and a weak-topic evaluation, plus full study notes on inverse kinematics, sensors, interfaces, Node-RED, FX5U SLMP and Modbus TCP.">
+<title>Automation Tech 1 · Final Prep</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A6%BE%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<style>
+:root {
+  --paper: #FBFAF6;
+  --panel: #F1EFE8;
+  --card: #FFFFFF;
+  --ink: #1C211E;
+  --muted: #5B635E;
+  --rule: #DAD6CB;
+  --accent: #1D6A4E;
+  --accent-soft: #E1EEE7;
+  --hot: #B5470F;
+  --hot-soft: #F7E3D5;
+  --warn: #8A6100;
+  --warn-soft: #F6ECD1;
+  --good: #1D6A4E;
+  --bad: #B3261E;
+  --bad-soft: #F9E1DE;
+  --font: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", Consolas, monospace;
+  --top-h: 60px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #121614; --panel: #1B211E; --card: #171C19; --ink: #E6EBE8; --muted: #9CA8A1; --rule: #2E3833;
+    --accent: #7DC8A6; --accent-soft: #1A3028; --hot: #F08A4E; --hot-soft: #3A2215; --warn: #E2B447; --warn-soft: #332A12;
+    --good: #7DC8A6; --bad: #F2887E; --bad-soft: #3B1C19;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #121614; --panel: #1B211E; --card: #171C19; --ink: #E6EBE8; --muted: #9CA8A1; --rule: #2E3833;
+  --accent: #7DC8A6; --accent-soft: #1A3028; --hot: #F08A4E; --hot-soft: #3A2215; --warn: #E2B447; --warn-soft: #332A12;
+  --good: #7DC8A6; --bad: #F2887E; --bad-soft: #3B1C19;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--top-h) + 16px); }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 17.5px/1.65 var(--font); }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+a { color: var(--accent); }
+b, strong { font-weight: 600; }
+button { font: inherit; color: inherit; }
+code { font: 500 0.88em var(--mono); background: var(--panel); border-radius: 4px; padding: 1px 5px; }
+:focus-visible { outline: 2.5px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+/* ---------- top bar ---------- */
+.top {
+  position: sticky; top: 0; z-index: 20; height: var(--top-h);
+  display: flex; align-items: center; gap: 16px; padding: 0 max(16px, calc((100vw - 1240px) / 2));
+  background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+.brand { font-weight: 700; font-size: 16px; line-height: 1.2; white-space: nowrap; text-decoration: none; color: var(--ink); }
+.brand small { display: block; font-weight: 500; font-size: 12.5px; color: var(--muted); }
+.tabs { display: flex; gap: 4px; margin-left: auto; background: var(--panel); border-radius: 10px; padding: 4px; }
+.tabs a {
+  text-decoration: none; color: var(--muted); font-weight: 600; font-size: 15px; padding: 6px 14px; border-radius: 7px; white-space: nowrap;
+}
+.tabs a[aria-current="page"] { background: var(--card); color: var(--ink); box-shadow: 0 1px 2px rgb(0 0 0 / 0.12); }
+.tabs .n { color: var(--accent); margin-right: 4px; }
+.icon-btn {
+  flex: none; width: 38px; height: 38px; border-radius: 9px; border: 1px solid var(--rule); background: var(--card);
+  display: grid; place-items: center; cursor: pointer; font-size: 17px;
+}
+@media (max-width: 720px) {
+  .brand small { display: none; }
+  .brand { font-size: 14px; white-space: normal; max-width: 7.5em; }
+  .tabs a { padding: 6px 9px; font-size: 14px; }
+  .tabs .lbl-long { display: none; }
+}
+
+/* ---------- shared bits ---------- */
+.wrap { padding: 28px max(16px, calc((100vw - 1240px) / 2)) 80px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 20px;
+  border-radius: 10px; border: 1.5px solid var(--rule); background: var(--card); cursor: pointer; font-weight: 600; text-decoration: none; color: var(--ink);
+}
+.btn:hover { border-color: var(--muted); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; border-radius: 99px; padding: 2px 10px; background: var(--panel); color: var(--muted); white-space: nowrap; }
+.pill.wk { background: var(--hot-soft); color: var(--hot); }
+.katex { font-size: 1.05em; }
+
+/* ---------- Part 1: exam ---------- */
+.exam { max-width: 880px; margin: 0 auto; }
+.hero h1 { font-size: clamp(28px, 5vw, 40px); line-height: 1.2; margin: 8px 0 12px; letter-spacing: -0.01em; }
+.hero p { color: var(--muted); margin: 0 0 20px; max-width: 60ch; }
+.how { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin: 24px 0; padding: 0; list-style: none; }
+.how li { background: var(--panel); border-radius: 12px; padding: 14px 16px; font-size: 15.5px; }
+.how li b { display: block; color: var(--accent); }
+.topic-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 8px; margin: 12px 0 28px; }
+.topic-grid div { display: flex; justify-content: space-between; gap: 10px; border: 1px solid var(--rule); border-radius: 10px; padding: 8px 12px; font-size: 15px; }
+.topic-grid span:last-child { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.check { display: inline-flex; gap: 8px; align-items: center; font-size: 15px; color: var(--muted); cursor: pointer; }
+.check input { width: 18px; height: 18px; accent-color: var(--accent); }
+
+.qhead { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 10px; }
+.qcount { font-weight: 700; font-variant-numeric: tabular-nums; }
+.qhead .score { margin-left: auto; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.bar { height: 6px; background: var(--panel); border-radius: 99px; overflow: hidden; margin-bottom: 22px; }
+.bar i { display: block; height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.35s ease; }
+
+.slide { background: var(--card); border: 1px solid var(--rule); border-radius: 16px; padding: clamp(18px, 4vw, 32px); }
+.slide.in-next { animation: inNext 0.32s ease both; }
+.slide.in-prev { animation: inPrev 0.32s ease both; }
+@keyframes inNext { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: none; } }
+@keyframes inPrev { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .slide.in-next, .slide.in-prev { animation: none; } }
+.qtext { font-size: 20px; line-height: 1.55; font-weight: 500; margin: 0 0 18px; }
+.qimg { display: block; margin: 0 0 20px; border-radius: 10px; border: 1px solid var(--rule); cursor: zoom-in; max-height: 380px; width: auto; }
+.opts { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.opt {
+  width: 100%; display: flex; gap: 14px; align-items: flex-start; text-align: left; cursor: pointer;
+  background: var(--card); border: 1.5px solid var(--rule); border-radius: 12px; padding: 12px 16px; line-height: 1.5;
+}
+.opt:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+.opt:disabled { cursor: default; }
+.opt .k {
+  flex: none; width: 28px; height: 28px; border-radius: 7px; display: grid; place-items: center;
+  font-weight: 700; font-size: 14px; background: var(--panel); color: var(--muted); margin-top: 1px;
+}
+.opt .t { overflow-x: auto; min-width: 0; }
+.opt.correct { border-color: var(--good); background: var(--accent-soft); }
+.opt.correct .k { background: var(--good); color: var(--paper); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.opt.wrong .k { background: var(--bad); color: var(--paper); }
+.opt.dim { opacity: 0.55; }
+
+.feedback { margin-top: 18px; border-radius: 12px; padding: 14px 18px; border-left: 5px solid var(--good); background: var(--accent-soft); animation: inNext 0.25s ease both; }
+.feedback.bad { border-left-color: var(--bad); background: var(--bad-soft); }
+.feedback h3 { margin: 0 0 4px; font-size: 17px; color: var(--good); }
+.feedback.bad h3 { color: var(--bad); }
+.feedback p { margin: 0; }
+.feedback .review { display: inline-flex; margin-top: 10px; font-weight: 600; text-decoration: none; gap: 6px; }
+.feedback .review:hover { text-decoration: underline; }
+
+.nav { display: flex; gap: 10px; justify-content: space-between; margin-top: 20px; }
+.hint { font-size: 13px; color: var(--muted); text-align: center; margin-top: 12px; }
+.hint kbd { font: 500 12px var(--mono); border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; }
+@media (max-width: 560px) { .hint { display: none; } .qtext { font-size: 18px; } }
+
+/* results */
+.result-top { display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: center; margin-bottom: 28px; }
+.ring { width: 150px; aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; position: relative;
+  background: conic-gradient(var(--ring-c, var(--accent)) calc(var(--p) * 1%), var(--panel) 0); }
+.ring::before { content: ""; position: absolute; inset: 14px; border-radius: 50%; background: var(--paper); }
+.ring div { position: relative; text-align: center; line-height: 1.1; }
+.ring b { font-size: 34px; display: block; font-variant-numeric: tabular-nums; }
+.ring span { font-size: 13px; color: var(--muted); }
+.result-top h1 { margin: 0 0 6px; font-size: clamp(24px, 4vw, 32px); line-height: 1.25; }
+.result-top p { margin: 0; color: var(--muted); }
+@media (max-width: 560px) { .result-top { grid-template-columns: 1fr; justify-items: start; } }
+h2.sec { font-size: 22px; margin: 34px 0 6px; }
+.sec-sub { color: var(--muted); margin: 0 0 14px; font-size: 15.5px; }
+.fix { display: grid; gap: 12px; }
+.fix-item { border: 1.5px solid var(--rule); border-radius: 12px; padding: 14px 18px; background: var(--card); }
+.fix-item.lvl-fix { border-left: 6px solid var(--bad); }
+.fix-item.lvl-review { border-left: 6px solid var(--warn); }
+.fix-item header { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: baseline; }
+.fix-item h3 { margin: 0; font-size: 18px; }
+.badge { font-size: 12.5px; font-weight: 700; letter-spacing: 0.02em; border-radius: 6px; padding: 2px 8px; text-transform: uppercase; }
+.badge.fix { background: var(--bad-soft); color: var(--bad); }
+.badge.review { background: var(--warn-soft); color: var(--warn); }
+.badge.ready { background: var(--accent-soft); color: var(--good); }
+.fix-item .frac { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--muted); font-size: 15px; }
+.fix-item ul { margin: 8px 0 0; padding-left: 1.2em; display: grid; gap: 3px; font-size: 15.5px; }
+.fix-item ul a { font-weight: 500; }
+.tbl-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 15.5px; }
+th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+th { font-size: 13px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.mini { width: 120px; height: 8px; background: var(--panel); border-radius: 99px; overflow: hidden; }
+.mini i { display: block; height: 100%; border-radius: 99px; }
+details.miss { border: 1px solid var(--rule); border-radius: 10px; background: var(--card); margin-bottom: 8px; }
+details.miss summary { cursor: pointer; padding: 10px 14px; font-weight: 500; list-style: none; display: flex; gap: 10px; }
+details.miss summary::-webkit-details-marker { display: none; }
+details.miss summary::before { content: "▸"; color: var(--muted); transition: transform 0.2s; }
+details.miss[open] summary::before { transform: rotate(90deg); }
+details.miss .body { padding: 0 14px 14px 36px; display: grid; gap: 6px; font-size: 15.5px; }
+.yours { color: var(--bad); } .right { color: var(--good); }
+.empty-good { background: var(--accent-soft); border-radius: 12px; padding: 16px 18px; }
+
+/* ---------- Part 2: notes ---------- */
+.notes-layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 40px; align-items: start; }
+.toc { position: sticky; top: calc(var(--top-h) + 20px); max-height: calc(100vh - var(--top-h) - 40px); overflow-y: auto; font-size: 14.5px; padding-right: 6px; }
+.toc h4 { margin: 16px 0 4px; font-size: 12.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--hot); }
+.toc h4:first-child { margin-top: 0; }
+.toc a { display: block; color: var(--muted); text-decoration: none; padding: 3px 10px; border-left: 2px solid var(--rule); line-height: 1.4; }
+.toc a:hover { color: var(--ink); }
+.toc a.on { color: var(--accent); border-left-color: var(--accent); font-weight: 600; }
+.toc-toggle { display: none; }
+@media (max-width: 900px) {
+  .notes-layout { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .toc { position: static; max-height: none; display: none; background: var(--panel); border-radius: 12px; padding: 14px; margin-bottom: 20px; }
+  .toc.open { display: block; }
+  .toc-toggle { display: inline-flex; margin-bottom: 14px; }
+}
+.notes { max-width: 900px; }
+.notes > header h1 { font-size: clamp(26px, 4.5vw, 36px); margin: 4px 0 8px; line-height: 1.2; }
+.notes > header p { color: var(--muted); margin: 0; }
+.week { margin-top: 48px; }
+.week > h2 { font-size: clamp(22px, 3.5vw, 28px); margin: 0 0 4px; padding-bottom: 10px; border-bottom: 2px solid var(--ink); line-height: 1.25; }
+.week > h2 .pill { vertical-align: 5px; margin-right: 8px; }
+.note { padding-top: 26px; }
+.note h3 { font-size: 20px; margin: 0 0 10px; color: var(--accent); line-height: 1.35; }
+.note p { margin: 0 0 10px; }
+.note ul, .note ol { margin: 0 0 12px; padding-left: 1.3em; display: grid; gap: 4px; }
+.note li::marker { color: var(--accent); }
+.fig { margin: 14px 0 16px; }
+.fig img { display: block; border-radius: 10px; border: 1px solid var(--rule); cursor: zoom-in; width: 100%; height: auto; }
+.fig figcaption { font-size: 13px; color: var(--muted); margin-top: 5px; }
+.eq { background: var(--panel); border-radius: 10px; padding: 4px 16px; margin: 10px 0 14px; overflow-x: auto; }
+.eq .katex-display { margin: 10px 0; }
+.key { background: var(--accent-soft); border-radius: 10px; padding: 12px 16px; margin: 10px 0 14px; }
+.key::before { content: "Remember"; display: block; font-size: 12.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent); margin-bottom: 2px; }
+.warn { background: var(--warn-soft); border-left: 5px solid var(--warn); border-radius: 0 10px 10px 0; padding: 10px 16px; margin: 10px 0 14px; font-size: 16px; }
+.warn::before { content: "⚠ Slide check"; display: block; font-weight: 700; color: var(--warn); font-size: 13px; letter-spacing: 0.03em; }
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 20px; }
+@media (max-width: 640px) { .two { grid-template-columns: minmax(0, 1fr); } }
+.card { border: 1px solid var(--rule); border-radius: 12px; padding: 12px 16px; background: var(--card); }
+.card h4 { margin: 0 0 4px; font-size: 16px; }
+.card p, .card ul { font-size: 15.5px; margin-bottom: 0; }
+.note table { margin: 8px 0 14px; }
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 8px 0 14px; font-size: 15px; font-weight: 600; }
+.flow span { background: var(--panel); border-radius: 8px; padding: 5px 10px; }
+.flow i { font-style: normal; color: var(--muted); }
+
+/* floating back-to-question + zoom */
+.float-back {
+  position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 30;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.22); white-space: nowrap;
+}
+dialog.zoom { border: 0; padding: 0; background: transparent; max-width: 96vw; max-height: 94vh; }
+dialog.zoom::backdrop { background: rgb(0 0 0 / 0.78); }
+dialog.zoom img { display: block; max-width: 96vw; max-height: 94vh; border-radius: 8px; cursor: zoom-out; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="#exam">Automation Tech 1<small>Final exam prep · Weeks 11–16</small></a>
+  <nav class="tabs" aria-label="Sections">
+    <a href="#exam" data-tab="exam"><span class="n">1</span><span class="lbl-long">Practice </span>Exam</a>
+    <a href="#notes" data-tab="notes"><span class="n">2</span><span class="lbl-long">Study </span>Notes</a>
+  </nav>
+  <button class="icon-btn" id="theme-btn" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">◐</button>
+</header>
+
+<!-- ═════════════ PART 1 · EXAM (rendered by app.js) ═════════════ -->
+<main id="view-exam" class="wrap" hidden>
+  <div class="exam" id="exam-root"></div>
+</main>
+
+<!-- ═════════════ PART 2 · NOTES ═════════════ -->
+<main id="view-notes" class="wrap" hidden>
+  <div class="notes-layout">
+    <button class="btn toc-toggle" id="toc-toggle" type="button" aria-expanded="false">☰ Contents</button>
+    <nav class="toc" id="toc" aria-label="Contents">
+      <h4>W11 · Robot IK</h4>
+      <a href="#notes/kinematics">Forward vs inverse kinematics</a>
+      <a href="#notes/ik-2link">2-link arm: finding θ₂</a>
+      <a href="#notes/ik-theta1">2-link arm: finding θ₁</a>
+      <a href="#notes/multiple-solutions">Multiple solutions</a>
+      <a href="#notes/atan2">Why Atan2</a>
+      <a href="#notes/worked-example">Worked example</a>
+      <a href="#notes/rrr">RRR (no offset)</a>
+      <a href="#notes/offset">RRR with offset</a>
+      <a href="#notes/rrp">RRP configuration</a>
+      <a href="#notes/ik-cheatsheet">IK formula sheet</a>
+      <h4>W13 · Sensors</h4>
+      <a href="#notes/sensor-what">What is a sensor</a>
+      <a href="#notes/sensor-stages">How a sensor works</a>
+      <a href="#notes/sensor-types">Proximity &amp; fiber sensors</a>
+      <a href="#notes/smart-sensor">Smart sensors</a>
+      <a href="#notes/smart-block">Smart sensor block diagram</a>
+      <a href="#notes/smart-vs-traditional">Traditional vs smart</a>
+      <a href="#notes/sensor-impact">Sensors in industry</a>
+      <h4>W14 · Interface &amp; Node-RED</h4>
+      <a href="#notes/interface">What is an interface</a>
+      <a href="#notes/interface-types">Interface types &amp; why</a>
+      <a href="#notes/nodered-what">What is Node-RED</a>
+      <a href="#notes/nodered-first-flow">First flow &amp; deploy</a>
+      <a href="#notes/nodered-editor">Editor layout</a>
+      <a href="#notes/nodered-nodes">Flows, nodes &amp; wires</a>
+      <a href="#notes/nodered-subflows">Groups &amp; subflows</a>
+      <a href="#notes/nodered-import">Import/export &amp; palette</a>
+      <a href="#notes/nodered-sidebar">Sidebar panels</a>
+      <a href="#notes/assignment-temp">Assignment: temperature alarm</a>
+      <h4>W15 · FX5U ↔ Node-RED</h4>
+      <a href="#notes/plc-why">Why connect PLC to Node-RED</a>
+      <a href="#notes/fx5u-protocols">FX5U protocol options</a>
+      <a href="#notes/fx5u-slmp">FX5U SLMP settings</a>
+      <a href="#notes/nodered-mc">Node-RED MC protocol nodes</a>
+      <a href="#notes/assignment-fx5u">Assignment: FX5U monitoring</a>
+      <h4>W16 · Protocols &amp; Modbus</h4>
+      <a href="#notes/industrial-protocol">Industrial protocols</a>
+      <a href="#notes/interface-vs-protocol">Interface vs protocol</a>
+      <a href="#notes/modbus">Modbus client-server</a>
+      <a href="#notes/modbus-fc">Function codes &amp; data types</a>
+      <a href="#notes/modbus-fx5u">FX5U Modbus TCP settings</a>
+      <a href="#notes/modbus-nodered">Node-RED Modbus nodes</a>
+      <a href="#notes/assignment-modbus">Assignment: smart line</a>
+    </nav>
+
+    <article class="notes" id="notes-root">
+      <header>
+        <span class="pill">01005133 · Automation Technology 1</span>
+        <h1>Study Notes — Weeks 11 to 16</h1>
+        <p>Everything from the lecture slides, rewritten in plain English with the key figures. Every exam question links to one of these sections.</p>
+      </header>
+
+      <!-- ─────────────── W11 ─────────────── -->
+      <section class="week" id="w11">
+        <h2><span class="pill wk">W11</span>Basic Industrial Robot (3) — Inverse Kinematics</h2>
+
+        <div class="note" id="kinematics">
+          <h3>Forward vs inverse kinematics</h3>
+          <p><b>Kinematics</b> relates a robot's joint values to where its end effector (the tool at the tip) ends up.</p>
+          <div class="two">
+            <div class="card"><h4>Forward kinematics (FK)</h4><p>Know the joint angles \(\theta_1 \dots \theta_6\) → find the pose \((X, Y, Z, R_x, R_y, R_z)\).</p></div>
+            <div class="card"><h4>Inverse kinematics (IK)</h4><p>Know the pose \((X, Y, Z, R_x, R_y, R_z)\) → find the joint angles \(\theta_1 \dots \theta_6\).</p></div>
+          </div>
+          <figure class="fig"><img loading="lazy" src="img/w11-p05.jpg" alt="Slide comparing forward and inverse kinematics on a 6-axis robot"><figcaption>W11 slide 5</figcaption></figure>
+          <p>IK finds the joint variables that give a desired end-effector position and orientation — in the simple case, <b>joint angles from given x and y</b>.</p>
+          <ul>
+            <li>The solution is <b>difficult to find</b> and <b>not unique</b> (several joint sets reach the same point).</li>
+            <li>Two analytical approaches: <b>Geometric</b> (triangles, law of cosines — used in class) and <b>Algebraic</b>.</li>
+          </ul>
+        </div>
+
+        <div class="note" id="ik-2link">
+          <h3>2-link planar arm: finding θ₂ (law of cosines)</h3>
+          <p>Link 1 has length \(a_1\) and joint angle \(\theta_1\) (from the x-axis). Link 2 has length \(a_2\) and angle \(\theta_2\) (relative to link 1). The target is \((x, y)\). Draw the line \(c\) from the base to the target, so \(c^2 = x^2 + y^2\).</p>
+          <figure class="fig"><img loading="lazy" src="img/w11-p07.jpg" alt="2-link planar arm with links a1, a2 and angles theta1, theta2"><figcaption>W11 slide 7</figcaption></figure>
+          <ol>
+            <li><b>Law of cosines</b> on the triangle \(a_1, a_2, c\): \(c^2 = a_1^2 + a_2^2 - 2a_1a_2\cos\theta_c\)</li>
+            <li><b>Supplementary angle:</b> \(\theta_c\) and \(\theta_2\) lie on a straight line, so \(\theta_c + \theta_2 = \pi\) and \(\cos\theta_c = -\cos\theta_2\).</li>
+            <li><b>Substitute:</b> \(c^2 = a_1^2 + a_2^2 + 2a_1a_2\cos\theta_2\)</li>
+          </ol>
+          <div class="eq">$$\cos\theta_2 = \frac{x^2 + y^2 - a_1^2 - a_2^2}{2a_1a_2} = D$$</div>
+          <p>Then use Atan2 rather than \(\cos^{-1}\), so you keep both solutions and the correct quadrant:</p>
+          <div class="eq">$$\theta_2 = \operatorname{Atan2}\!\left(\pm\sqrt{1 - D^2},\; D\right)$$</div>
+          <figure class="fig"><img loading="lazy" src="img/w11-p09.jpg" alt="Geometric visualization and analytical derivation of cos theta2 = D"><figcaption>W11 slide 9</figcaption></figure>
+          <div class="key">\(D\) must be between −1 and 1. \(|D| &gt; 1\) → the target is out of reach (no real solution). \(D = 1\) → arm fully stretched (\(\theta_2 = 0\)).</div>
+        </div>
+
+        <div class="note" id="ik-theta1">
+          <h3>2-link planar arm: finding θ₁</h3>
+          <ol>
+            <li>Angle of the line to the target: \(\omega = \operatorname{Atan2}(y, x)\)</li>
+            <li>Angle between link 1 and that line (from link 2's geometry): \(\phi = \operatorname{Atan2}(a_2\sin\theta_2,\; a_1 + a_2\cos\theta_2)\)</li>
+            <li>Combine: \(\theta_1 = \omega - \phi\)</li>
+          </ol>
+          <div class="eq">$$\theta_1 = \operatorname{Atan2}(y, x) - \operatorname{Atan2}\big(a_2\sin\theta_2,\; a_1 + a_2\cos\theta_2\big)$$</div>
+          <figure class="fig"><img loading="lazy" src="img/w11-p13.jpg" alt="Derivation of theta1 = omega - phi"><figcaption>W11 slide 13</figcaption></figure>
+          <div class="key">Always solve <b>θ₂ first</b>, then plug each θ₂ into the θ₁ formula. Each sign of θ₂ gives its own θ₁.</div>
+        </div>
+
+        <div class="note" id="multiple-solutions">
+          <h3>The multiplicity of solutions (arm up / arm down)</h3>
+          <p>The \(\pm\) in \(\theta_2 = \operatorname{Atan2}(\pm\sqrt{1-D^2}, D)\) gives <b>two configurations</b> that reach the same point: the elbow bends one way or the other.</p>
+          <figure class="fig"><img loading="lazy" src="img/w11-p12.jpg" alt="Arm up and arm down configurations"><figcaption>W11 slide 12 — the slide labels Arm Up with −√(1−D²) and Arm Down with +√(1−D²)</figcaption></figure>
+          <div class="warn">Slide 12 pairs <b>Arm Up with −√</b>, but the Example 1 slides label θ₂ = +28.95° as "2nd Arm UP". Whether a sign means "up" depends on how the angle direction is drawn. For the exam, know that there are <b>two solutions, one per sign</b>, and draw both.</div>
+          <table>
+            <thead><tr><th>Value of D</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td>\(|D| &lt; 1\)</td><td>Two solutions (θ₂ = ±)</td></tr>
+              <tr><td>\(D = \pm 1\)</td><td>One solution — arm fully stretched (θ₂ = 0) or fully folded (θ₂ = 180°)</td></tr>
+              <tr><td>\(|D| &gt; 1\)</td><td>No solution — target outside the workspace</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note" id="atan2">
+          <h3>Why Atan2 instead of standard tan⁻¹?</h3>
+          <p>\(\tan\theta = y/x\) <b>loses quadrant information</b>: \((+,+)\) in quadrant I and \((-,-)\) in quadrant III give the same positive ratio. \(\operatorname{Atan2}(y, x)\) looks at the signs of <b>both</b> arguments, so the robot identifies the correct physical quadrant of the target.</p>
+          <figure class="fig"><img loading="lazy" src="img/w11-p14.jpg" alt="Atan2 anatomy showing the four quadrants"><figcaption>W11 slide 14</figcaption></figure>
+          <table>
+            <thead><tr><th>Point (x, y)</th><th>tan⁻¹(y/x)</th><th>Atan2(y, x)</th></tr></thead>
+            <tbody>
+              <tr><td>(3, 3)</td><td>45°</td><td>45°</td></tr>
+              <tr><td>(−3, 3)</td><td>−45° ✗</td><td>135°</td></tr>
+              <tr><td>(−3, −3)</td><td>45° ✗</td><td>−135° (= 225°)</td></tr>
+              <tr><td>(3, −3)</td><td>−45°</td><td>−45°</td></tr>
+            </tbody>
+          </table>
+          <div class="key">Argument order is <b>Atan2(y, x)</b> — the "opposite" side first, then the "adjacent" side.</div>
+        </div>
+
+        <div class="note" id="worked-example">
+          <h3>Worked example (lecture Example 1)</h3>
+          <p>\(a_1 = 3\), \(a_2 = 5\), target \((x, y) = (2.0,\ 7.5)\). Find all \(\theta_1, \theta_2\).</p>
+          <figure class="fig"><img loading="lazy" src="img/w11-p22.jpg" alt="Example 1 computation of D and theta2"><figcaption>W11 slide 22</figcaption></figure>
+          <div class="eq">$$D = \frac{7.5^2 + 2^2 - 3^2 - 5^2}{2(3)(5)} = \frac{26.25}{30} = 0.875 \qquad \sqrt{1 - D^2} = 0.484$$
+          $$\theta_2 = \operatorname{Atan2}(\pm 0.484,\ 0.875) = \pm 28.96^\circ$$</div>
+          <p>Now \(\theta_1\), with \(\operatorname{Atan2}(7.5, 2) = 75.07^\circ\) and \(\phi = \operatorname{Atan2}(5\sin\theta_2,\ 3 + 5\cos\theta_2) = \pm 18.17^\circ\):</p>
+          <table>
+            <thead><tr><th>θ₂</th><th>θ₁ = 75.07° − φ</th><th>Check (FK)</th></tr></thead>
+            <tbody>
+              <tr><td>+28.96°</td><td><b>56.90°</b></td><td>x = 2.00, y = 7.50 ✓</td></tr>
+              <tr><td>−28.96°</td><td><b>93.24°</b></td><td>x = 2.00, y = 7.50 ✓</td></tr>
+            </tbody>
+          </table>
+          <div class="warn">Slides 24–25 evaluate <code>Atan2(7.5, 2)</code> as 14.93°, which is really Atan2(2, 7.5) (x and y swapped). That gives θ₁ = −3.24° and 33.10°, which reach the <b>mirrored</b> point (7.5, 2). With Atan2(y, x) = 75.07°, the correct answers for (2, 7.5) are <b>56.90° and 93.24°</b>. D and θ₂ on the slides are correct.</div>
+          <div class="two">
+            <figure class="fig"><img loading="lazy" src="img/w11-p24.jpg" alt="Example 1 theta1 with theta2 positive"><figcaption>W11 slide 24</figcaption></figure>
+            <figure class="fig"><img loading="lazy" src="img/w11-p25.jpg" alt="Example 1 theta1 with theta2 negative"><figcaption>W11 slide 25</figcaption></figure>
+          </div>
+        </div>
+
+        <div class="note" id="rrr">
+          <h3>RRR configuration (no offset) — 2D projected into 3D</h3>
+          <p>An RRR (Revolute-Revolute-Revolute) robot in 3D is mathematically <b>identical to a 2-link planar robot</b>, just rotating on a base axis. Swap the planar coordinates:</p>
+          <div class="flow"><span>base x → projected radius r</span><span>base y → vertical height s</span></div>
+          <figure class="fig"><img loading="lazy" src="img/w11-p15.jpg" alt="Projection of 2-link planar arm into 3D RRR"><figcaption>W11 slide 15</figcaption></figure>
+          <div class="eq">$$\theta_1 = \operatorname{Atan2}(y_c, x_c) \qquad r = \sqrt{x_c^2 + y_c^2} \qquad s = z_c - d_1$$
+          $$D = \frac{r^2 + s^2 - a_2^2 - a_3^2}{2a_2a_3} = \frac{x_c^2 + y_c^2 + (z_c - d_1)^2 - a_2^2 - a_3^2}{2a_2a_3}$$
+          $$\theta_3 = \operatorname{Atan2}\!\left(\pm\sqrt{1 - D^2},\ D\right)$$
+          $$\theta_2 = \operatorname{Atan2}\!\left(z_c - d_1,\ \sqrt{x_c^2 + y_c^2}\right) - \operatorname{Atan2}\big(a_3\sin\theta_3,\ a_2 + a_3\cos\theta_3\big)$$</div>
+          <figure class="fig"><img loading="lazy" src="img/w11-p16.jpg" alt="RRR configuration 3D isometric view and IK equations"><figcaption>W11 slide 16</figcaption></figure>
+          <p>Another valid base solution is \(\theta_1 = \operatorname{Atan2}(y_c, x_c) + \pi\) (reaching back over the base).</p>
+          <div class="warn">Slide 16 prints \(a_3^3\) in D. It should be \(a_3^2\). Slide 27 labels the links \(a_1, a_2\) in the D formula but \(a_2, a_3\) in the figure — use the links that form the elbow (\(a_2, a_3\)). Slide 27 also shows the θ₂ subtraction term with its arguments swapped (\(a_2 + a_3\cos\theta_3\) first). The order above, \(\operatorname{Atan2}(a_3\sin\theta_3,\ a_2 + a_3\cos\theta_3)\), matches the 2-link θ₁ formula.</div>
+          <p><b>Example:</b> \(d_1 = 1\), \(a_2 = 4\), \(a_3 = 3\), target (3, 4, 2) → θ₁ = 53.13°, r = 5, s = 1, D = 0.0417, θ₃ = ±87.61°.</p>
+        </div>
+
+        <div class="note" id="offset">
+          <h3>RRR with offset — the offset illusion</h3>
+          <p>When the shoulder is offset sideways by \(d\), the arm plane no longer passes through the base axis. The same target can then be reached with the elbow bending to either side of the target line:</p>
+          <div class="two">
+            <div class="card"><h4>Left-arm configuration</h4><p>Elbow bends <b>left</b> of the target line.</p></div>
+            <div class="card"><h4>Right-arm configuration</h4><p>Elbow bends <b>right</b> of the target line.</p></div>
+          </div>
+          <figure class="fig"><img loading="lazy" src="img/w11-p17.jpg" alt="The offset illusion: left and right arm"><figcaption>W11 slide 17</figcaption></figure>
+          <p>By Pythagoras, the usable in-plane radius shrinks to \(\sqrt{x_c^2 + y_c^2 - d^2}\). The θ₁ "modifier" formulas:</p>
+          <div class="eq">$$\text{Right arm: }\ \theta_1 = \operatorname{Atan2}(y_c, x_c) + \operatorname{Atan2}\!\left(-\sqrt{x_c^2 + y_c^2 - d^2},\ -d\right)$$
+          $$\text{Left arm: }\ \theta_1 = \operatorname{Atan2}(y_c, x_c) - \operatorname{Atan2}\!\left(\sqrt{x_c^2 + y_c^2 - d^2},\ d\right)$$</div>
+          <figure class="fig"><img loading="lazy" src="img/w11-p18.jpg" alt="Mathematics modifiers for right and left arm"><figcaption>W11 slide 18</figcaption></figure>
+          <p><b>Right arm derivation:</b> \(\theta_1 = \alpha + \beta\), with \(\alpha = \operatorname{Atan2}(y_c, x_c)\), \(\gamma = \operatorname{Atan2}(\sqrt{r^2 - d^2}, d)\) and \(\beta = \gamma + \pi\). Since \(\cos(\theta+\pi) = -\cos\theta\) and \(\sin(\theta+\pi) = -\sin\theta\), \(\beta = \operatorname{Atan2}(-\sqrt{r^2-d^2}, -d)\).<br><b>Left arm:</b> \(\theta_1 = \phi - \alpha\), where \(\phi = \operatorname{Atan2}(y_c, x_c)\) and \(\alpha = \operatorname{Atan2}(\sqrt{r^2-d^2}, d)\).</p>
+          <p>For θ₂ and θ₃ use the RRR formulas, but with \(r^2 = x_c^2 + y_c^2 - d^2\):</p>
+          <div class="eq">$$D = \frac{x_c^2 + y_c^2 - d^2 + (z_c - d_1)^2 - a_2^2 - a_3^2}{2a_2a_3}$$</div>
+          <div class="warn">Slide 29 writes θ₃ = Atan2(D, ±√(1−D²)) with the arguments reversed, and slide 31 ends with "−d₁" where it should be "−d". Use Atan2(±√(1−D²), D) and −d, which match slides 12, 14 and 18.</div>
+        </div>
+
+        <div class="note" id="rrp">
+          <h3>RRP configuration (Revolute-Revolute-Prismatic)</h3>
+          <p>Replacing the last rotating joint with an <b>extending (prismatic)</b> joint vastly simplifies IK.</p>
+          <table>
+            <thead><tr><th></th><th>RRR</th><th>RRP</th></tr></thead>
+            <tbody>
+              <tr><td>Output required</td><td>Angle θ₃</td><td>Linear distance d₃</td></tr>
+              <tr><td>Complexity</td><td>High — law of cosines</td><td>Low — Pythagorean theorem</td></tr>
+            </tbody>
+          </table>
+          <figure class="fig"><img loading="lazy" src="img/w11-p19.jpg" alt="RRR vs RRP taxonomy"><figcaption>W11 slide 19</figcaption></figure>
+          <div class="eq">$$\theta_1 = \operatorname{Atan2}(y_c, x_c) \qquad r = \sqrt{x_c^2 + y_c^2} \qquad s = z_c - d_1$$
+          $$d_3 = \sqrt{r^2 + s^2} = \sqrt{x_c^2 + y_c^2 + (z_c - d_1)^2}$$
+          $$\theta_2 = \operatorname{Atan2}(s, r) = \operatorname{Atan2}\!\left(z_c - d_1,\ \sqrt{x_c^2 + y_c^2}\right)$$</div>
+          <figure class="fig"><img loading="lazy" src="img/w11-p20.jpg" alt="RRP configuration equations"><figcaption>W11 slide 20</figcaption></figure>
+          <div class="warn">Slide 33 writes θ₂ = Atan2(r, s). The elevation angle is measured up from the horizontal, so use <b>Atan2(s, r)</b> as on slide 20.</div>
+          <p><b>Example:</b> \(d_1 = 2\), target (3, 4, 5) → θ₁ = 53.13°, r = 5, s = 3, d₃ = √34 ≈ 5.83, θ₂ = 30.96°. RRP has only <b>one</b> value of θ₂ and d₃ (the assignment hint says so too).</p>
+        </div>
+
+        <div class="note" id="ik-cheatsheet">
+          <h3>IK formula sheet</h3>
+          <div class="tbl-wrap"><table>
+            <thead><tr><th>Arm</th><th>Step</th><th>Formula</th></tr></thead>
+            <tbody>
+              <tr><td rowspan="3">2-link planar</td><td>D</td><td>\((x^2+y^2-a_1^2-a_2^2)/(2a_1a_2)\)</td></tr>
+              <tr><td>θ₂</td><td>\(\operatorname{Atan2}(\pm\sqrt{1-D^2}, D)\)</td></tr>
+              <tr><td>θ₁</td><td>\(\operatorname{Atan2}(y,x) - \operatorname{Atan2}(a_2\sin\theta_2, a_1+a_2\cos\theta_2)\)</td></tr>
+              <tr><td rowspan="3">RRR</td><td>θ₁, r, s</td><td>\(\operatorname{Atan2}(y_c,x_c)\), \(\sqrt{x_c^2+y_c^2}\), \(z_c-d_1\)</td></tr>
+              <tr><td>θ₃</td><td>\(\operatorname{Atan2}(\pm\sqrt{1-D^2}, D)\), \(D = (r^2+s^2-a_2^2-a_3^2)/(2a_2a_3)\)</td></tr>
+              <tr><td>θ₂</td><td>\(\operatorname{Atan2}(s, r) - \operatorname{Atan2}(a_3\sin\theta_3, a_2+a_3\cos\theta_3)\)</td></tr>
+              <tr><td rowspan="2">RRR + offset d</td><td>θ₁ right</td><td>\(\operatorname{Atan2}(y_c,x_c) + \operatorname{Atan2}(-\sqrt{x_c^2+y_c^2-d^2}, -d)\)</td></tr>
+              <tr><td>θ₁ left</td><td>\(\operatorname{Atan2}(y_c,x_c) - \operatorname{Atan2}(\sqrt{x_c^2+y_c^2-d^2}, d)\)</td></tr>
+              <tr><td rowspan="2">RRP</td><td>d₃</td><td>\(\sqrt{x_c^2+y_c^2+(z_c-d_1)^2}\)</td></tr>
+              <tr><td>θ₂</td><td>\(\operatorname{Atan2}(z_c-d_1, \sqrt{x_c^2+y_c^2})\)</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+      </section>
+
+      <!-- ─────────────── W13 ─────────────── -->
+      <section class="week" id="w13">
+        <h2><span class="pill wk">W13</span>Sensor and Smart Device</h2>
+
+        <div class="note" id="sensor-what">
+          <h3>What is a sensor?</h3>
+          <div class="key">A sensor is a device that <b>detects physical changes</b> and <b>converts them into electrical signals</b>.</div>
+          <ul>
+            <li>Detects phenomena such as temperature, light, pressure and chemical substances.</li>
+            <li>Used in industrial automation, environmental monitoring, consumer electronics and medical devices.</li>
+            <li>Gives systems the data to <b>monitor, analyze and interact</b> with their surroundings.</li>
+            <li>Types: electronic, mechanical, optical, chemical, biological and thermal. Each detects <b>specific</b> properties and <b>converts</b> them into measurable signals.</li>
+          </ul>
+          <figure class="fig"><img loading="lazy" src="img/w13-p06.jpg" alt="Six common industrial sensors"><figcaption>W13 slide 6</figcaption></figure>
+          <table>
+            <thead><tr><th>Sensor</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Temperature sensor</td><td>Detects temperature changes → electrical signal</td></tr>
+              <tr><td>Pressure sensor</td><td>Gas/liquid pressure → proportional electrical signal</td></tr>
+              <tr><td>Load cell</td><td>Force or weight → signal, via mechanical deformation</td></tr>
+              <tr><td>Photoelectric sensor</td><td>Uses light to detect presence, absence or position</td></tr>
+              <tr><td>Encoder</td><td>Rotational or linear motion → digital or analog signal</td></tr>
+              <tr><td>Safety light curtain</td><td>Multiple light beams detect intrusion, for safety</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note" id="sensor-stages">
+          <h3>How a sensor works — 4 stages</h3>
+          <div class="flow"><span>1 Detection</span><i>→</i><span>2 Conversion (transduction)</span><i>→</i><span>3 Signal conditioning</span><i>→</i><span>4 Output</span></div>
+          <figure class="fig"><img loading="lazy" src="img/w13-p07.jpg" alt="Four stages of how a sensor works"><figcaption>W13 slide 7</figcaption></figure>
+          <ol>
+            <li><b>Detection of physical phenomenon</b> — a sensing element interacts directly with the quantity (temperature, light, pressure, displacement) and changes.</li>
+            <li><b>Conversion (transduction)</b> — the change becomes an electrical signal. At this stage it is <b>weak, analog and not yet usable</b>.</li>
+            <li><b>Signal conditioning</b> — improve quality and reliability: <b>amplification, filtering, linearization, noise reduction</b>.</li>
+            <li><b>Output</b> — an analog or digital signal read by a <b>PLC, microcontroller, DAQ system, or display</b>.</li>
+          </ol>
+        </div>
+
+        <div class="note" id="sensor-types">
+          <h3>Proximity &amp; fiber-optic sensors</h3>
+          <div class="tbl-wrap"><table>
+            <thead><tr><th>Sensor</th><th>Detects</th><th>Key features</th><th>Applications</th></tr></thead>
+            <tbody>
+              <tr><td><b>Capacitive proximity</b></td><td>Metal <b>and</b> non-metal; solid, liquid, granular</td><td>Range depends on the target's <b>dielectric constant</b></td><td>Level detection, presence sensing, packaging inspection, bulk material level</td></tr>
+              <tr><td><b>Inductive proximity</b></td><td><b>Metal only</b></td><td>Non-contact, highly reliable, resists dust, oil, vibration</td><td>Position sensing, transport monitoring, pulse generation, RPM, rotation, feed/reject, idle running</td></tr>
+              <tr><td><b>Fiber-optic photoelectric</b></td><td>Tiny objects</td><td>Transmitter/receiver linked by fiber cables; fits tight spaces, high-temperature and harsh environments</td><td>Precision assembly, electronic components, pneumatic pick-and-place, packaging machines</td></tr>
+            </tbody>
+          </table></div>
+          <div class="two">
+            <figure class="fig"><img loading="lazy" src="img/w13-p08.jpg" alt="Capacitive proximity sensors"><figcaption>W13 slide 8 — capacitive</figcaption></figure>
+            <figure class="fig"><img loading="lazy" src="img/w13-p10.jpg" alt="Inductive proximity sensors"><figcaption>W13 slide 10 — inductive</figcaption></figure>
+          </div>
+          <figure class="fig"><img loading="lazy" src="img/w13-p09.jpg" alt="Fiber-optic photoelectric sensors"><figcaption>W13 slide 9 — fiber-optic</figcaption></figure>
+        </div>
+
+        <div class="note" id="smart-sensor">
+          <h3>Smart sensors</h3>
+          <div class="key">A smart sensor is a sensor with <b>built-in signal processing, intelligence, and communication</b> capabilities.</div>
+          <p>It takes input from the environment and uses built-in compute to perform predefined functions, processing data before passing it on. The result is more accurate, automated data with less noise. Uses include smart grids, reconnaissance, exploration and science.</p>
+          <table>
+            <thead><tr><th>Function</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><b>Measurement</b></td><td>Measures physical quantities (detect → electrical signal)</td></tr>
+              <tr><td><b>Configuration</b></td><td>Setup and calibration; detects position or installation errors</td></tr>
+              <tr><td><b>Verification</b></td><td>Self-diagnostics — nonstop supervision of sensor behavior</td></tr>
+              <tr><td><b>Communication</b></td><td>Exchanges data with the main microcontroller or external devices</td></tr>
+            </tbody>
+          </table>
+          <p>Benefits: high accuracy, real-time monitoring, self-diagnostics, digital communication, easy Industry 4.0 integration.</p>
+          <figure class="fig"><img loading="lazy" src="img/w13-p12.jpg" alt="Smart sensor functions"><figcaption>W13 slide 12</figcaption></figure>
+          <p><b>Applications:</b> motion sensors (occupancy → lights on/off, saves energy), light sensors (daylight harvesting, human-centric lighting), thermal sensors (HVAC, equipment overheating), smoke sensors (early fire alarm, more evacuation time).</p>
+        </div>
+
+        <div class="note" id="smart-block">
+          <h3>Smart sensor block diagram</h3>
+          <div class="flow"><span>Sensing unit</span><i>→</i><span>Signal conditioning</span><i>→</i><span>ADC</span><i>→</i><span>Application algorithms</span><i>⇄</i><span>Communication unit</span></div>
+          <figure class="fig"><img loading="lazy" src="img/w13-p14.jpg" alt="Smart sensor block diagram"><figcaption>W13 slide 14</figcaption></figure>
+          <ul>
+            <li><b>Sensing unit</b> — detects changes in physical parameters and produces equivalent electrical signals.</li>
+            <li><b>Signal conditioning unit</b> — shapes the signal for the next stage without losing data.</li>
+            <li><b>ADC</b> — converts analog to digital and sends it to the microprocessor.</li>
+            <li><b>Application algorithm</b> — processes data with the loaded program and generates output signals.</li>
+            <li><b>Memory</b> — stores received and processed data.</li>
+            <li><b>Local user interface (LUI)</b> — panel-mounted device that lets building operators monitor and control equipment.</li>
+            <li><b>Communication unit / transceiver</b> — sends outputs to the main station <b>and</b> receives commands from it.</li>
+          </ul>
+        </div>
+
+        <div class="note" id="smart-vs-traditional">
+          <h3>Traditional vs smart sensor</h3>
+          <table>
+            <thead><tr><th>Traditional (e.g. inductive sensor)</th><th>Smart (e.g. IO-Link smart sensor)</th></tr></thead>
+            <tbody>
+              <tr><td>Detect</td><td>Detect + process</td></tr>
+              <tr><td>Analog</td><td>Digital</td></tr>
+              <tr><td>No diagnostics</td><td>Self-diagnostics</td></tr>
+              <tr><td>PLC does the processing</td><td>MCU inside does the processing</td></tr>
+            </tbody>
+          </table>
+          <figure class="fig"><img loading="lazy" src="img/w13-p19.jpg" alt="Traditional sensor vs smart sensor"><figcaption>W13 slide 19</figcaption></figure>
+        </div>
+
+        <div class="note" id="sensor-impact">
+          <h3>The impact of sensors on industrial automation</h3>
+          <p>Sensors provide real-time data, measure key parameters (temperature, pressure, flow rate, vibration), and enable automatic control and optimization.</p>
+          <ol>
+            <li><b>Real-time monitoring &amp; process control</b></li>
+            <li><b>Fault detection &amp; predictive maintenance</b> — catch abnormal conditions before failure</li>
+            <li><b>Quality improvement</b> — fewer defects</li>
+            <li><b>Energy efficiency</b> — lower operating cost</li>
+            <li><b>Safety enhancement</b> — detect hazards, fewer accidents</li>
+          </ol>
+          <p><b>Benefits of integration:</b> improved efficiency (less downtime), increased productivity, enhanced quality, reduced costs (energy, waste, maintenance), improved safety.</p>
+          <table>
+            <thead><tr><th>Sensor type</th><th>Measures</th><th>Typical applications</th></tr></thead>
+            <tbody>
+              <tr><td>Temperature</td><td>Temperature</td><td>HVAC, furnaces, boilers, process control</td></tr>
+              <tr><td>Pressure</td><td>Pressure</td><td>Hydraulic &amp; pneumatic systems, tanks, pipelines</td></tr>
+              <tr><td>Flow</td><td>Liquid/gas flow rate</td><td>Water treatment, chemical processing, food industry</td></tr>
+              <tr><td>Vibration</td><td>Machine vibration</td><td>Predictive maintenance, motor &amp; bearing monitoring</td></tr>
+              <tr><td>Proximity</td><td>Object presence</td><td>Conveyors, position detection, part counting</td></tr>
+            </tbody>
+          </table>
+          <p><b>Uses in manufacturing:</b> predictive maintenance, process control, quality control, inventory management.</p>
+          <figure class="fig"><img loading="lazy" src="img/w13-p26.jpg" alt="Sensors to PLC to Node-RED to cloud"><figcaption>W13 slide 26 — sensors → PLC (→ lamps, contactors, motors, valves) → Node-RED → cloud → dashboards, database, alerts</figcaption></figure>
+        </div>
+      </section>
+
+      <!-- ─────────────── W14 ─────────────── -->
+      <section class="week" id="w14">
+        <h2><span class="pill wk">W14</span>Smart Device and Interface System — Node-RED</h2>
+
+        <div class="note" id="interface">
+          <h3>What is an interface?</h3>
+          <div class="key">An interface is a <b>connection point</b> that allows two systems or devices to <b>exchange information</b>.</div>
+          <div class="flow"><span>Connect</span><i>→</i><span>Exchange data</span><i>→</i><span>Work together</span></div>
+          <figure class="fig"><img loading="lazy" src="img/w14-p06.jpg" alt="Interfaces between sensor, FX5U and dashboard/HMI"><figcaption>W14 slide 6</figcaption></figure>
+          <div class="tbl-wrap"><table>
+            <thead><tr><th>Link</th><th>Interface examples</th></tr></thead>
+            <tbody>
+              <tr><td>Sensor → PLC</td><td>Digital I/O (24 VDC), analog I/O (0–10 V), current (4–20 mA), temperature (RTD, thermocouple), proximity/photoelectric</td></tr>
+              <tr><td>PLC (FX5U) itself</td><td>Digital I/O, analog I/O, high-speed counter, pulse output, positioning/motion control</td></tr>
+              <tr><td>PLC → dashboard / HMI</td><td>Ethernet (TCP/IP), serial (RS-232 / RS-485), industrial networks (CC-Link IE), USB, OPC / MQTT / Web API</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+
+        <div class="note" id="interface-types">
+          <h3>Types of interface — and why we need one</h3>
+          <div class="two">
+            <div class="card"><h4>1 · Hardware interface — connects devices</h4>
+              <p>The physical and electrical connection for transferring signals or data.</p>
+              <ul><li><b>External ports:</b> USB, HDMI, Ethernet</li><li><b>Internal slots:</b> PCIe (graphics card, memory)</li><li><b>Chip protocols:</b> UART, SPI</li></ul></div>
+            <div class="card"><h4>2 · Software interface — connects applications &amp; data</h4>
+              <p>Lets different software or systems exchange and process data.</p>
+              <ul><li><b>UI:</b> GUI (icons, windows) and CLI (typed text)</li><li><b>API:</b> software systems talk to each other</li><li><b>Programming/object interface:</b> a code contract — what a component must do, not how</li></ul></div>
+          </div>
+          <p><b>Question from the slide:</b> "If we connect a PLC and a computer using an Ethernet cable, can they communicate immediately?" — <b>No.</b> The cable is only the hardware interface. Both sides also need matching network settings and a common <b>protocol</b> (see <a href="#notes/interface-vs-protocol">interface vs protocol</a>).</p>
+          <figure class="fig"><img loading="lazy" src="img/w14-p09.jpg" alt="Why we need an interface: PLC data to dashboard, database, IoT, cloud"><figcaption>W14 slide 9</figcaption></figure>
+          <p><b>Why?</b> We need an interface / integration solution to <b>collect, process and deliver PLC data</b> to other systems: dashboards (live data, trends, KPIs), databases (history, reporting, analytics), IoT/MQTT (device communication, edge computing) and cloud (storage, analytics, remote access).</p>
+        </div>
+
+        <div class="note" id="nodered-what">
+          <h3>What is Node-RED?</h3>
+          <div class="key">Node-RED is a <b>flow-based programming tool</b> for connecting devices, systems and online services. It is <b>not a communication protocol</b> — it is an <b>integration tool</b> that works with different protocols.</div>
+          <ul>
+            <li>Goal: let anyone build applications that <b>collect, transform and visualize</b> data. It is low-code, so it suits users of any background.</li>
+            <li>Built on <b>Node.js</b> (event-driven, non-blocking) → runs at the edge on low-cost hardware (Raspberry Pi) and in the cloud.</li>
+            <li>Installation (W13): install Node.js → run the Node-RED install command → verify the installation → run Node-RED.</li>
+          </ul>
+          <p><b>How does Node-RED work?</b> Input → Process → Output:</p>
+          <figure class="fig"><img loading="lazy" src="img/w14-p41.jpg" alt="Inject, Function, Debug flow"><figcaption>W14 slide 41</figcaption></figure>
+          <table>
+            <thead><tr><th>Stage</th><th>Node</th><th>Example</th></tr></thead>
+            <tbody>
+              <tr><td>Input — data enters the flow</td><td>Inject</td><td>Simulated sensor value (temperature = 35 °C)</td></tr>
+              <tr><td>Process — transform / filter</td><td>Function</td><td>Convert units, calculate, format, add timestamp</td></tr>
+              <tr><td>Output — send or display</td><td>Debug</td><td>Debug panel, dashboard, database, MQTT</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note" id="nodered-first-flow">
+          <h3>Your first flow: Inject → Debug</h3>
+          <ol>
+            <li><b>Open the editor:</b> <code>http://localhost:1880</code> (from another computer: <code>http://&lt;ip-address&gt;:1880</code>).</li>
+            <li><b>Add an Inject node</b> — injects messages by clicking its button or on a time interval.</li>
+            <li><b>Add a Debug node</b> — shows messages in the Debug sidebar (by default only <code>msg.payload</code>; it can show the whole message).</li>
+            <li><b>Wire them</b> — drag from the output port of one to the input port of the other.</li>
+            <li><b>Deploy</b> — nodes only exist in the editor until you click <b>Deploy</b>.</li>
+            <li><b>Inject</b> — click the Inject button. Numbers appear: by default the payload is a <b>timestamp in milliseconds</b>.</li>
+          </ol>
+        </div>
+
+        <div class="note" id="nodered-editor">
+          <h3>Editor layout — 4 components</h3>
+          <figure class="fig"><img loading="lazy" src="img/w14-p12.jpg" alt="Node-RED editor with header, palette, workspace, sidebar"><figcaption>W14 slide 12</figcaption></figure>
+          <ol>
+            <li><b>Header</b> (top) — Deploy button, main menu, user menu (if authentication is enabled).</li>
+            <li><b>Palette</b> (left) — the nodes available to use, in categories (inputs, outputs, functions first; subflows at the top). Can be hidden.</li>
+            <li><b>Workspace</b> (middle) — build flows by dragging nodes and wiring them. It has one tab per flow/subflow. The footer has zoom in/out/reset and the <b>view navigator</b> (scaled-down map for finding "lost" nodes). Customize it via User Settings → View.</li>
+            <li><b>Sidebar</b> (right) — info, debug, config nodes, context.</li>
+          </ol>
+        </div>
+
+        <div class="note" id="nodered-nodes">
+          <h3>Flows, nodes &amp; wires</h3>
+          <p><b>Flow</b> = a tab in the workspace, the main way to organize nodes. (Informally, "flow" also means one set of connected nodes, so one tab can contain several flows.)</p>
+          <ul>
+            <li>Each flow has a name and description (shown in the Info sidebar); all nodes in a flow share <b>flow-scoped context</b>.</li>
+            <li>Add a flow: the <b>+</b> button, or double-click free space in the tab bar. Reorder by dragging tabs.</li>
+            <li>Edit flow properties: double-click its tab → <b>Properties</b> (name, Markdown description) and <b>Environment Variables</b>.</li>
+            <li><b>Disabled flow:</b> none of its nodes are created on deploy.</li>
+          </ul>
+          <p><b>Adding nodes:</b> drag from the palette, use the <b>Quick-Add</b> dialog (<b>Ctrl/Cmd + click</b> the workspace), or import from the library/clipboard.</p>
+          <ul>
+            <li>A node has <b>at most one input port</b> and <b>many output ports</b>. Ports can have labels (e.g. a Switch node shows the matching rule).</li>
+            <li><b>Status</b> under a node shows its runtime state (e.g. MQTT connected).</li>
+            <li><b>Blue circle</b> = undeployed changes · <b>red triangle</b> = configuration errors.</li>
+            <li><b>Inject and Debug</b> are the only core nodes with buttons.</li>
+            <li>Edit a node: <b>double-click</b> or press <b>Enter</b> (with several selected, the first is edited). Tabs: <b>Properties, Description, Appearance</b>.</li>
+          </ul>
+          <figure class="fig"><img loading="lazy" src="img/w14-p19.jpg" alt="Node indicators and Quick-Add dialog"><figcaption>W14 slide 19</figcaption></figure>
+          <p><b>Wires:</b> press on a port, drag to the destination, release. Or hold <b>Ctrl/Cmd</b>, click the port, then click the destination; keep holding to chain more wires quickly.</p>
+          <p><b>Arranging:</b> the Arrange menu aligns and distributes nodes, e.g. align left <code>Alt-a l</code>, right <code>Alt-a r</code>, top <code>Alt-a t</code>, bottom <code>Alt-a b</code>, middle <code>Alt-a m</code>, center <code>Alt-a c</code>, distribute horizontally <code>Alt-a h</code>, vertically <code>Alt-a v</code>.</p>
+        </div>
+
+        <div class="note" id="nodered-subflows">
+          <h3>Groups &amp; subflows</h3>
+          <div class="two">
+            <div class="card"><h4>Group</h4><p>Nodes joined so they move/copy as <b>one object</b>. Can have a border, background color and label. Create: select nodes → <i>Groups → Group selection</i>. Edit: double-click (Properties, Environment Variables, Description).</p></div>
+            <div class="card"><h4>Subflow</h4><p>A collection of nodes <b>collapsed into a single node</b>. It reduces visual complexity and packages reusable logic. Once created, it appears in the palette.</p></div>
+          </div>
+          <ul>
+            <li>Create empty: <i>Subflow → Create subflow</i>. Convert: <i>Subflow → Selection to Subflow</i>.</li>
+            <li>Conversion is only possible if the <b>wires coming into the selection connect to one node</b> — a subflow node has at most one input.</li>
+            <li>Edit it by double-clicking it in the palette, or with "Edit flow template" in an instance. Subflow tabs can be closed (unlike flow tabs).</li>
+            <li>Inputs/outputs are grey square nodes: at most one input, as many outputs as needed. There is an optional <b>status</b> output (msg.payload = string or Status Object).</li>
+            <li>Properties dialog tabs: Properties (per-instance env vars), Module Properties (metadata), Description, Appearance.</li>
+          </ul>
+        </div>
+
+        <div class="note" id="nodered-import">
+          <h3>Import / export &amp; palette manager</h3>
+          <p>Flows are shared as <b>JSON</b>.</p>
+          <div class="two">
+            <div class="card"><h4>Import</h4><ul><li>paste flow JSON</li><li>upload a JSON file</li><li>browse the local library</li><li>browse example flows of installed nodes</li></ul><p>Into the current flow or a new flow.</p></div>
+            <div class="card"><h4>Export</h4><ul><li>copy to clipboard</li><li>download a JSON file</li><li>save to the local library</li></ul><p>Selected nodes, current flow, or all flows. <b>Compact</b> (one line) or <b>formatted</b> (indented).</p></div>
+          </div>
+          <p><b>Palette Manager</b> (User Settings → Palette) installs new nodes:</p>
+          <ul>
+            <li><b>Nodes</b> tab — installed modules with version and node types; remove, disable or upgrade. A module <b>in use cannot be removed or disabled</b>.</li>
+            <li><b>Install</b> tab — search modules (shows last update and docs link), then click install. This is how you add <code>node-red-contrib-mcprotocol</code> and <code>node-red-contrib-modbus</code>.</li>
+          </ul>
+        </div>
+
+        <div class="note" id="nodered-sidebar">
+          <h3>Sidebar panels</h3>
+          <table>
+            <thead><tr><th>Panel</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><b>Information</b></td><td>Outline of all flows and nodes (searchable) plus details of the selection. Hover buttons: reveal in workspace, trigger node button, enable/disable.</td></tr>
+              <tr><td><b>Debug</b></td><td>Messages passed to Debug nodes plus some runtime logs. Filter: <b>all nodes / selected nodes / current flow</b>.</td></tr>
+              <tr><td><b>Configuration nodes</b></td><td>All config nodes by scope, with a use count. Unused ones have a dotted outline ("unused" filter). Double-click to edit.</td></tr>
+              <tr><td><b>Context data</b></td><td>View the contents of context.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note" id="assignment-temp">
+          <h3>Assignment: temperature monitoring &amp; alarm</h3>
+          <div class="flow"><span>Inject (°C)</span><i>→</i><span>Function (process)</span><i>→</i><span>Switch (classify)</span><i>→</i><span>Debug ×3</span></div>
+          <table>
+            <thead><tr><th>Condition</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>T &lt; 40 °C</td><td>Normal</td></tr>
+              <tr><td>40 °C ≤ T &lt; 60 °C</td><td>Warning</td></tr>
+              <tr><td>T ≥ 60 °C</td><td>Overheat — message must say <b>"MOTOR OVERHEAT"</b></td></tr>
+            </tbody>
+          </table>
+          <p>Give nodes meaningful names, test at least three temperatures, and submit a flow screenshot, result screenshots (NORMAL/WARNING/OVERHEAT) and the exported <b>.json</b>.</p>
+        </div>
+      </section>
+
+      <!-- ─────────────── W15 ─────────────── -->
+      <section class="week" id="w15">
+        <h2><span class="pill wk">W15</span>Node-RED with Mitsubishi PLC FX5U</h2>
+
+        <div class="note" id="plc-why">
+          <h3>Why connect a PLC to Node-RED?</h3>
+          <table>
+            <thead><tr><th>Reason</th><th>What it gives you</th></tr></thead>
+            <tbody>
+              <tr><td>Real-time monitoring</td><td>Machine status and process data in real time, from anywhere</td></tr>
+              <tr><td>Web-based dashboard</td><td>Intuitive dashboards in a web browser</td></tr>
+              <tr><td>Data processing</td><td>Filter, calculate and transform PLC data with flows</td></tr>
+              <tr><td>Data logging</td><td>Store data in files, databases or the cloud for history and analysis</td></tr>
+              <tr><td>IoT / cloud integration</td><td>Connect to cloud platforms and IoT services</td></tr>
+            </tbody>
+          </table>
+          <figure class="fig"><img loading="lazy" src="img/w15-p06.jpg" alt="Sensor to FX5U to Node-RED to applications"><figcaption>W15 slide 6 — the PLC connects to Node-RED over Ethernet (TCP/IP). Control path: Dashboard / Node-RED → PLC → Machine.</figcaption></figure>
+        </div>
+
+        <div class="note" id="fx5u-protocols">
+          <h3>FX5U communication options</h3>
+          <div class="tbl-wrap"><table>
+            <thead><tr><th>Protocol</th><th>Key points</th><th>Best for</th></tr></thead>
+            <tbody>
+              <tr><td><b>MC Protocol / SLMP</b> ★ Recommended</td><td>Mitsubishi native, high speed, access to full device memory, advanced functions</td><td>HMI, SCADA, engineering tools</td></tr>
+              <tr><td><b>Modbus TCP</b></td><td>Open standard, widely used, easy integration, multi-vendor</td><td>Cloud, Node-RED, third-party systems</td></tr>
+              <tr><td><b>OPC UA</b> (via OPC server / gateway)</td><td>Platform independent, secure, scalable</td><td>MES, ERP, IT systems</td></tr>
+              <tr><td><b>MQTT</b> (via gateway / application)</td><td>Lightweight <b>publish/subscribe</b>, real-time, cloud-friendly</td><td>IoT devices, cloud, remote monitoring</td></tr>
+            </tbody>
+          </table></div>
+          <figure class="fig"><img loading="lazy" src="img/w16-p08.jpg" alt="FX5U supported protocols"><figcaption>W16 slide 8 (same content as W15 slide 7, with "best for")</figcaption></figure>
+        </div>
+
+        <div class="note" id="fx5u-slmp">
+          <h3>FX5U setting for SLMP (GX Works3)</h3>
+          <ol>
+            <li><b>Navigation → Parameter → FX5UCPU → Module Parameter → Ethernet Port.</b></li>
+            <li><b>Basic Settings → Own Node Settings:</b> IP address <code>192.168.3.36</code>, subnet mask <code>255.255.255.0</code>. (Communication data code: Binary.)</li>
+            <li><b>External Device Configuration → &lt;Detailed Setting&gt;</b> opens the Ethernet Configuration window.</li>
+            <li>From <b>Module List → Ethernet Device (General)</b>, drag in an <b>SLMP Connection Module</b>. Set protocol <b>TCP</b> and port <b>9000</b>.</li>
+            <li>Click <b>Close with Reflecting the Setting</b>, then <b>Check</b> and <b>Apply</b>. Write the parameters to the PLC.</li>
+          </ol>
+          <figure class="fig"><img loading="lazy" src="img/w15-p08.jpg" alt="GX Works3 Ethernet port own node settings"><figcaption>W15 slide 8</figcaption></figure>
+          <figure class="fig"><img loading="lazy" src="img/w15-p10.jpg" alt="Adding SLMP connection module"><figcaption>W15 slide 10</figcaption></figure>
+        </div>
+
+        <div class="note" id="nodered-mc">
+          <h3>Node-RED: MC protocol nodes</h3>
+          <p>Install <code>node-red-contrib-mcprotocol</code> (v1.2.1, 3 nodes). The MITSUBISHI palette category then shows <b>MC Read</b>, <b>MC Write</b>, <b>Ind MC Read</b> and <b>Ind MC Write</b>.</p>
+          <ul>
+            <li><b>MC Write node:</b> Connection (192.168.3.36:9000), Address (e.g. <code>M100</code>), Data (<code>msg.payload</code>), Errors (Throw).</li>
+            <li><b>MC Protocol Connection:</b> Host <code>192.168.3.36</code>, Port <code>9000</code>, frame <b>3E</b>, protocol <b>TCP</b>, PLC type <b>Q</b>, PC No 0xff, timeout 1000 ms.</li>
+          </ul>
+          <figure class="fig"><img loading="lazy" src="img/w15-p12.jpg" alt="node-red-contrib-mcprotocol nodes and settings"><figcaption>W15 slide 12</figcaption></figure>
+          <div class="key">The host IP and port in Node-RED must match the FX5U's Own Node IP and the SLMP module's port.</div>
+        </div>
+
+        <div class="note" id="assignment-fx5u">
+          <h3>Assignment: PLC monitoring &amp; control with FX5U</h3>
+          <div class="flow"><span>Sensor / push button</span><i>→</i><span>FX5U</span><i>→</i><span>Node-RED</span><i>→</i><span>Dashboard</span></div>
+          <div class="flow"><span>Dashboard</span><i>→</i><span>Node-RED</span><i>→</i><span>FX5U</span><i>→</i><span>Output device</span></div>
+          <table>
+            <thead><tr><th>Device</th><th>Address</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td>START push button</td><td>X0</td><td>Start the system</td></tr>
+              <tr><td>STOP push button</td><td>X1</td><td>Stop the system</td></tr>
+              <tr><td>Photoelectric sensor</td><td>X2</td><td>Detect a workpiece</td></tr>
+              <tr><td>Motor</td><td>Y0</td><td>Conveyor motor</td></tr>
+              <tr><td>Green lamp</td><td>Y1</td><td>System running</td></tr>
+              <tr><td>Red lamp</td><td>Y2</td><td>Alarm</td></tr>
+              <tr><td>System run status</td><td>M0</td><td>Internal running status</td></tr>
+              <tr><td>Workpiece count</td><td>D0</td><td>Total detected workpieces</td></tr>
+            </tbody>
+          </table>
+          <p><b>X</b> = input · <b>Y</b> = output · <b>M</b> = internal relay (bit) · <b>D</b> = data register (word).</p>
+          <ul>
+            <li><b>Task 1 (PLC):</b> START X0 → Y0 motor + Y1 green ON, M0 = ON. Each X2 detection → D0 + 1. STOP X1 → Y0, Y1, M0 OFF.</li>
+            <li><b>Task 2:</b> Node-RED reads M0, Y0, X2 and D0 in real time.</li>
+            <li><b>Task 3 (dashboard):</b> system status (RUNNING/STOPPED), motor status, sensor status, production counter.</li>
+            <li><b>Bonus:</b> if <b>D0 ≥ 20</b>, Node-RED shows "PRODUCTION TARGET REACHED", activates a dashboard alarm and <b>writes M20</b>. The PLC turns ON <b>red lamp Y2</b>.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ─────────────── W16 ─────────────── -->
+      <section class="week" id="w16">
+        <h2><span class="pill wk">W16</span>Node-RED with FX5U — Modbus TCP</h2>
+
+        <div class="note" id="industrial-protocol">
+          <h3>Industrial protocols &amp; the automation pyramid</h3>
+          <div class="key">An industrial protocol is a <b>set of rules and conventions</b> that define how devices <b>format, transmit and interpret</b> data. It enables reliable communication between devices <b>at every level</b>.</div>
+          <figure class="fig"><img loading="lazy" src="img/w16-p05.jpg" alt="Automation pyramid"><figcaption>W16 slide 5</figcaption></figure>
+          <table>
+            <thead><tr><th>Level</th><th>Name</th><th>Examples</th></tr></thead>
+            <tbody>
+              <tr><td>5</td><td>Enterprise — business operations, logistics</td><td>ERP, SAP, Oracle, finance, HR, SCM</td></tr>
+              <tr><td>4</td><td>Operations management — monitor &amp; optimize production</td><td>MES, production tracking, scheduling, KPI</td></tr>
+              <tr><td>3</td><td>Supervisory control — supervise the process</td><td>SCADA, HMI, historian, alarms, trends</td></tr>
+              <tr><td>2</td><td>Control — execute control logic</td><td>PLC, DCS, PAC, motion controller</td></tr>
+              <tr><td>1</td><td>Field — interact with the physical process</td><td>Sensors, transducers, actuators, I/O modules</td></tr>
+            </tbody>
+          </table>
+          <p><b>Benefits:</b> <b>Interoperability</b> (different vendors communicate) · <b>Reliability &amp; security</b> (stable, data integrity) · <b>Efficiency</b> (less engineering and maintenance cost) · <b>Scalability</b> (expand to IT/cloud).</p>
+        </div>
+
+        <div class="note" id="interface-vs-protocol">
+          <h3>Interface vs protocol</h3>
+          <p>Devices need <b>both</b> a physical/logical connection (interface) and a common language (protocol).</p>
+          <div class="two">
+            <div class="card"><h4>Interface — how devices are connected</h4><ul><li>Physical or logical connection</li><li>Electrical signals, connectors, cables, network media</li><li>Examples: Ethernet (RJ45), serial RS-232 / RS-485, USB, Wi-Fi</li><li><b>Different interfaces can use the same protocol</b></li></ul></div>
+            <div class="card"><h4>Protocol — how data is communicated</h4><ul><li>Rules for how data is <b>formatted, transmitted and interpreted</b></li><li>The "language" devices use to understand each other</li><li>Examples: Modbus, PROFINET, EtherNet/IP, OPC UA, MQTT</li><li><b>Different protocols can run over the same interface</b></li></ul></div>
+          </div>
+          <figure class="fig"><img loading="lazy" src="img/w16-p07.jpg" alt="Interface vs protocol"><figcaption>W16 slide 7 — Modbus TCP over Ethernet and Modbus RTU over RS-485; one Ethernet link carrying Modbus TCP, PROFINET, EtherNet/IP, OPC UA and MQTT</figcaption></figure>
+        </div>
+
+        <div class="note" id="modbus">
+          <h3>Modbus: client-server, request-response</h3>
+          <p>Modbus is a widely used industrial protocol for data exchange between PLCs, HMIs, sensors, inverters, robots, PCs and Node-RED.</p>
+          <figure class="fig"><img loading="lazy" src="img/w16-p10.jpg" alt="Modbus client-server request-response"><figcaption>W16 slide 10</figcaption></figure>
+          <ul>
+            <li>The <b>client</b> (HMI, SCADA, PC, Node-RED) sends a request to read/write data.</li>
+            <li>The <b>server</b> (PLC, device) processes it and returns a response.</li>
+            <li><b>Only the client can start communication.</b></li>
+            <li>Example: request "Read Holding Register, address 0, quantity 1" → response "Data: 1500".</li>
+          </ul>
+        </div>
+
+        <div class="note" id="modbus-fc">
+          <h3>Function codes &amp; data types</h3>
+          <table>
+            <thead><tr><th>Data type</th><th>Size</th><th>Access</th><th>Read FC</th><th>Write FC</th></tr></thead>
+            <tbody>
+              <tr><td>Coil</td><td>1 bit</td><td>R/W</td><td>01</td><td>05 (single), 0FH=15 (multiple)</td></tr>
+              <tr><td>Discrete input</td><td>1 bit</td><td>Read-only</td><td>02</td><td>—</td></tr>
+              <tr><td>Input register</td><td>16 bit</td><td>Read-only</td><td>04</td><td>—</td></tr>
+              <tr><td>Holding register</td><td>16 bit</td><td>R/W</td><td>03</td><td>06 (single), 10H=16 (multiple)</td></tr>
+            </tbody>
+          </table>
+          <figure class="fig"><img loading="lazy" src="img/w16-p09.jpg" alt="FX5U Modbus function code table"><figcaption>W16 slide 9 — FX5U supported function codes</figcaption></figure>
+          <div class="tbl-wrap"><table>
+            <thead><tr><th>FC</th><th>Name</th><th>Points / message</th></tr></thead>
+            <tbody>
+              <tr><td>01H</td><td>Read coils</td><td class="num">1–2000</td></tr>
+              <tr><td>02H</td><td>Read inputs</td><td class="num">1–2000</td></tr>
+              <tr><td>03H</td><td>Read holding registers</td><td class="num">1–125</td></tr>
+              <tr><td>04H</td><td>Read input registers</td><td class="num">1–125</td></tr>
+              <tr><td>05H</td><td>Write single coil</td><td class="num">1</td></tr>
+              <tr><td>06H</td><td>Write single register</td><td class="num">1</td></tr>
+              <tr><td>0FH</td><td>Write multiple coils</td><td class="num">1–1968</td></tr>
+              <tr><td>10H</td><td>Write multiple registers</td><td class="num">1–123</td></tr>
+              <tr><td>16H</td><td>Mask write register (AND/OR mask)</td><td class="num">1</td></tr>
+              <tr><td>17H</td><td>Read/write multiple registers</td><td class="num">R 1–125 · W 1–121</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+
+        <div class="note" id="modbus-fx5u">
+          <h3>FX5U setting for Modbus TCP</h3>
+          <ol>
+            <li>Module Parameter → Ethernet Port → Own Node Settings: IP <code>192.168.3.30</code>, mask <code>255.255.255.0</code>.</li>
+            <li>External Device Configuration: add a <b>MODBUS/TCP Connection Module</b>, protocol TCP, port <b>502</b> (allowed 1–5548 and 5570–65534, <b>default 502</b>).</li>
+            <li><b>MODBUS/TCP Settings → To Use or Not to Use = Used</b>, then open <b>Device Assignment</b>.</li>
+          </ol>
+          <figure class="fig"><img loading="lazy" src="img/w16-p14.jpg" alt="MODBUS/TCP connection module port 502"><figcaption>W16 slide 14</figcaption></figure>
+          <figure class="fig"><img loading="lazy" src="img/w16-p15.jpg" alt="Modbus device allocation parameter"><figcaption>W16 slide 15</figcaption></figure>
+          <p><b>Default device assignment</b> (Modbus address → PLC device):</p>
+          <div class="tbl-wrap"><table>
+            <thead><tr><th>Modbus type</th><th>Device</th><th>Start address</th><th>Points</th></tr></thead>
+            <tbody>
+              <tr><td rowspan="6">Coil</td><td>Y0</td><td class="num">0</td><td class="num">1024</td></tr>
+              <tr><td>M0</td><td class="num">8192</td><td class="num">7680</td></tr>
+              <tr><td>SM0</td><td class="num">20480</td><td class="num">2048</td></tr>
+              <tr><td>L0</td><td class="num">22528</td><td class="num">7680</td></tr>
+              <tr><td>B0</td><td class="num">30720</td><td class="num">256</td></tr>
+              <tr><td>F0</td><td class="num">38912</td><td class="num">128</td></tr>
+              <tr><td>Input</td><td>X0</td><td class="num">0</td><td class="num">1024</td></tr>
+              <tr><td rowspan="6">Holding register</td><td>D0</td><td class="num">0</td><td class="num">8000</td></tr>
+              <tr><td>SD0</td><td class="num">20480</td><td class="num">10000</td></tr>
+              <tr><td>W0</td><td class="num">30720</td><td class="num">512</td></tr>
+              <tr><td>SW0</td><td class="num">40960</td><td class="num">512</td></tr>
+              <tr><td>TN0</td><td class="num">53248</td><td class="num">512</td></tr>
+              <tr><td>STN0</td><td class="num">57344</td><td class="num">16</td></tr>
+            </tbody>
+          </table></div>
+          <div class="key">Coil address = start + device number. M0 → 8192, M20 → 8212, Y0 → 0. Holding register D10 → 10.</div>
+        </div>
+
+        <div class="note" id="modbus-nodered">
+          <h3>Node-RED: Modbus nodes</h3>
+          <p>Install <code>node-red-contrib-modbus</code> (v5.60.2, 14 nodes): Modbus-Response, Modbus-Read, Modbus-Getter, Modbus-Flex-Getter, Modbus-Write, Modbus-Flex-Write, Modbus-Server…</p>
+          <ul>
+            <li><b>modbus-client</b> config node: name <code>FX5U_MODBUS</code>, type <b>TCP</b>, host <b>192.168.3.30</b>, port <b>502</b>, Unit-Id <b>1</b>, timeout 1000 ms, reconnect on timeout (2000 ms). Tabs: Settings, Queues, Optionals.</li>
+            <li><b>Modbus-Write</b> example: Unit-Id 1, <b>FC 5: Force Single Coil</b>, address <b>8192</b> (= M0), server FX5U_MODBUS.</li>
+          </ul>
+          <figure class="fig"><img loading="lazy" src="img/w16-p16.jpg" alt="node-red-contrib-modbus nodes and client settings"><figcaption>W16 slide 16</figcaption></figure>
+          <div class="two">
+            <div class="card"><h4>W15 · SLMP</h4><p><code>node-red-contrib-mcprotocol</code><br>192.168.3.36 : <b>9000</b>, frame 3E<br>Address by device name (M100)</p></div>
+            <div class="card"><h4>W16 · Modbus TCP</h4><p><code>node-red-contrib-modbus</code><br>192.168.3.30 : <b>502</b>, Unit-Id 1<br>Address by number + FC (8192, FC5)</p></div>
+          </div>
+        </div>
+
+        <div class="note" id="assignment-modbus">
+          <h3>Assignment: smart production line (Modbus TCP)</h3>
+          <p>The FX5U controls the machine sequence. Node-RED is the supervisory monitoring and control system.</p>
+          <div class="two">
+            <div class="card"><h4>Station 1 — detection &amp; conveyor</h4><p>Detect product → start conveyor when ready → transfer → stop at filling position.</p></div>
+            <div class="card"><h4>Station 2 — filling / processing</h4><p>Detect product → stop conveyor → fill according to the selected recipe → restart conveyor.</p></div>
+            <div class="card"><h4>Station 3 — inspection &amp; sorting</h4><p>Simulated quality sensor → count Good → reject mechanism for defects → count Rejected.</p></div>
+            <div class="card"><h4>Dashboard</h4><p>Control (START/STOP/RESET, AUTO/MANUAL, station enable) · process (speed, current, temperature, cycle time, state) · production (target, total, good, reject, reject rate, achievement) · alarms &amp; Modbus status.</p></div>
+          </div>
+          <figure class="fig"><img loading="lazy" src="img/w16-p20.jpg" alt="Example smart production line dashboard"><figcaption>W16 slide 20</figcaption></figure>
+          <p><b>Assessed on:</b> Modbus function codes &amp; data mapping, PLC sequence &amp; interlock, Node-RED functions &amp; data processing, recipe management, alarm &amp; fault handling, dashboard &amp; production analysis, documentation &amp; demonstration.</p>
+        </div>
+      </section>
+    </article>
+  </div>
+</main>
+
+<button class="btn primary float-back" id="back-to-q" type="button" hidden></button>
+<dialog class="zoom" id="zoom"><img alt=""></dialog>
+
+<script src="questions.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
